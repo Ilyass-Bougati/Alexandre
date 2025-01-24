@@ -1,6 +1,8 @@
 package alex.server.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
@@ -9,6 +11,7 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @ColumnDefault("USER")
     private String roleName;
 
     public long getId() {
