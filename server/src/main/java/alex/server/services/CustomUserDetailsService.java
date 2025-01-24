@@ -3,7 +3,6 @@ package alex.server.services;
 import alex.server.entities.User;
 import alex.server.repositories.UserRepository;
 import alex.server.security.CustomUserDetails;
-import jdk.jfr.SettingDefinition;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
