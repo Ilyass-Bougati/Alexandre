@@ -1,8 +1,11 @@
 package alex.server.entities;
 
 import alex.server.interfaces.UserInterface;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -37,20 +40,33 @@ public class User implements UserInterface {
     @Column
     private Date dateCreated = new Date();
 
-    @OneToMany
-    private List<Role> roles = new ArrayList<Role>() {
-        {
-            add(new Role("USER"));
-        }
-    };
+    @NotNull
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Role> roles = new ArrayList<Role>();
 
-    @OneToMany
+    @Nullable
+    @ColumnDefault("null")
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Card> cards = new ArrayList<>();
 
-    @OneToMany
+    @Nullable
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<CartElement> cart = new ArrayList<>();
 
-    @OneToMany
+    @Nullable
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Order> orders = new ArrayList<>();
 
     public List<Order> getOrders() {
