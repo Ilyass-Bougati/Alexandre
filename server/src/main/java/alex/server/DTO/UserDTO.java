@@ -1,20 +1,20 @@
-package alex.server.entities;
+package alex.server.DTO;
 
+import alex.server.entities.Card;
+import alex.server.entities.CartElement;
+import alex.server.entities.Order;
+import alex.server.entities.Role;
 import alex.server.interfaces.UserInterface;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "users")
-public class User implements UserInterface {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDTO implements UserInterface {
     private long id;
 
     // the login data
@@ -32,38 +32,11 @@ public class User implements UserInterface {
     private String secondAddress;
     private String city;
     private String country;
-
-    @CreationTimestamp
-    @Column
-    private Date dateCreated = new Date();
-
-    @OneToMany
-    private List<Role> roles = new ArrayList<>();
-
-    @OneToMany
-    private List<Card> cards = new ArrayList<>();
-
-    @OneToMany
-    private List<CartElement> cart = new ArrayList<>();
-
-    @OneToMany
-    private List<Order> orders = new ArrayList<>();
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public List<CartElement> getCart() {
-        return cart;
-    }
-
-    public void setCart(List<CartElement> cart) {
-        this.cart = cart;
-    }
+    private Date dateCreated;
+    private List<Role> roles;
+    private List<Card> cards;
+    private List<CartElement> cart;
+    private List<Order> orders;
 
     public long getId() {
         return id;
@@ -73,11 +46,11 @@ public class User implements UserInterface {
         this.id = id;
     }
 
-    public @Email String getEmail() {
+    public @Email(message = "Email should be valid") String getEmail() {
         return email;
     }
 
-    public void setEmail(@Email String email) {
+    public void setEmail(@Email(message = "Email should be valid") String email) {
         this.email = email;
     }
 
@@ -169,11 +142,19 @@ public class User implements UserInterface {
         this.cards = cards;
     }
 
-    public User() {}
-
-    public User(String email, String password) {
-        setEmail(email);
-        setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+    public List<CartElement> getCart() {
+        return cart;
     }
 
+    public void setCart(List<CartElement> cart) {
+        this.cart = cart;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 }
