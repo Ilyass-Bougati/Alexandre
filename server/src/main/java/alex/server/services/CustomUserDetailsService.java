@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findDistinctById(id);
+        Optional<User> user = userRepository.findDistinctById(Long.parseLong(id));
         if (user.isPresent()) {
             return new CustomUserDetails(user.get());
         } else {
