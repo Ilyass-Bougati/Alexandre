@@ -3,7 +3,7 @@ package alex.server.DTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
-public class RegisterRequest {
+public class AuthRequest {
     @Email
     private String email;
 
@@ -26,10 +26,10 @@ public class RegisterRequest {
         this.password = password;
     }
 
-    public RegisterRequest(String email, String password) {
+    public AuthRequest(String email, String password) {
         setEmail(email);
         setPassword(password);
     }
 
-    public RegisterRequest() {}
+    public AuthRequest() {}
 }

@@ -5,6 +5,7 @@ import alex.server.interfaces.UserInterface;
 import alex.server.security.CustomUserDetails;
 import alex.server.services.CustomUserDetailsService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 
 public class AuthFunctions {
@@ -30,5 +31,9 @@ public class AuthFunctions {
 
     public static boolean isAuthenticated(HttpSession session) {
         return session.getAttribute("USER_ID") != null;
+    }
+
+    public static boolean checkPassword(String password, String hash) {
+        return BCrypt.checkpw(password, hash);
     }
 }

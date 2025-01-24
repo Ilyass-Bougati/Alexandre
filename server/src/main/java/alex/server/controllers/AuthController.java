@@ -1,10 +1,11 @@
 package alex.server.controllers;
 
-import alex.server.DTO.RegisterRequest;
+import alex.server.DTO.AuthRequest;
 import alex.server.entities.Role;
 import alex.server.entities.User;
-import alex.server.repositories.RoleRepository;
 import alex.server.repositories.UserRepository;
+import alex.server.security.CustomUserDetails;
+import alex.server.services.CustomUserDetailsService;
 import alex.server.utils.AuthFunctions;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,23 +23,23 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
 
     Logger logger = LoggerFactory.getLogger(AuthController.class);
-    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    public AuthController(UserRepository userRepository, RoleRepository roleRepository) {
+    public AuthController(UserRepository userRepository, CustomUserDetailsService customUserDetailsService) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(
-            @RequestBody @Valid RegisterRequest registerRequest,
+            @RequestBody @Valid AuthRequest authRequest,
             HttpSession session
     ) {
         // Creating the new user
         User newUser = new User(
-                registerRequest.getEmail(),
-                registerRequest.getPassword()
+                authRequest.getEmail(),
+                authRequest.getPassword()
         );
 
         // adding the default USER role
@@ -66,4 +68,34 @@ public class AuthController {
             );
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(
+            @RequestBody @Valid AuthRequest authRequest,
+            HttpSession session
+    ) {
+        try {
+            CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(authRequest.getEmail());
+            // checking if the passwords match
+            if (AuthFunctions.checkPassword(authRequest.getPassword(), userDetails.getPassword())) {
+                AuthFunctions.authenticate(session, userDetails);
+                return ResponseEntity.ok().build();
+            } else {
+                throw new ResponseStatusException(
+                        HttpStatusCode.valueOf(401),
+                        "Invalid email or password"
+                );
+            }
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatusCode.valueOf(401),
+                    "Invalid email or password"
+            );
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatusCode.valueOf(500)
+            );
+        }
+    }
+
 }
