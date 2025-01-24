@@ -86,7 +86,7 @@ public class User implements UserInterface {
     }
 
     public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt();
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     public String getFirstName() {
