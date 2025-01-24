@@ -8,6 +8,7 @@ import alex.server.repositories.UserRepository;
 import alex.server.utils.AuthFunctions;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatusCode;
@@ -50,9 +51,19 @@ public class AuthController {
             // on success
             AuthFunctions.authenticate(session, newUser);
             return ResponseEntity.ok().build();
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(
+                    HttpStatusCode.valueOf(401),
+                    "Invalid email or password"
+            );
+
         } catch (Exception e) {
             logger.trace(e.getMessage());
-            throw new ResponseStatusException(HttpStatusCode.valueOf(500), e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatusCode.valueOf(500),
+                    e.getMessage()
+            );
         }
     }
 }
