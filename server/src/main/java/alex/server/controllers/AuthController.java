@@ -36,6 +36,14 @@ public class AuthController {
             @RequestBody @Valid AuthRequest authRequest,
             HttpSession session
     ) {
+        // Checking if the email already exists
+        if (userRepository.existsByEmail(authRequest.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatusCode.valueOf(401),
+                    "Email already in use"
+            );
+        }
+
         // Creating the new user
         User newUser = new User(
                 authRequest.getEmail(),
@@ -60,7 +68,8 @@ public class AuthController {
                     "Invalid email or password"
             );
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.trace(e.getMessage());
             throw new ResponseStatusException(
                     HttpStatusCode.valueOf(500),
