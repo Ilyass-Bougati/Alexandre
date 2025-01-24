@@ -1,5 +1,6 @@
 package alex.server.security;
 
+import alex.server.utils.AuthFunctions;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,23 +25,31 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(CustomAuthenticationFilter.class.getName());
-
         String method = request.getMethod();
         String path = request.getServletPath();
+        // checking for sessions
+        HttpSession session = request.getSession(true);
 
         // The authorized paths
-        Pattern pattern = Pattern.compile("/auth/*");
+        Pattern pattern = Pattern.compile("/auth/[A-Za-z]+");
         Matcher matcher = pattern.matcher(path);
 
         if (matcher.matches() && method.equals("POST")) {
-            filterChain.doFilter(request, response);
+            // checking if already authenticated
+            if (AuthFunctions.isAuthenticated(session))
+            {
+                response.sendError(
+                        HttpServletResponse.SC_UNAUTHORIZED,
+                        "Already authenticated"
+                );
+            } else {
+                filterChain.doFilter(request, response);
+            }
             return;
         }
 
-        // checking for sessions
-        HttpSession session = request.getSession(true);
-        if (session.getAttribute("USER_EMAIL") == null || session.getAttribute("USER_ID") == null) {
+
+        if (!AuthFunctions.isAuthenticated(session)) {
             response.sendError(
                     HttpServletResponse.SC_UNAUTHORIZED,
                     "Not authorized"

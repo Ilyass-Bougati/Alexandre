@@ -14,7 +14,7 @@ public class ApplicationConfig {
 
         http.authorizeHttpRequests(c -> c
                 // this will be override through filters
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
         );
         http.csrf(c -> c.disable());
         http.addFilterAt(
