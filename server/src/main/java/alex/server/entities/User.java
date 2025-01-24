@@ -38,7 +38,11 @@ public class User implements UserInterface {
     private Date dateCreated = new Date();
 
     @OneToMany
-    private List<Role> roles = new ArrayList<>();
+    private List<Role> roles = new ArrayList<Role>() {
+        {
+            add(new Role("USER"));
+        }
+    };
 
     @OneToMany
     private List<Card> cards = new ArrayList<>();
