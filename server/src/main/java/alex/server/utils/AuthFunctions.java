@@ -29,6 +29,6 @@ public class AuthFunctions {
     }
 
     public static boolean isAuthenticated(HttpSession session) {
-        return (session.getAttribute("USER_EMAIL") != null) && (session.getAttribute("USER_ID") != null);
+        return session.getAttribute("USER_ID") != null;
     }
 }
