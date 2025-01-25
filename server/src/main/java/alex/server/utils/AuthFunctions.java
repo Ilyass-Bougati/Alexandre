@@ -16,7 +16,9 @@ public class AuthFunctions {
     }
 
     public static void logout(HttpSession session) {
-        session.invalidate();
+        if (isAuthenticated(session)) {
+            session.invalidate();
+        }
     }
 
     public static CustomUserDetails getUser(HttpSession session) {
