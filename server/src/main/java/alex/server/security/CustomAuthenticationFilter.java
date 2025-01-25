@@ -31,7 +31,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         HttpSession session = request.getSession(true);
 
         // The authorized paths
-        Pattern pattern = Pattern.compile("/auth/[A-Za-z]+");
+        Pattern pattern = Pattern.compile("/v[1-9]/auth/[A-Za-z]+");
         Matcher matcher = pattern.matcher(path);
 
         if (matcher.matches() && method.equals("POST")) {
