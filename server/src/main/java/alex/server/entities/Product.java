@@ -3,6 +3,7 @@ package alex.server.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.NumberFormat;
 
@@ -20,13 +21,14 @@ public class Product {
     private String description;
     private double price;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User seller;
 
-    @Max(1)
-    @Min(100)
+    @Max(100)
+    @Min(0)
     private double discount;
-    private boolean available;
+    private boolean available = true;
 
     @CreationTimestamp
     @Column
