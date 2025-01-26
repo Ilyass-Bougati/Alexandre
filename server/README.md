@@ -11,4 +11,5 @@ The creation of users can only be done through the register route, the other ope
 
 - `GET` : fetch the details of the user (`UserDTO`)
 - `PUT` : modifies the user details (except the role and the password)
+- `DELETE` : to delete ther user
 - `PUT /v1/user/password` : to change the password of the user
