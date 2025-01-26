@@ -4,12 +4,14 @@ import alex.server.DTO.UserDTO;
 import alex.server.entities.User;
 import alex.server.repositories.CardRepository;
 import alex.server.repositories.UserRepository;
+import alex.server.requests.PasswordModificationRequest;
 import alex.server.security.CustomUserDetails;
 import alex.server.services.CustomUserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -58,17 +60,26 @@ public class UserController {
         }
     }
 
+    // TODO : Test this
     @PutMapping("/password")
-    public ResponseEntity<Void> modifyPassword(@RequestBody String password, HttpSession session) {
+    public ResponseEntity<Void> modifyPassword(@RequestBody PasswordModificationRequest password, HttpSession session) {
         long userId = (long) session.getAttribute("USER_ID");
         CustomUserDetails user = (CustomUserDetails) customUserDetailsService.loadUserByUsername(userId);
-        user.getUser().setPassword(password);
-        try {
-            userRepository.save(user.getUser());
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(500));
+
+        // checking if the old password and the user password are the same
+        if (BCrypt.checkpw(password.getOldPassword(), user.getPassword())) {
+            user.getUser().setPassword(password.getNewPassword());
+            try {
+                userRepository.save(user.getUser());
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatusCode.valueOf(500));
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(403));
         }
+
+
     }
 
 }

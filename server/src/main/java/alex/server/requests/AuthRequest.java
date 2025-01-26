@@ -1,4 +1,4 @@
-package alex.server.DTO;
+package alex.server.requests;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

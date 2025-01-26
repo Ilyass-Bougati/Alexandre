@@ -1,6 +1,6 @@
 package alex.server.controllers;
 
-import alex.server.DTO.AuthRequest;
+import alex.server.requests.AuthRequest;
 import alex.server.entities.Role;
 import alex.server.entities.User;
 import alex.server.repositories.UserRepository;
