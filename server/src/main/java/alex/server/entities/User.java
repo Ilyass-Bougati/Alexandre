@@ -1,5 +1,6 @@
 package alex.server.entities;
 
+import alex.server.DTO.UserDTO;
 import alex.server.interfaces.UserInterface;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -195,6 +196,23 @@ public class User implements UserInterface {
     public User(String email, String password) {
         setEmail(email);
         setPassword(password);
+    }
+    
+    public User(UserDTO user) {
+        setId(user.getId());
+        setEmail(user.getEmail());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
+        setPhoneNumber(user.getPhoneNumber());
+        setFirstAddress(user.getFirstAddress());
+        setSecondAddress(user.getSecondAddress());
+        setCity(user.getCity());
+        setCountry(user.getCountry());
+        setDateCreated(user.getDateCreated());
+        setRoles(user.getRoles());
+        setCards(user.getCards());
+        setCart(user.getCart());
+        setOrders(user.getOrders());
     }
 
 }

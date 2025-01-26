@@ -1,16 +1,9 @@
 package alex.server.DTO;
 
-import alex.server.entities.Card;
-import alex.server.entities.CartElement;
-import alex.server.entities.Order;
-import alex.server.entities.Role;
+import alex.server.entities.*;
 import alex.server.interfaces.UserInterface;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +13,6 @@ public class UserDTO implements UserInterface {
     // the login data
     @Email(message = "Email should be valid")
     private String email;
-    private String password;
 
     // user infos
     private String firstName;
@@ -52,14 +44,6 @@ public class UserDTO implements UserInterface {
 
     public void setEmail(@Email(message = "Email should be valid") String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {
@@ -156,5 +140,26 @@ public class UserDTO implements UserInterface {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public UserDTO() {
+
+    }
+
+    public UserDTO(User user) {
+        setId(user.getId());
+        setEmail(user.getEmail());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
+        setPhoneNumber(user.getPhoneNumber());
+        setFirstAddress(user.getFirstAddress());
+        setSecondAddress(user.getSecondAddress());
+        setCity(user.getCity());
+        setCountry(user.getCountry());
+        setDateCreated(user.getDateCreated());
+        setRoles(user.getRoles());
+        setCards(user.getCards());
+        setCart(user.getCart());
+        setOrders(user.getOrders());
     }
 }
