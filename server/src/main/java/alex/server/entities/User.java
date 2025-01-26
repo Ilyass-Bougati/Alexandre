@@ -199,6 +199,7 @@ public class User implements UserInterface {
     }
     
     public User(UserDTO user) {
+        // The password and roles cannot be modified this way
         setId(user.getId());
         setEmail(user.getEmail());
         setFirstName(user.getFirstName());
@@ -209,7 +210,6 @@ public class User implements UserInterface {
         setCity(user.getCity());
         setCountry(user.getCountry());
         setDateCreated(user.getDateCreated());
-        setRoles(user.getRoles());
         setCards(user.getCards());
         setCart(user.getCart());
         setOrders(user.getOrders());
