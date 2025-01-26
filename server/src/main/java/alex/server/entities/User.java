@@ -71,6 +71,23 @@ public class User implements UserInterface {
     )
     private List<Order> orders = new ArrayList<>();
 
+    @Nullable
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Product> products = new ArrayList<>();
+
+
+    @Nullable
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(@Nullable List<Product> products) {
+        this.products = products;
+    }
+
     public List<Order> getOrders() {
         return orders;
     }
@@ -177,6 +194,14 @@ public class User implements UserInterface {
 
     public List<Role> getRoles() {
         return roles;
+    }
+
+    public List<String> getRoleNames() {
+        List<String> roleNames = new ArrayList<>();
+        for (Role role : roles) {
+            roleNames.add(role.getAuthority());
+        }
+        return roleNames;
     }
 
     public void setRoles(List<Role> roles) {
