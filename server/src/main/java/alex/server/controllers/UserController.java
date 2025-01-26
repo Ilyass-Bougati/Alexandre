@@ -19,12 +19,10 @@ public class UserController {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final UserRepository userRepository;
-    private final CardRepository cardRepository;
 
-    public UserController(CustomUserDetailsService customUserDetailsService, UserRepository userRepository, CardRepository cardRepository) {
+    public UserController(CustomUserDetailsService customUserDetailsService, UserRepository userRepository) {
         this.customUserDetailsService = customUserDetailsService;
         this.userRepository = userRepository;
-        this.cardRepository = cardRepository;
     }
 
     @GetMapping("/")
@@ -58,7 +56,19 @@ public class UserController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(500));
         }
+    }
 
+    @PutMapping("/password")
+    public ResponseEntity<Void> modifyPassword(@RequestBody String password, HttpSession session) {
+        long userId = (long) session.getAttribute("USER_ID");
+        CustomUserDetails user = (CustomUserDetails) customUserDetailsService.loadUserByUsername(userId);
+        user.getUser().setPassword(password);
+        try {
+            userRepository.save(user.getUser());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(500));
+        }
     }
 
 }
