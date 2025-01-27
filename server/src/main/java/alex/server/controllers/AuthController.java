@@ -54,9 +54,6 @@ public class AuthController {
         newUser.getRoles().add(
                 new Role("USER")
         );
-        newUser.getRoles().add(
-                new Role("SELLER")
-        );
 
         // saving the user
         try {
