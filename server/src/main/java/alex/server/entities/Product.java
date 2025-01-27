@@ -1,5 +1,6 @@
 package alex.server.entities;
 
+import alex.server.DTO.ProductDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -109,5 +110,15 @@ public class Product {
 
     public void setAddedAt(Date addedAt) {
         this.addedAt = addedAt;
+    }
+
+    public Product() {}
+
+    public Product(ProductDTO productDTO) {
+        setName(productDTO.getName());
+        setDescription(productDTO.getDescription());
+        setPrice(productDTO.getPrice());
+        setDiscount(productDTO.getDiscount());
+        setAvailable(productDTO.isAvailable());
     }
 }

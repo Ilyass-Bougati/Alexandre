@@ -2,11 +2,13 @@ package alex.server.DTO;
 
 import alex.server.entities.Product;
 import alex.server.entities.User;
+import jakarta.annotation.Nullable;
 
 import java.util.Date;
 
 // TODO : add the pictures, separate the user and the seller
 public class ProductDTO {
+    @Nullable
     private long id;
     private String name;
     private String description;
@@ -14,6 +16,7 @@ public class ProductDTO {
     private long seller_id;
     private double discount;
     private boolean available = true;
+    @Nullable
     private Date addedAt = new Date();
 
     public long getId() {
@@ -80,6 +83,8 @@ public class ProductDTO {
         this.addedAt = addedAt;
     }
 
+    public ProductDTO() {}
+
     public ProductDTO(long id, String name, String description, double price, long seller_id, double discount, boolean available, Date addedAt) {
         this.id = id;
         this.name = name;
@@ -89,6 +94,15 @@ public class ProductDTO {
         this.discount = discount;
         this.available = available;
         this.addedAt = addedAt;
+    }
+
+    public ProductDTO(String name, String description, double price, long seller_id, double discount, boolean available) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.seller_id = seller_id;
+        this.discount = discount;
+        this.available = available;
     }
 
     public ProductDTO(Product product) {
