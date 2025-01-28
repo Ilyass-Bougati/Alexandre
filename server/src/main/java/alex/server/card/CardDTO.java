@@ -1,25 +1,10 @@
 package alex.server.card;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "cards")
-public class Card {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class CardDTO {
     private String holdersFullName;
     private String cardNumber;
     private String expiringDate;
     private String cvv;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getHoldersFullName() {
         return holdersFullName;
@@ -53,23 +38,12 @@ public class Card {
         this.cvv = cvv;
     }
 
-    public Card() {
+    public CardDTO() {}
 
-    }
-
-    public Card(String holdersFullName, String cardNumber, String expiringDate, String cvv) {
+    public CardDTO(String holdersFullName, String cardNumber, String expiringDate, String cvv) {
         this.holdersFullName = holdersFullName;
         this.cardNumber = cardNumber;
         this.expiringDate = expiringDate;
         this.cvv = cvv;
-    }
-
-    public Card(CardDTO cardDTO) {
-        this(
-                cardDTO.getHoldersFullName(),
-                cardDTO.getCardNumber(),
-                cardDTO.getExpiringDate(),
-                cardDTO.getCvv()
-        )
     }
 }
