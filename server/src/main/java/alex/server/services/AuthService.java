@@ -1,6 +1,7 @@
 package alex.server.services;
 
-import alex.server.security.CustomUserDetails;
+import alex.server.user.CustomUserDetails;
+import alex.server.user.CustomUserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 

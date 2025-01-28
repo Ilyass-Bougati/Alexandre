@@ -1,13 +1,8 @@
 package alex.server.utils;
 
-import alex.server.DTO.UserDTO;
-import alex.server.interfaces.UserInterface;
-import alex.server.security.CustomUserDetails;
-import alex.server.services.CustomUserDetailsService;
+import alex.server.user.UserInterface;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.stereotype.Service;
 
 public class AuthFunctions {
 
