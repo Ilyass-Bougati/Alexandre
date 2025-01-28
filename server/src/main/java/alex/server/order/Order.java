@@ -26,6 +26,7 @@ public class Order {
     private Product product;
     private double price;
     private boolean isFulfilled;
+    private boolean onGoing;
     private boolean wasRefunded;
 
     @OneToMany
@@ -34,4 +35,12 @@ public class Order {
     @CreationTimestamp
     @Column
     private Date orderedAt = new Date();
+
+    public Order(Product product) {
+        setProduct(product);
+        setPrice(product.getPrice());
+        setFulfilled(false);
+        setWasRefunded(false);
+        setOnGoing(false);
+    }
 }
