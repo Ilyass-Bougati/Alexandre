@@ -2,6 +2,9 @@ package alex.server.role;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -13,7 +16,9 @@ import org.springframework.security.core.GrantedAuthority;
  *  ADMIN : which is self-explanatory
  *
  */
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
@@ -23,23 +28,6 @@ public class Role implements GrantedAuthority {
     @NotNull
     private String authority;
 
-    public Role() {
-
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-
-    public void setAuthority(String roleName) {
-        this.authority = roleName;
-    }
-
     @Override
     public String getAuthority() {
         return authority;
@@ -48,4 +36,5 @@ public class Role implements GrantedAuthority {
     public Role(String authority) {
         setAuthority(authority);
     }
+
 }

@@ -1,7 +1,11 @@
 package alex.server.card;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "cards")
 public class Card {
@@ -13,63 +17,10 @@ public class Card {
     private String expiringDate;
     private String cvv;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getHoldersFullName() {
-        return holdersFullName;
-    }
-
-    public void setHoldersFullName(String holdersFullName) {
-        this.holdersFullName = holdersFullName;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public String getExpiringDate() {
-        return expiringDate;
-    }
-
-    public void setExpiringDate(String expiringDate) {
-        this.expiringDate = expiringDate;
-    }
-
-    public String getCvv() {
-        return cvv;
-    }
-
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
-    }
-
-    public Card() {
-
-    }
-
-    public Card(String holdersFullName, String cardNumber, String expiringDate, String cvv) {
-        this.holdersFullName = holdersFullName;
-        this.cardNumber = cardNumber;
-        this.expiringDate = expiringDate;
-        this.cvv = cvv;
-    }
-
     public Card(CardDTO cardDTO) {
-        this(
-                cardDTO.getHoldersFullName(),
-                cardDTO.getCardNumber(),
-                cardDTO.getExpiringDate(),
-                cardDTO.getCvv()
-        )
+        setHoldersFullName(cardDTO.getHoldersFullName());
+        setCardNumber(cardDTO.getCardNumber());
+        setExpiringDate(cardDTO.getExpiringDate());
+        setCvv(cardDTO.getCvv());
     }
 }

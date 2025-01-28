@@ -1,7 +1,13 @@
 package alex.server.productPicture;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "product_pictures")
 public class ProductPicture {
@@ -9,20 +15,4 @@ public class ProductPicture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String uri;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
 }

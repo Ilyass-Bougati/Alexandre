@@ -2,7 +2,13 @@ package alex.server.seller;
 
 import alex.server.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "seller_infos")
 public class SellerInfo {
@@ -13,36 +19,4 @@ public class SellerInfo {
     private User user;
     private String companyName;
     private String identifier;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
 }
