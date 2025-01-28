@@ -1,6 +1,9 @@
 package alex.server.product;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,15 +15,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
-    @Nullable
     private long id;
-    private String name;
-    private String description;
-    private double price;
-    private long seller_id;
+    @NotNull @NotBlank private String name;
+    @NotNull @NotBlank private String description;
+    @NotNull @Min(1) private double price;
+    @NotNull private long seller_id;
     private double discount;
     private boolean available = true;
-    @Nullable
     private Date addedAt = new Date();
 
 

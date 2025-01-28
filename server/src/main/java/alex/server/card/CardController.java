@@ -5,6 +5,7 @@ import alex.server.user.CustomUserDetails;
 import alex.server.user.User;
 import alex.server.user.UserRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,10 @@ public class CardController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Void> createCard(@RequestBody CardDTO cardDTO, HttpSession session) {
+    public ResponseEntity<Void> createCard(
+            @RequestBody @Valid CardDTO cardDTO,
+            HttpSession session
+    ) {
         CustomUserDetails userDetails = authService.getUser(session);
         User user = userDetails.getUser();
 

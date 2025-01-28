@@ -7,6 +7,7 @@ import alex.server.user.UserRepository;
 import alex.server.user.CustomUserDetails;
 import alex.server.services.AuthService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,11 @@ public class CartController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Void> createCart(@RequestBody addCartElementRequest request, HttpSession session) {
+    public ResponseEntity<Void> createCart(
+            @RequestBody @Valid addCartElementRequest request,
+            HttpSession session) {
         // creating the cardElement
-        Optional<Product> addedProduct = productRepository.findById(request.getId());
+        Optional<Product> addedProduct = productRepository.findById(request.getProductId());
         if (addedProduct.isPresent()) {
             CartElement cartElement = new CartElement();
             cartElement.setProduct(addedProduct.get());
@@ -73,7 +76,10 @@ public class CartController {
 
 
     @PutMapping("/")
-    public ResponseEntity<Void> updateCart(@RequestBody CartElementDTO request, HttpSession session) {
+    public ResponseEntity<Void> updateCart(
+            @RequestBody @Valid CartElementDTO request,
+            HttpSession session
+    ) {
         CustomUserDetails userDetails = authService.getUser(session);
         User user = userDetails.getUser();
 

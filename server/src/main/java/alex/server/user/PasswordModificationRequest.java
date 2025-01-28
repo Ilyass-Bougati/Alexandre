@@ -1,5 +1,7 @@
 package alex.server.user;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PasswordModificationRequest {
-    private String oldPassword;
-    private String newPassword;
+    @NotEmpty @Size(min = 8, max = 20) private String oldPassword;
+    @NotEmpty @Size(min = 8, max = 20) private String newPassword;
 }

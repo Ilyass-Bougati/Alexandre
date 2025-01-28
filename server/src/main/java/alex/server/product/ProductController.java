@@ -4,6 +4,7 @@ import alex.server.user.UserRepository;
 import alex.server.user.CustomUserDetails;
 import alex.server.services.AuthService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,10 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductCreationRequest product, HttpSession session) {
+    public ResponseEntity<ProductDTO> createProduct(
+            @RequestBody @Valid ProductCreationRequest product,
+            HttpSession session
+    ) {
         // checking if the user is a seller
         CustomUserDetails userDetails = authService.getUser(session);
 

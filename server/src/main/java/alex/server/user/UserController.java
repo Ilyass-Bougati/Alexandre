@@ -1,6 +1,7 @@
 package alex.server.user;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -27,7 +28,9 @@ public class UserController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> updateUser(HttpSession session, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<Void> updateUser(
+            HttpSession session, @RequestBody @Valid UserDTO userDTO
+    ) {
         long userId = (long) session.getAttribute("USER_ID");
         try {
             User modifiedUser = new User(userDTO);
@@ -54,7 +57,10 @@ public class UserController {
 
     // TODO : Test this
     @PutMapping("/password")
-    public ResponseEntity<Void> modifyPassword(@RequestBody PasswordModificationRequest password, HttpSession session) {
+    public ResponseEntity<Void> modifyPassword(
+            @RequestBody @Valid PasswordModificationRequest password,
+            HttpSession session
+    ) {
         long userId = (long) session.getAttribute("USER_ID");
         CustomUserDetails user = (CustomUserDetails) customUserDetailsService.loadUserByUsername(userId);
 
