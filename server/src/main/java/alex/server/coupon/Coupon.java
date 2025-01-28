@@ -20,4 +20,9 @@ public class Coupon {
     @Min(0)
     @Max(100)
     private int reduction;
+
+    public Coupon(CouponDTO couponDTO) {
+        setCode(couponDTO.getCode());
+        setReduction(couponDTO.getReduction());
+    }
 }
