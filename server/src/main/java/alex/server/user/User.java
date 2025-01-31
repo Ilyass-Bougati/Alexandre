@@ -5,6 +5,7 @@ import alex.server.cart.CartElement;
 import alex.server.order.Order;
 import alex.server.product.Product;
 import alex.server.role.Role;
+import alex.server.seller.SellerInfo;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -86,6 +87,10 @@ public class User implements UserInterface {
             orphanRemoval = true
     )
     private List<Product> products = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    private SellerInfo sellerInfo;
 
 
     @Nullable

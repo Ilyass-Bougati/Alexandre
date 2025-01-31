@@ -15,8 +15,6 @@ public class SellerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @OneToOne
-    private User user;
     private String companyName;
     private String identifier;
 }

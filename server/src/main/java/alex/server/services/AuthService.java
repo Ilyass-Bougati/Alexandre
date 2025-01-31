@@ -25,4 +25,9 @@ public class AuthService {
         }
     }
 
+    public boolean isSeller(HttpSession session) {
+        CustomUserDetails user = getUser(session);
+        return user.getUser().getRoleNames().contains("SELLER");
+    }
+
 }
