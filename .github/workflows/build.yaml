@@ -24,4 +24,4 @@ jobs:
 
     - name: Build with Maven
       working-directory: ./server
-      run: mvn -B package --file pom.xml
+      run: mvn clean install 
