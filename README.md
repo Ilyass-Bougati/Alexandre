@@ -1,4 +1,9 @@
-# Alex Shop
+# Alex Shop **Cancelled**
+
+This project was for education
+
+This project was cancelled before the creation of the frontend, I cancelled it because I figured there are huge problem with how I used spring security which made it super problematic to work with, and very insecure.
+
 ## The Server
 
 The server is written in Java with the spring framework, and I used the following packages
