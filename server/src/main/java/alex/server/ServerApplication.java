@@ -1,5 +1,7 @@
 package alex.server;
 
+import alex.server.product.Product;
+import alex.server.product.ProductRepository;
 import alex.server.role.Role;
 import alex.server.user.User;
 import alex.server.user.UserRepository;
@@ -19,7 +21,7 @@ public class ServerApplication {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext ctx, UserRepository userRepository) {
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx, UserRepository userRepository, ProductRepository productRepository) {
         return args -> {
             User user = new User();
             user.setEmail("ilyass@admin.com");
@@ -38,6 +40,27 @@ public class ServerApplication {
             );
             user.setFirstName("Ilyass");
             user.setLastName("Bougati");
+
+            Product product1 = new Product();
+            product1.setName("PS4 pro");
+            product1.setDescription("A console for playing video games");
+            product1.setPrice(6400);
+            product1.setDiscount(20);
+
+            Product product2 = new Product();
+            product2.setName("Gaming monitor");
+            product2.setDescription("Good for playing video games");
+            product2.setPrice(1500);
+
+            Product product3 = new Product();
+            product3.setName("Bloodborne");
+            product3.setDescription("a From Software video game, only for the best gamers");
+            product3.setPrice(220);
+
+            productRepository.save(product1);
+            productRepository.save(product2);
+            productRepository.save(product3);
+
 
             userRepository.save(user);
         };

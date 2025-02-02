@@ -37,8 +37,8 @@ updating and deleting the id can only be done if you're the creator of the id. A
 - `POST /v1/cart` : adds a product to the cart
 ```json
 {
-	"productId": [id],
-	"quantity": [qtt]
+	"productId": "[id]",
+	"quantity": "[qtt]"
 }
 ```
 - `PUT /v1/cart` ; modifies the quantity or `isOrdered` property of a cart, and takes a `CartDTO` object
@@ -49,11 +49,21 @@ updating and deleting the id can only be done if you're the creator of the id. A
 - `POST /v1/card` : add a card to the users list of cards
 ```json
 {
-	"holdersFullName": [...],
-	"cardNumber": [...],
-	"expiringDate": [...],
-	"cvv": [...]
+	"holdersFullName": "[...]",
+	"cardNumber":  "[...]",
+	"expiringDate":  "[...]",
+	"cvv":  "[...]"
 }
 ```
 - `PUT /v1/card` : modifies a card informations.
 - `DELETE /v1/card/cardId` : deletes a card by its id
+
+### The seller controller
+- `GET /v1/seller` : returns the sellers informations if the user is a seller
+- `POST /v1/seller` : to become a seller
+```json
+{
+	"companyName":  "[...]",
+	"identifier":  "[...]"
+}
+```

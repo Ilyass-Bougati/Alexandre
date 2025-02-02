@@ -1,6 +1,7 @@
 package alex.server.order;
 
 
+import alex.server.cart.CartElement;
 import alex.server.coupon.Coupon;
 import alex.server.product.Product;
 import jakarta.persistence.*;
@@ -22,8 +23,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @OneToOne
-    private Product product;
+    @OneToMany
+    private List<CartElement> cartElements = new ArrayList<>();
     private double price;
     private boolean isFulfilled;
     private boolean onGoing;
@@ -36,9 +37,16 @@ public class Order {
     @Column
     private Date orderedAt = new Date();
 
-    public Order(Product product) {
-        setProduct(product);
-        setPrice(product.getPrice());
+    public Order(List<CartElement> cartElements) {
+        setCartElements(cartElements);
+
+        // calculating the price
+        double price = 0;
+        for (CartElement cartElement : cartElements) {
+            price += cartElement.getQuantity() * cartElement.getProduct().getPrice() * (1 - cartElement.getDiscount() / 100.0);
+        }
+
+        setPrice(price);
         setFulfilled(false);
         setWasRefunded(false);
         setOnGoing(false);

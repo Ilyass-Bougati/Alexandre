@@ -52,56 +52,25 @@ public class User implements UserInterface {
     @Column
     private Date dateCreated = new Date();
 
-    @NotNull
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<Role>();
 
-    @Nullable
     @ColumnDefault("null")
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Card> cards = new ArrayList<>();
 
-    @Nullable
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(cascade = CascadeType.ALL)
     private List<CartElement> cart = new ArrayList<>();
 
-    @Nullable
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
-    @Nullable
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Product> products = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private SellerInfo sellerInfo;
-
-
-    @Nullable
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(@Nullable List<Product> products) {
-        this.products = products;
-    }
-
 
     public void setPassword(String password) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -133,8 +102,8 @@ public class User implements UserInterface {
         setCountry(user.getCountry());
         setDateCreated(user.getDateCreated());
         setCards(user.getCards());
-        setCart(user.getCart());
-        setOrders(user.getOrders());
+//        setCart(user.getCart());
+//        setOrders(user.getOrders());
     }
 
 }

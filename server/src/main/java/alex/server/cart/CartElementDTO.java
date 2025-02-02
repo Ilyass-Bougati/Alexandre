@@ -14,7 +14,6 @@ public class CartElementDTO {
     @NotNull private long id;
     @NotNull private long productId;
     @NotNull private int quantity;
-
     private double discount;
     private boolean ordered;
     private Date addedAt = new Date();
