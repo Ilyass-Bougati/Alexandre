@@ -7,4 +7,5 @@ Alexandre is a modular e-commerce platform built with a microservices architectu
 - **Observability-First:** Integrated metrics with Prometheus, logs with Loki, and distributed traces via OpenTelemetry + Tempo, all visualized through Grafana dashboards.
 - **Secure by Design:** JWT-based authentication, RBAC, and service-level communication over secure channels.
 - **DevOps Friendly:** Fully containerized with Docker Compose, supports local development and production deployment.
+
 This project demonstrates scalable backend architecture, real-time data synchronization, and production-grade observability for enterprise-level commerce and logistics applications.
