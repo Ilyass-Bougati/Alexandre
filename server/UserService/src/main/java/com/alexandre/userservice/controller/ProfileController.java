@@ -2,11 +2,8 @@ package com.alexandre.userservice.controller;
 
 import com.alexandre.userservice.dto.ProfileDTO;
 import com.alexandre.userservice.service.ProfileService;
-import com.alexandre.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

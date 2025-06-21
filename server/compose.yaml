@@ -33,6 +33,24 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres_inventory:
+    image: postgres:15
+    container_name: alexandre_inventory_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_inventory_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - alexandre_inventory_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
   # keycloak:
   #   image: keycloak/keycloak:26.2
   #   container_name: alexandre_keycloak
@@ -55,5 +73,6 @@ services:
 volumes:
   alexandre_user_service:
   alexandre_order_service:
+  alexandre_inventory_service:
 
 

@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO update(UserDTO userDTO) {
         User oldUserOptional = userRepository.findById(userDTO.getId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         oldUserOptional.setEmail(userDTO.getEmail());
         userRepository.save(oldUserOptional);

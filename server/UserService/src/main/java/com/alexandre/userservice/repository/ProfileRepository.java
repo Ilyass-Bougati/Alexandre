@@ -8,7 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProfileRepository extends JpaRepository<Profile, Long> {
-    Optional<Profile> findById(UUID id);
-    void deleteById(UUID id);
+public interface ProfileRepository extends JpaRepository<Profile, UUID> {
 }
