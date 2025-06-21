@@ -1,10 +1,10 @@
 spring:
   application:
-    name: UserService
+    name: OrderService
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/alexandre_user_service}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/alexandre_order_service}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
 
@@ -15,4 +15,4 @@ spring:
     open-in-view: true
 
 server:
-  port: 8081
+  port: 8082

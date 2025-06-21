@@ -7,10 +7,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>UserService</artifactId>
+    <artifactId>OrderService</artifactId>
     <packaging>jar</packaging>
 
-    <name>UserService</name>
+    <name>OrderService</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -19,4 +19,6 @@
 
     <dependencies>
     </dependencies>
+
+
 </project>
