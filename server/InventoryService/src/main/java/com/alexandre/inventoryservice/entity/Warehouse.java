@@ -19,6 +19,6 @@ public class Warehouse {
     private UUID id;
     private String name;
 
-    @OneToMany(mappedBy = "aeroportArrive", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Unit> units;
 }
