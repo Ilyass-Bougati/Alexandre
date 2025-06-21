@@ -1,6 +1,6 @@
 package com.alexandre.userservice.repository;
 
-import com.alexandre.userservice.entity.User;
+import com.alexandre.userservice.entity.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findById(UUID id);
+public interface ProfileRepository extends JpaRepository<Profile, Long> {
+    Optional<Profile> findById(UUID id);
     void deleteById(UUID id);
 }

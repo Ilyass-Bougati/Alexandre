@@ -1,7 +1,6 @@
 package com.alexandre.userservice.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -12,19 +11,28 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
 @Builder
-@Table(name = "users")
-public class User {
+@Entity
+@Table(name = "profiles")
+public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Email
-    @Column(unique = true)
-    private String email;
+    @NotBlank
+    @NotNull
+    private String firstName;
 
     @NotBlank
     @NotNull
-    private String password;
+    private String lastName;
+
+    @Column(unique = true)
+    @NotBlank
+    @NotNull
+    private String phoneNumber;
+
+    @NotBlank
+    @NotNull
+    private String address;
 }

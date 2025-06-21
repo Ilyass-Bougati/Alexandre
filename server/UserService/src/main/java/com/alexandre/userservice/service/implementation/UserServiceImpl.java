@@ -2,51 +2,50 @@ package com.alexandre.userservice.service.implementation;
 
 import com.alexandre.userservice.dto.UserDTO;
 import com.alexandre.userservice.entity.User;
+import com.alexandre.userservice.exception.NotFoundException;
 import com.alexandre.userservice.mapper.UserMapper;
 import com.alexandre.userservice.repository.UserRepository;
 import com.alexandre.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
-    public UserDTO getUserById(UUID id) {
+    @Transactional(readOnly = true)
+    public UserDTO findById(UUID id) {
         Optional<User> userOptional = userRepository.findById(id);
-        // TODO : replace this with custom exception
-        return userOptional.map(userMapper::toUserDTO)
-                .orElseThrow(RuntimeException::new);
+        return userOptional.map(userMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = userMapper.toUser(userDTO);
-        return userMapper.toUserDTO(userRepository.save(user));
+    public UserDTO create(UserDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
+        return userMapper.toDto(userRepository.save(user));
     }
 
-    // TODO : I'm sure this could be refactored
     @Override
-    public UserDTO updateUser(UserDTO userDTO) {
+    public UserDTO update(UserDTO userDTO) {
         User oldUserOptional = userRepository.findById(userDTO.getId())
                 .orElseThrow(RuntimeException::new);
 
-        oldUserOptional.setFirstName(userDTO.getFirstName());
-        oldUserOptional.setLastName(userDTO.getLastName());
         oldUserOptional.setEmail(userDTO.getEmail());
-        oldUserOptional.setAddress(userDTO.getAddress());
         userRepository.save(oldUserOptional);
-        return userMapper.toUserDTO(oldUserOptional);
+        return userMapper.toDto(oldUserOptional);
     }
 
     @Override
-    public void deleteUserById(UUID id) {
+    public void deleteById(UUID id) {
         userRepository.deleteById(id);
     }
 }

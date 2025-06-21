@@ -8,24 +8,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserMapperImpl implements UserMapper {
     @Override
-    public UserDTO toUserDTO(User user) {
+    public UserDTO toDto(User user) {
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .address(user.getAddress())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .phoneNumber(user.getPhoneNumber())
                 .build();
     }
 
     @Override
-    public User toUser(UserDTO userDTO) {
+    public User toEntity(UserDTO userDTO) {
         return User.builder()
-                .address(userDTO.getAddress())
-                .firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .phoneNumber(userDTO.getPhoneNumber())
                 .email(userDTO.getEmail())
                 .password(userDTO.getPassword())
                 .build();
