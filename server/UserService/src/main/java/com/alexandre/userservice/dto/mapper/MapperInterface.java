@@ -1,4 +1,4 @@
-package com.alexandre.userservice.mapper;
+package com.alexandre.userservice.dto.mapper;
 
 
 public interface MapperInterface<Entity, Dto> {

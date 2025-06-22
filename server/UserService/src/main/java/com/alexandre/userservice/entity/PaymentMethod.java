@@ -2,7 +2,6 @@ package com.alexandre.userservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -14,21 +13,22 @@ import java.util.UUID;
 @Setter
 @Entity
 @Builder
-@Table(name = "users")
-public class User {
+public class PaymentMethod {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Email
-    @Column(unique = true)
-    private String email;
+    @NotBlank
+    private String cardHolderName;
 
     @NotBlank
-    private String password;
+    private String stripeToken;
+
+    @NotBlank
+    private String last4Digits;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name="profile_id", nullable=false)
     private Profile profile;
 }

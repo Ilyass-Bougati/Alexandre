@@ -1,7 +1,7 @@
 package com.alexandre.userservice.controller;
 
 import com.alexandre.userservice.dto.ProfileDTO;
-import com.alexandre.userservice.service.ProfileService;
+import com.alexandre.userservice.service.profile.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

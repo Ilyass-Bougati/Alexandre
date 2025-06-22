@@ -1,0 +1,26 @@
+package com.alexandre.userservice.dto.mapper.Implementation;
+
+import com.alexandre.userservice.dto.CityDTO;
+import com.alexandre.userservice.dto.mapper.CityMapper;
+import com.alexandre.userservice.entity.City;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CityMapperImpl implements CityMapper{
+    @Override
+    public CityDTO toDto(City city) {
+        return CityDTO.builder()
+                .name(city.getName())
+                .id(city.getId())
+                .shippingFee(city.getShippingFee())
+                .build();
+    }
+
+    @Override
+    public City toEntity(CityDTO cityDTO) {
+        return City.builder()
+                .name(cityDTO.getName())
+                .shippingFee(cityDTO.getShippingFee())
+                .build();
+    }
+}

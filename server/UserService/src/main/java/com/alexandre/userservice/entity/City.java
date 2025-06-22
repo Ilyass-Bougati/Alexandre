@@ -2,10 +2,11 @@ package com.alexandre.userservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -14,21 +15,18 @@ import java.util.UUID;
 @Setter
 @Entity
 @Builder
-@Table(name = "users")
-public class User {
+public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Email
-    @Column(unique = true)
-    private String email;
-
     @NotBlank
-    private String password;
+    private String name;
+
+    @NotNull
+    private Double shippingFee;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private Profile profile;
+    @OneToMany(mappedBy = "city", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Address> addresses;
 }

@@ -1,8 +1,8 @@
-package com.alexandre.userservice.mapper.Implementation;
+package com.alexandre.userservice.dto.mapper.Implementation;
 
 import com.alexandre.userservice.dto.ProfileDTO;
 import com.alexandre.userservice.entity.Profile;
-import com.alexandre.userservice.mapper.ProfileMapper;
+import com.alexandre.userservice.dto.mapper.ProfileMapper;
 import org.springframework.stereotype.Service;
 
 @Service

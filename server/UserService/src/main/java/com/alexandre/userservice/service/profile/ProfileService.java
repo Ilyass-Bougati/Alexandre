@@ -1,6 +1,7 @@
-package com.alexandre.userservice.service;
+package com.alexandre.userservice.service.profile;
 
 import com.alexandre.userservice.dto.ProfileDTO;
+import com.alexandre.userservice.service.CrudService;
 
 import java.util.UUID;
 

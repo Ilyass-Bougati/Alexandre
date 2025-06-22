@@ -1,11 +1,10 @@
-package com.alexandre.userservice.service.implementation;
+package com.alexandre.userservice.service.user;
 
 import com.alexandre.userservice.dto.UserDTO;
 import com.alexandre.userservice.entity.User;
 import com.alexandre.userservice.exception.NotFoundException;
-import com.alexandre.userservice.mapper.UserMapper;
+import com.alexandre.userservice.dto.mapper.UserMapper;
 import com.alexandre.userservice.repository.UserRepository;
-import com.alexandre.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
