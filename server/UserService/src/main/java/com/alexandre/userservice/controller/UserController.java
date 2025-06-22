@@ -1,5 +1,6 @@
 package com.alexandre.userservice.controller;
 
+import com.alexandre.userservice.dto.RegisterRequest;
 import com.alexandre.userservice.dto.UserDTO;
 import com.alexandre.userservice.service.user.UserService;
 import jakarta.validation.Valid;
@@ -25,6 +26,12 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
         return ResponseEntity.ok(userService.create(userDTO));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Void> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+        userService.registerUser(registerRequest);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
