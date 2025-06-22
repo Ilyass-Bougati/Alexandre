@@ -1,6 +1,5 @@
 package com.alexandre.userservice.controller;
 
-import com.alexandre.userservice.dto.OrderDTO;
 import com.alexandre.userservice.dto.UserDTO;
 import com.alexandre.userservice.service.user.UserService;
 import jakarta.validation.Valid;
@@ -43,22 +42,4 @@ public class UserController {
         userService.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/{userId}/{productId}")
-    public String createProduct(@PathVariable UUID userId, @PathVariable UUID productId) {
-        OrderDTO order = OrderDTO.builder()
-                .productId(productId)
-                .userId(userId)
-                .build();
-
-        webClient.build().post()
-                .uri("http://orderservice/api/v1/order")
-                .bodyValue(order)
-                .retrieve()
-                .toBodilessEntity()
-                .subscribe();
-
-        return "ok";
-    }
-
 }
