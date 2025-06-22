@@ -20,12 +20,12 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<ProfileDTO> createProfile(@RequestBody @Valid ProfileDTO profileDTO) {
         return ResponseEntity.ok(profileService.create(profileDTO));
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<ProfileDTO> updateProfile(@RequestBody @Valid ProfileDTO profileDTO) {
         return ResponseEntity.ok(profileService.update(profileDTO));
     }

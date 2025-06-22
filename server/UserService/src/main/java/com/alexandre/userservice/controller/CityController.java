@@ -20,12 +20,12 @@ public class CityController {
         return ResponseEntity.ok(cityService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<CityDTO> createCity(@RequestBody @Valid CityDTO cityDTO) {
         return ResponseEntity.ok(cityService.create(cityDTO));
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<CityDTO> updateCity(@RequestBody @Valid CityDTO cityDTO) {
         return ResponseEntity.ok(cityService.update(cityDTO));
     }

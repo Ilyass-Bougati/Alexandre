@@ -29,9 +29,6 @@ public class Profile {
     @NotBlank
     private String phoneNumber;
 
-    @NotBlank
-    private String address;
-
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

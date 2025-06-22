@@ -13,11 +13,7 @@ spring:
             - id: UserService
               uri: lb://userservice
               predicates:
-                - Path=/user/api/**
-                - Path=/profile/api/**
-                - Path=/city/api/**
-                - Path=/address/api/**
-                - Path=/paymentmethod/api/**
+                - Path=/user/api/**, /profile/api/**, /city/api/**, /address/api/**, /paymentmethod/api/**
 
             ## Order Service Route
             - id: OrderService

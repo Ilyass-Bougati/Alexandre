@@ -26,7 +26,6 @@ public class ProfileDTO {
     @NotNull
     private String phoneNumber;
 
-    @NotBlank
     @NotNull
-    private String address;
+    private UUID userId;
 }

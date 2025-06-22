@@ -39,7 +39,6 @@ public class ProfileServiceImpl implements ProfileService {
 
         oldProfileOptional.setFirstName(profileDTO.getFirstName());
         oldProfileOptional.setLastName(profileDTO.getLastName());
-        oldProfileOptional.setAddress(profileDTO.getAddress());
         oldProfileOptional.setPhoneNumber(profileDTO.getPhoneNumber());
 
         profileRepository.save(oldProfileOptional);
