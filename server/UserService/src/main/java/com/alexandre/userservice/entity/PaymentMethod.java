@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -31,4 +33,7 @@ public class PaymentMethod {
     @ManyToOne
     @JoinColumn(name="profile_id", nullable=false)
     private Profile profile;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

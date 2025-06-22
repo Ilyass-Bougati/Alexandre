@@ -23,6 +23,7 @@ public class AddressMapperImpl implements AddressMapper {
                 .isDefault(address.getIsDefault())
                 .cityId(address.getCity().getId())
                 .profileId(address.getProfile().getId())
+                .createdAt(address.getCreatedAt())
                 .build();
     }
 
@@ -34,6 +35,7 @@ public class AddressMapperImpl implements AddressMapper {
                 .isDefault(addressDTO.getIsDefault())
                 .profile(profileEntityService.findById(addressDTO.getProfileId()))
                 .city(cityEntityService.findById(addressDTO.getCityId()))
+                .createdAt(addressDTO.getCreatedAt())
                 .build();
     }
 }

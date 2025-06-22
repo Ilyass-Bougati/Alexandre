@@ -21,6 +21,7 @@ public class PaymentMethodMapperImpl implements PaymentMethodMapper {
                 .last4Digits(paymentMethod.getLast4Digits())
                 .stripeToken(paymentMethod.getStripeToken())
                 .profileId(paymentMethod.getProfile().getId())
+                .createdAt(paymentMethod.getCreatedAt())
                 .build();
     }
 
@@ -31,6 +32,7 @@ public class PaymentMethodMapperImpl implements PaymentMethodMapper {
                 .last4Digits(paymentMethodDTO.getLast4Digits())
                 .stripeToken(paymentMethodDTO.getStripeToken())
                 .profile(profileEntityService.findById(paymentMethodDTO.getProfileId()))
+                .createdAt(paymentMethodDTO.getCreatedAt())
                 .build();
     }
 }

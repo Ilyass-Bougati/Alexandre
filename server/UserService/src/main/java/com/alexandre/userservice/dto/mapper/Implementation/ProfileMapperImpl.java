@@ -21,6 +21,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .phoneNumber(profile.getPhoneNumber())
                 .userId(profile.getUser().getId())
                 .id(profile.getId())
+                .createdAt(profile.getCreatedAt())
                 .build();
     }
 
@@ -31,6 +32,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .lastName(profileDTO.getLastName())
                 .phoneNumber(profileDTO.getPhoneNumber())
                 .user(userEntityService.findById(profileDTO.getUserId()))
+                .createdAt(profileDTO.getCreatedAt())
                 .build();
     }
 }

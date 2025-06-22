@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -25,4 +26,6 @@ public class PaymentMethodDTO {
 
     @NotNull
     private UUID profileId;
+
+    private LocalDateTime createdAt;
 }

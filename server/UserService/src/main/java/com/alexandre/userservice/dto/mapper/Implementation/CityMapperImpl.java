@@ -13,6 +13,7 @@ public class CityMapperImpl implements CityMapper{
                 .name(city.getName())
                 .id(city.getId())
                 .shippingFee(city.getShippingFee())
+                .createdAt(city.getCreatedAt())
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class CityMapperImpl implements CityMapper{
         return City.builder()
                 .name(cityDTO.getName())
                 .shippingFee(cityDTO.getShippingFee())
+                .createdAt(cityDTO.getCreatedAt())
                 .build();
     }
 }

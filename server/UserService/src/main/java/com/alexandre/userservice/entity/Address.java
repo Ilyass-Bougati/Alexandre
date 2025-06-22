@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -37,4 +39,7 @@ public class Address {
     @ManyToOne
     @JoinColumn(name="city_id", nullable=false)
     private City city;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }
