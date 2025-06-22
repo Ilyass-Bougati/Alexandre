@@ -1,12 +1,13 @@
-package com.alexandre.orderservice.entity;
+package com.alexandre.orderservice.dto.order;
 
+import com.alexandre.orderservice.dto.orderItem.OrderItemDTO;
 import com.alexandre.orderservice.enums.OrderState;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,11 +16,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "orders")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class OrderDTO {
     private UUID id;
 
     @NotNull
@@ -28,11 +25,9 @@ public class Order {
     @NotNull
     private UUID addressId;
 
-    @NotNull
-    private OrderState state;
+    private OrderState state = OrderState.PENDING;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderItem> items;
+    private List<OrderItemDTO> items = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;

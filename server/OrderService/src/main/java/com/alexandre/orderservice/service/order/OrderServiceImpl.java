@@ -1,14 +1,12 @@
-package com.alexandre.orderservice.service.implementation;
+package com.alexandre.orderservice.service.order;
 
-import com.alexandre.orderservice.dto.OrderDTO;
+import com.alexandre.orderservice.dto.order.OrderDTO;
 import com.alexandre.orderservice.entity.Order;
-import com.alexandre.orderservice.mapper.OrderMapper;
+import com.alexandre.orderservice.dto.order.OrderMapper;
 import com.alexandre.orderservice.repository.OrderRepository;
-import com.alexandre.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -18,25 +16,30 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public OrderDTO getOrderById(UUID id) {
+    public OrderDTO findById(UUID id) {
         return orderRepository.findById(id)
-                .map(orderMapper::toOrderDTO)
+                .map(orderMapper::toDto)
                 .orElseThrow(RuntimeException::new);
     }
 
     @Override
-    public OrderDTO createOrder(OrderDTO orderDTO) {
-        Order order = orderRepository.save(orderMapper.toOrder(orderDTO));
-        return orderMapper.toOrderDTO(order);
+    public OrderDTO create(OrderDTO orderDTO) {
+        Order order = orderRepository.save(orderMapper.toEntity(orderDTO));
+        return orderMapper.toDto(order);
     }
 
+    /**
+     * This isn't implemented yet
+     * @param orderDTO
+     * @return
+     */
     @Override
-    public OrderDTO updateOrder(OrderDTO orderDTO) {
+    public OrderDTO update(OrderDTO orderDTO) {
         return null;
     }
 
     @Override
-    public void deleteOrder(UUID id) {
+    public void deleteById(UUID id) {
         orderRepository.deleteById(id);
     }
 }

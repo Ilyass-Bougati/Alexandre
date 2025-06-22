@@ -17,11 +17,6 @@ public class UserController {
     private final UserService userService;
     private final WebClient.Builder webClient;
 
-    @GetMapping("/")
-    public String test() {
-        return "Hello World";
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.findById(id));

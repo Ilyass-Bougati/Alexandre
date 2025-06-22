@@ -23,6 +23,7 @@ public class AddressMapperImpl implements AddressMapper {
                 .isDefault(address.getIsDefault())
                 .cityId(address.getCity().getId())
                 .profileId(address.getProfile().getId())
+                .postalCode(address.getPostalCode())
                 .createdAt(address.getCreatedAt())
                 .build();
     }
