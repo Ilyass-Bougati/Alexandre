@@ -35,9 +35,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .state(orderDTO.getState())
                 .createdAt(orderDTO.getCreatedAt())
                 // This might not work
-                .items(orderDTO.getItems().stream()
-                        .map(item -> orderItemEntityService.findById(item.getId()))
-                        .toList()
-                ).build();
+                .items(orderDTO.getItems().stream().map(orderItemMapper::toEntity).toList())
+                .build();
     }
 }

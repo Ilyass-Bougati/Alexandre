@@ -13,7 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderItemDTO {
     private UUID id;
-    @NotNull
     private UUID orderId;
 
     @NotNull
@@ -22,9 +21,6 @@ public class OrderItemDTO {
     @NotNull
     private Integer quantity;
 
-    @NotEmpty
     private String productName;
-
-    @NotNull
     private Double unitPriceAtOrderTime;
 }

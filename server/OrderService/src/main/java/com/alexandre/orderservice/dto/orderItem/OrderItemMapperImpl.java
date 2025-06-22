@@ -24,6 +24,7 @@ public class OrderItemMapperImpl implements OrderItemMapper {
                 .productName(orderItem.getProductName())
                 .unitPriceAtOrderTime(orderItem.getUnitPriceAtOrderTime())
                 .productId(orderItem.getProductId())
+                .orderId(orderItem.getId())
                 .id(orderItem.getId())
                 .build();
     }

@@ -11,6 +11,8 @@ import java.util.UUID;
     Note here that we're taking snapshots of the unit price and the product name
     at the time of ordering, so that further updates won't change what the user
     has ordered
+
+    TODO : Add @NotNull constrains later
  */
 
 @Getter
@@ -34,9 +36,7 @@ public class OrderItem {
     @NotNull
     private Integer quantity;
 
-    @NotEmpty
     private String productName;
 
-    @NotNull
     private Double unitPriceAtOrderTime;
 }
