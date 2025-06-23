@@ -1,0 +1,78 @@
+services:
+  postgres_users:
+    image: postgres:15
+    container_name: alexandre_user_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_user_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - alexandre_user_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_orders:
+    image: postgres:15
+    container_name: alexandre_order_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_order_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - alexandre_order_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_inventory:
+    image: postgres:15
+    container_name: alexandre_inventory_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_inventory_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - alexandre_inventory_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  # keycloak:
+  #   image: keycloak/keycloak:26.2
+  #   container_name: alexandre_keycloak
+  #   environment:
+  #     KC_HEALTH_ENABLED: true
+  #     KC_METRICS_ENABLED: true
+  #     # TODO : make these env variables
+  #     KC_DB: postgres
+  #     KC_DB_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
+  #     KC_DB_USERNAME: postgres
+  #     KC_DB_PASSWORD: postgres
+  #     KC_BOOTSTRAP_ADMIN_USERNAME: admin
+  #     KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+  #   depends_on:
+  #     - postgres_users
+  #   ports:
+  #     - "8080:8080"
+  #   command: start-dev
+
+volumes:
+  alexandre_user_service:
+  alexandre_order_service:
+  alexandre_inventory_service:
+
+
