@@ -22,6 +22,7 @@
     <module>InventoryService</module>
     <module>DiscoveryServer</module>
     <module>ApiGateway</module>
+      <module>ConfigServer</module>
   </modules>
 
   <properties>
