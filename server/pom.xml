@@ -17,12 +17,12 @@
   <name>server</name>
   <url>http://maven.apache.org</url>
   <modules>
-    <module>UserService</module>
-    <module>OrderService</module>
-    <module>InventoryService</module>
-    <module>DiscoveryServer</module>
-    <module>ApiGateway</module>
-      <module>ConfigServer</module>
+    <module>user-service</module>
+    <module>order-service</module>
+    <module>inventory-service</module>
+    <module>discovery-server</module>
+    <module>api-gateway</module>
+      <module>config-server</module>
   </modules>
 
   <properties>

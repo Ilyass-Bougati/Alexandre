@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: git@github.com:Ilyass-Bougati/alexandre-config.git
+          skip-ssl-validation: true
+          clone-on-start: true
+
+otel:
+  metrics:
+    exporter: none
+  logs:
+    exporter: none
+  traces:
+    exporter: none
+
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 8888
