@@ -1,0 +1,3 @@
+[submodule "server/alexandre-config"]
+	path = server/alexandre-config
+	url = git@github.com:Ilyass-Bougati/alexandre-config.git
