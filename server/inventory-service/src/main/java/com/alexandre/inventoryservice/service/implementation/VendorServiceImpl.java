@@ -34,6 +34,11 @@ public class VendorServiceImpl implements VendorService {
         return vendorMapper.toDto(vendorRepository.save(vendor));
     }
 
+    /**
+     * This doesn't change the products
+     * @param vendorDTO the new vendor data, the id is required
+     * @return the updated vendor data
+     */
     @Override
     public VendorDTO update(VendorDTO vendorDTO) {
         Vendor oldVendorOptional = vendorRepository
@@ -41,7 +46,10 @@ public class VendorServiceImpl implements VendorService {
                 .orElseThrow(() -> new NotFoundException("Vendor not found"));
 
 
-        // TODO : update fields
+        oldVendorOptional.setName(vendorDTO.getName());
+        oldVendorOptional.setEmail(vendorDTO.getEmail());
+        oldVendorOptional.setAddress(vendorDTO.getAddress());
+        oldVendorOptional.setPhoneNumber(vendorDTO.getPhoneNumber());
 
         vendorRepository.save(oldVendorOptional);
         return vendorMapper.toDto(oldVendorOptional);

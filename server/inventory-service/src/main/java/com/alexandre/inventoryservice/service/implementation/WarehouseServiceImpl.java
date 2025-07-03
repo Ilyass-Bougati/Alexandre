@@ -35,12 +35,18 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseMapper.toDto(warehouseRepository.save(warehouse));
     }
 
+    /**
+     * Note that this doesn't change the variations
+     * @param warehouseDTO the new warehouse data, the id should be provided
+     * @return the updated warehouse data
+     */
     @Override
     public WarehouseDTO update(WarehouseDTO warehouseDTO) {
         Warehouse oldWarehouseOptional = warehouseRepository.findById(warehouseDTO.getId())
                 .orElseThrow(() -> new NotFoundException("Warehouse not found"));
 
         oldWarehouseOptional.setName(warehouseDTO.getName());
+        oldWarehouseOptional.setLocation(warehouseDTO.getLocation());
 
         warehouseRepository.save(oldWarehouseOptional);
         return warehouseMapper.toDto(oldWarehouseOptional);

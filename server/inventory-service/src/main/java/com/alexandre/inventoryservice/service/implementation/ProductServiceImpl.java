@@ -34,6 +34,11 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(productRepository.save(product));
     }
 
+    /**
+     * note that product images, vendors and variations can't be changed through this method
+     * @param productDTO the new product data, note that it's mandatory to provide the id
+     * @return the updated product data
+     */
     @Override
     public ProductDTO update(ProductDTO productDTO) {
         Product oldProductOptional = productRepository.findById(productDTO.getId())
@@ -41,8 +46,6 @@ public class ProductServiceImpl implements ProductService {
 
         oldProductOptional.setName(productDTO.getName());
         oldProductOptional.setDescription(productDTO.getDescription());
-        oldProductOptional.setPrice(productDTO.getPrice());
-        oldProductOptional.setImageUrl(productDTO.getImageUrl());
 
         productRepository.save(oldProductOptional);
         return productMapper.toDto(oldProductOptional);

@@ -34,6 +34,11 @@ public class VariationImageServiceImpl implements VariationImageService {
         return variationImageMapper.toDto(variationImageRepository.save(variationImage));
     }
 
+    /**
+     * Note here that we can't change the variation linked to an image
+     * @param variationImageDTO the new variation image data, it's required to have the id included
+     * @return the new updated variation image
+     */
     @Override
     public VariationImageDTO update(VariationImageDTO variationImageDTO) {
         VariationImage oldVariationImageOptional = variationImageRepository
@@ -41,7 +46,9 @@ public class VariationImageServiceImpl implements VariationImageService {
                 .orElseThrow(() -> new NotFoundException("VariationImage not found"));
 
 
-        // TODO : update fields
+        oldVariationImageOptional.setUri(variationImageDTO.getUri());
+        oldVariationImageOptional.setThumbnail(variationImageDTO.getThumbnail());
+        oldVariationImageOptional.setOrderIndex(variationImageDTO.getOrderIndex());
 
         variationImageRepository.save(oldVariationImageOptional);
         return variationImageMapper.toDto(oldVariationImageOptional);
