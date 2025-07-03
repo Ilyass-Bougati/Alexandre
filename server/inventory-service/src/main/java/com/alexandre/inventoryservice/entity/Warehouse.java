@@ -1,6 +1,8 @@
 package com.alexandre.inventoryservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.List;
@@ -17,8 +19,14 @@ public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @NotEmpty(message = "The name can't be null or empty")
     private String name;
 
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Unit> units;
+    @NotEmpty(message = "The location can't be null or empty")
+    private String location;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ProductVariation> productVariations;
 }
