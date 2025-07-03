@@ -1,0 +1,38 @@
+package com.alexandre.inventoryservice.controller;
+
+import com.alexandre.inventoryservice.dto.VariationImageDTO;
+import com.alexandre.inventoryservice.service.VariationImageService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/inventory/api/v1/variationImage")
+public class VariationImageController {
+    private final VariationImageService variationImageService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VariationImageDTO> getVariationImageById(@PathVariable UUID id) {
+        return ResponseEntity.ok(variationImageService.findById(id));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<VariationImageDTO> createVariationImage(@RequestBody VariationImageDTO variationImageDTO) {
+        return ResponseEntity.ok(variationImageService.create(variationImageDTO));
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<VariationImageDTO> updateVariationImage(@RequestBody VariationImageDTO variationImageDTO) {
+        return ResponseEntity.ok(variationImageService.update(variationImageDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteVariationImage(@PathVariable UUID id) {
+        variationImageService.deleteById(id);
+    }
+}
