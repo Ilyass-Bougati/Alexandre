@@ -10,22 +10,20 @@ public class ProductMapperImpl implements ProductMapper {
 
     @Override
     public ProductDTO toDto(Product product) {
+        // TODO : Add the product images
         return ProductDTO.builder()
                 .id(product.getId())
-                .price(product.getPrice())
-                .name(product.getName())
                 .description(product.getDescription())
-                .imageUrl(product.getImageUrl())
+                .name(product.getName())
                 .build();
     }
 
     @Override
     public Product toEntity(ProductDTO productDTO) {
+        // TODO : Add the product images
         return Product.builder()
-                .price(productDTO.getPrice())
-                .name(productDTO.getName())
                 .description(productDTO.getDescription())
-                .imageUrl(productDTO.getImageUrl())
+                .name(productDTO.getName())
                 .build();
     }
 }
