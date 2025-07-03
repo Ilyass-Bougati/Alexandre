@@ -3,7 +3,9 @@ package com.alexandre.inventoryservice.mapper.implementation;
 import com.alexandre.inventoryservice.dto.VariationImageDTO;
 import com.alexandre.inventoryservice.entity.VariationImage;
 import com.alexandre.inventoryservice.mapper.VariationImageMapper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class VariationImageMapperImpl implements VariationImageMapper {
     @Override
     public VariationImageDTO toDto(VariationImage variationImage) {

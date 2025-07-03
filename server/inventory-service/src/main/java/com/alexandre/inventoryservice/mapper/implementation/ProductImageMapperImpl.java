@@ -3,7 +3,9 @@ package com.alexandre.inventoryservice.mapper.implementation;
 import com.alexandre.inventoryservice.dto.ProductImageDTO;
 import com.alexandre.inventoryservice.entity.ProductImage;
 import com.alexandre.inventoryservice.mapper.ProductImageMapper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProductImageMapperImpl implements ProductImageMapper {
     @Override
     public ProductImageDTO toDto(ProductImage productImage) {

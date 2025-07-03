@@ -3,7 +3,9 @@ package com.alexandre.inventoryservice.mapper.implementation;
 import com.alexandre.inventoryservice.dto.ProductVendorDTO;
 import com.alexandre.inventoryservice.entity.ProductVendor;
 import com.alexandre.inventoryservice.mapper.ProductVendorMapper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProductVendorMapperImpl implements ProductVendorMapper {
     @Override
     public ProductVendorDTO toDto(ProductVendor productVendor) {
