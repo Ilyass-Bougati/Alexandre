@@ -3,7 +3,6 @@ package com.alexandre.userservice.dto.mapper.Implementation;
 import com.alexandre.userservice.dto.ProfileDTO;
 import com.alexandre.userservice.entity.Profile;
 import com.alexandre.userservice.dto.mapper.ProfileMapper;
-import com.alexandre.userservice.service.user.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProfileMapperImpl implements ProfileMapper {
 
-    private final UserEntityService userEntityService;
 
     @Override
     public ProfileDTO toDto(Profile profile) {
@@ -19,7 +17,6 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
                 .phoneNumber(profile.getPhoneNumber())
-                .userId(profile.getUser().getId())
                 .id(profile.getId())
                 .createdAt(profile.getCreatedAt())
                 .build();
@@ -31,7 +28,6 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .firstName(profileDTO.getFirstName())
                 .lastName(profileDTO.getLastName())
                 .phoneNumber(profileDTO.getPhoneNumber())
-                .user(userEntityService.findById(profileDTO.getUserId()))
                 .createdAt(profileDTO.getCreatedAt())
                 .build();
     }
