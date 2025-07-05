@@ -2,6 +2,7 @@ package com.alexandre.userservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -35,6 +36,11 @@ public class Profile {
     @Column(unique = true)
     @NotBlank
     private String phoneNumber;
+
+    @Column(unique = true)
+    @NotBlank
+    @Email
+    private String email;
 
 
     @JsonIgnore
