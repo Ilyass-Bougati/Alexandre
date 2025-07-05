@@ -36,7 +36,7 @@
   },
   "clients": [
     {
-      "clientId": "shop-client",
+      "clientId": "public-client",
       "description": "The alexandre application",
       "publicClient": true,
       "directAccessGrantsEnabled": true
