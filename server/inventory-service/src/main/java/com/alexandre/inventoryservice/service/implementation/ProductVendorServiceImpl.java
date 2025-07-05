@@ -41,7 +41,9 @@ public class ProductVendorServiceImpl implements ProductVendorService {
                 .orElseThrow(() -> new NotFoundException("ProductVendor not found"));
 
 
-        // TODO : update fields
+        // TODO : rethink this later, can we change the vendor and the product
+        oldProductVendorOptional.setDeliveryDelayDays(productVendorDTO.getDeliveryDelayDays());
+        oldProductVendorOptional.setPurchasePrice(productVendorDTO.getPurchasePrice());
 
         productVendorRepository.save(oldProductVendorOptional);
         return productVendorMapper.toDto(oldProductVendorOptional);

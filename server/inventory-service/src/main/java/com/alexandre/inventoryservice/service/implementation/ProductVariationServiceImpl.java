@@ -18,6 +18,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 
     private final ProductVariationRepository productVariationRepository;
     private final ProductVariationMapper productVariationMapper;
+    private final WarehouseServiceImpl warehouseService;
 
     @Override
     @Transactional(readOnly = true)
@@ -41,7 +42,13 @@ public class ProductVariationServiceImpl implements ProductVariationService {
                 .orElseThrow(() -> new NotFoundException("ProductVariation not found"));
 
 
-        // TODO : update fields
+        // TODO : being able to change the warehouse
+        oldProductVariationOptional.setDefaultVariation(productVariationDTO.getDefaultVariation());
+        oldProductVariationOptional.setAvailableQuantity(productVariationDTO.getAvailableQuantity());
+        oldProductVariationOptional.setInventoryQuantity(productVariationDTO.getInventoryQuantity());
+        oldProductVariationOptional.setSku(productVariationDTO.getSku());
+        oldProductVariationOptional.setType(productVariationDTO.getType());
+        oldProductVariationOptional.setUnitPrice(productVariationDTO.getUnitPrice());
 
         productVariationRepository.save(oldProductVariationOptional);
         return productVariationMapper.toDto(oldProductVariationOptional);

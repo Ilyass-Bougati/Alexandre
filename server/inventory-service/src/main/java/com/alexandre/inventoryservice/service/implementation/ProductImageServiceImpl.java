@@ -34,6 +34,11 @@ public class ProductImageServiceImpl implements ProductImageService {
         return productImageMapper.toDto(productImageRepository.save(productImage));
     }
 
+    /**
+     * Note here that we can't change the product linked to an image
+     * @param productImageDTO the new produce image data, it's required to have the id included
+     * @return the new updated product image
+     */
     @Override
     public ProductImageDTO update(ProductImageDTO productImageDTO) {
         ProductImage oldProductImageOptional = productImageRepository
@@ -41,7 +46,9 @@ public class ProductImageServiceImpl implements ProductImageService {
                 .orElseThrow(() -> new NotFoundException("ProductImage not found"));
 
 
-        // TODO : update fields
+        oldProductImageOptional.setUri(productImageDTO.getUri());
+        oldProductImageOptional.setThumbnail(productImageDTO.getThumbnail());
+        oldProductImageOptional.setOrderIndex(productImageDTO.getOrderIndex());
 
         productImageRepository.save(oldProductImageOptional);
         return productImageMapper.toDto(oldProductImageOptional);
