@@ -1,0 +1,43 @@
+{
+  "realm": "Alexandre",
+  "enabled": true,
+  "users": [
+    {
+      "username": "Alex",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "AlexAdmin"
+        }
+      ],
+      "realmRoles": ["alex_admin", "alex_user", "alex_staff", "alex_inv_staff"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "alex_admin"
+      },
+      {
+        "name": "alex_user"
+      },
+      {
+        "name": "alex_staff"
+      },
+      {
+        "name": "alex_inv_staff"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "public-client",
+      "description": "The alexandre application",
+      "publicClient": true,
+      "redirectUris": ["*"],
+      "directAccessGrantsEnabled": true
+    }
+  ]
+}
