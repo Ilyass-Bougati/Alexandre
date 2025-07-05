@@ -9,15 +9,15 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=grafana
     volumes:
-      - ./grafana:/etc/grafana/provisioning/datasources
+      - ./configurations/grafana:/etc/grafana/provisioning/datasources
 
   tempo:
     image: grafana/tempo
     container_name: tempo
-    command: [ "-config.file=/etc/tempo.yaml" ]
+    command: ["-config.file=/etc/tempo.yaml"]
     volumes:
-      - ./tempo/tempo.yml:/etc/tempo.yaml
-      - ./tempo/tempo-data:/tmp/tempo
+      - ./configurations/tempo/tempo.yml:/etc/tempo.yaml
+      - ./configurations/tempo/tempo-data:/tmp/tempo
     ports:
       - "3200:3200" # Tempo
       - "4317:4317" # OTLP
