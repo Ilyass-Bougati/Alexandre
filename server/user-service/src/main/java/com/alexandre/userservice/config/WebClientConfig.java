@@ -1,4 +1,4 @@
-package com.alexandre.userservice.configuration;
+package com.alexandre.userservice.config;
 
 import io.opentelemetry.api.OpenTelemetry;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;

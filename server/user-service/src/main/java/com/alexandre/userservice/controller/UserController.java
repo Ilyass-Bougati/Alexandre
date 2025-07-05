@@ -6,6 +6,7 @@ import com.alexandre.userservice.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -29,6 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('alex_admin')")
     public ResponseEntity<Void> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
         userService.registerUser(registerRequest);
         return ResponseEntity.ok().build();

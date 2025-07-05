@@ -4,6 +4,9 @@
   "users": [
     {
       "username": "Alex",
+      "email": "ilyass@alexandre.com",
+      "firstName": "ilyass",
+      "lastName": "bougati",
       "enabled": true,
       "emailVerified": true,
       "credentials": [
@@ -36,7 +39,6 @@
       "clientId": "public-client",
       "description": "The alexandre application",
       "publicClient": true,
-      "redirectUris": ["*"],
       "directAccessGrantsEnabled": true
     }
   ]
