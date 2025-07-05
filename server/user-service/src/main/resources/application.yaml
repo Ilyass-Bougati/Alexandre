@@ -15,20 +15,6 @@ spring:
         service-id: config-server
       fail-fast: false
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/Alexandre
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
-
-jwt-converter:
-  resource-id: shop-client
-  principle-attribute: preferred_username
-
-logging:
-  level:
-    com.alexandre.userservice.config.JwtAuthConverter: info
 
 eureka:
   client:
