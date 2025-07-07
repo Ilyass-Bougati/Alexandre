@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,5 +51,16 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     @Override
     public void deleteById(UUID id) {
         paymentMethodRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean profileOwnsPaymentMethod(UUID profileId, UUID paymentMethodId) {
+        return paymentMethodRepository.existsPaymentMethodByIdAndProfileId(paymentMethodId, profileId);
+    }
+
+    @Override
+    public List<PaymentMethodDTO> findByProfileId(UUID profileId) {
+        return paymentMethodRepository.findAllByProfileId(profileId)
+                .stream().map(paymentMethodMapper::toDto).toList();
     }
 }

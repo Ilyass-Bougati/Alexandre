@@ -49,4 +49,11 @@ public class CityServiceImpl implements CityService {
     public void deleteById(UUID id) {
         cityRepository.deleteById(id);
     }
+
+    @Override
+    public CityDTO findByName(String name) {
+        return cityRepository.findCityByName(name)
+                .map(cityMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("City not found"));
+    }
 }

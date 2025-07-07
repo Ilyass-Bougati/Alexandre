@@ -6,4 +6,5 @@ import com.alexandre.userservice.service.CrudService;
 import java.util.UUID;
 
 public interface CityService extends CrudService<CityDTO, UUID> {
+    CityDTO findByName(String name);
 }
