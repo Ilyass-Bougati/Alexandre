@@ -15,7 +15,13 @@
           "value": "AlexAdmin"
         }
       ],
-      "realmRoles": ["alex_admin", "alex_user", "alex_staff", "alex_inv_staff"]
+      "realmRoles": [
+        "alex_admin",
+        "alex_user",
+        "alex_staff",
+        "alex_inv_staff",
+        "realm-admin"
+      ]
     }
   ],
   "roles": {
