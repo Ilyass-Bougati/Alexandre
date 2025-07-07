@@ -6,6 +6,7 @@ import com.alexandre.userservice.exception.NotFoundException;
 import com.alexandre.userservice.dto.mapper.ProfileMapper;
 import com.alexandre.userservice.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class ProfileServiceImpl implements ProfileService {
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
@@ -50,10 +52,16 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.deleteById(id);
     }
 
+    /**
+     * This function returns a profile from a user id
+     * @param userId The profile's user id
+     * @return the profile DTO, or null in case the user doesn't exist
+     */
     @Override
     public ProfileDTO findByUserId(UUID userId) {
+        log.info("Finding profile by id {}", userId);
         return profileRepository.findByUserId(userId)
                 .map(profileMapper::toDto)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElse(null);
     }
 }

@@ -193,6 +193,5 @@ public class CityControllerTest {
                 .subscribe(
                         responseEntity -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED)
                 );
-
     }
 }
