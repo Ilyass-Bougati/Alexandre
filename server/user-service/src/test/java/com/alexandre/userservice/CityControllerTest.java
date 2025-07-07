@@ -21,7 +21,6 @@ public class CityControllerTest {
     @LocalServerPort
     int port;
     WebClient webClient;
-    WebClient keycloakClient;
     static String token;
 
     private final String email = "alex";

@@ -6,4 +6,5 @@ import com.alexandre.userservice.service.CrudService;
 import java.util.UUID;
 
 public interface ProfileService extends CrudService<ProfileDTO, UUID> {
+    ProfileDTO findByUserId(UUID uuid);
 }

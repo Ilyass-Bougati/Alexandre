@@ -49,4 +49,11 @@ public class ProfileServiceImpl implements ProfileService {
     public void deleteById(UUID id) {
         profileRepository.deleteById(id);
     }
+
+    @Override
+    public ProfileDTO findByUserId(UUID userId) {
+        return profileRepository.findByUserId(userId)
+                .map(profileMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
 }
