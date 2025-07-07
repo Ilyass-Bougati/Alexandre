@@ -22,8 +22,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // fine to disable since we're using JWT
         http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(authorizeRequests ->
-                    authorizeRequests.anyRequest().authenticated()
+        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                .requestMatchers("/auth/**").permitAll()
+                .anyRequest().authenticated()
         );
 
         // using the jwt resource server
