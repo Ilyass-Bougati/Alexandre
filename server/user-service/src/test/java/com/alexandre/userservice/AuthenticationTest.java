@@ -1,11 +1,16 @@
 package com.alexandre.userservice;
 
+import com.alexandre.userservice.dto.AuthenticationResponse;
 import com.alexandre.userservice.dto.RegisterRequest;
+import com.alexandre.userservice.utils.AuthUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -17,6 +22,8 @@ public class AuthenticationTest {
     @LocalServerPort
     int port;
     WebClient webClient;
+    WebClient keycloakClient;
+    String token;
 
     private final String email = "i.bougati12@gmail.com";
     private final String password = "password";
@@ -27,7 +34,13 @@ public class AuthenticationTest {
         webClient = WebClient.builder()
                 .baseUrl("http://localhost:" + port)
                 .build();
+
+        keycloakClient = WebClient.builder()
+                .baseUrl("http://localhost:8080")
+                .build();
     }
+
+
 
     @Test
     @Order(1)
@@ -48,6 +61,24 @@ public class AuthenticationTest {
                 .retrieve()
                 .toEntity(Void.class)
                 .block();
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Order(2)
+    public void loginUser() {
+        ResponseEntity<AuthenticationResponse> res = keycloakClient.post()
+                .uri("/realms/Alexandre/protocol/openid-connect/token")
+                .body(BodyInserters.fromFormData(AuthUtils.registerFormData(email, password)))
+                .retrieve()
+                .toEntity(AuthenticationResponse.class)
+                .block();
+
+        // getting the token
+        Assertions.assertNotNull(res);
+        Assertions.assertNotNull(res.getBody());
+        token = res.getBody().getAccess_token();
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
