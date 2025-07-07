@@ -27,6 +27,8 @@ public class AddressControllerTest {
     private final String password = "address.test.password";
     private final String adminUsername = "alex";
     private final String adminPassword = "AlexAdmin";
+    private final String unprivilegedEmail = "up.address.user@gmail.com";
+    private final String unprivilegedPassword = "up.user.password";
     static AddressDTO address;
     static CityDTO city;
 
@@ -103,7 +105,106 @@ public class AddressControllerTest {
                 .toEntity(AddressDTO.class)
                 .block();
 
+        address = createdAddress.getBody();
         assertThat(createdAddress.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Order(2)
+    public void updateAddress() {
+        // updating the address
+        address.setStreet("Street 2");
+
+        ResponseEntity<AddressDTO> createdAddress = webClient.post()
+                .uri("/address/api/v1/")
+                .bodyValue(address)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(AddressDTO.class)
+                .block();
+
+        assertThat(createdAddress.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(createdAddress.getBody().getStreet()).isEqualTo(address.getStreet());
+    }
+
+    @Test
+    @Order(3)
+    public void getAddress() {
+        ResponseEntity<AddressDTO> createdAddress = webClient.get()
+                .uri("/address/api/v1/" + address.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(AddressDTO.class)
+                .block();
+
+        assertThat(createdAddress.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(createdAddress.getBody().getStreet()).isEqualTo(address.getStreet());
+    }
+
+    @Test
+    @Order(4)
+    public void deleteAddress() {
+        ResponseEntity<AddressDTO> createdAddress = webClient.delete()
+                .uri("/address/api/v1/" + address.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(AddressDTO.class)
+                .block();
+
+        assertThat(createdAddress.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Order(5)
+    public void failUpdateAddress() {
+        RegisterRequest request = RegisterRequest.builder()
+                .email(unprivilegedEmail)
+                .password(unprivilegedPassword)
+                .lastName("auth")
+                .firstName("test")
+                .phoneNumber("555555555")
+                .build();
+
+        // registering the user
+        ResponseEntity<Void> res = webClient.post()
+                .uri("/auth/api/v1/register/")
+                .bodyValue(request)
+                .retrieve()
+                .toEntity(Void.class)
+                .block();
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<AuthenticationResponse> authRes = AuthUtils.login(unprivilegedEmail, unprivilegedPassword);
+        token = authRes.getBody().getAccess_token();
+
+        // updating the address
+        address.setStreet("Street 3");
+
+        ResponseEntity<String> responseEntity = webClient.put()
+                .uri("/address/api/v1/")
+                .bodyValue(address)
+                .header("Authorization", "Bearer " + token)
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    @Order(6)
+    public void failDeleteAddress() {
+        ResponseEntity<String> responseEntity = webClient.delete()
+                .uri("/address/api/v1/" + address.getId())
+                .header("Authorization", "Bearer " + token)
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
 }

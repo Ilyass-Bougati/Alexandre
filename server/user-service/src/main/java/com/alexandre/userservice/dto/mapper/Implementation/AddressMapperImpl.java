@@ -31,6 +31,7 @@ public class AddressMapperImpl implements AddressMapper {
     @Override
     public Address toEntity(AddressDTO addressDTO) {
         return Address.builder()
+                .id(addressDTO.getId())
                 .postalCode(addressDTO.getPostalCode())
                 .street(addressDTO.getStreet())
                 .isDefault(addressDTO.getIsDefault())

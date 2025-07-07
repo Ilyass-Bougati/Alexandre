@@ -20,6 +20,7 @@ public class CityMapperImpl implements CityMapper{
     @Override
     public City toEntity(CityDTO cityDTO) {
         return City.builder()
+                .id(cityDTO.getId())
                 .name(cityDTO.getName())
                 .shippingFee(cityDTO.getShippingFee())
                 .createdAt(cityDTO.getCreatedAt())

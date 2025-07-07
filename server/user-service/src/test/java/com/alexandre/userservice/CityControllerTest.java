@@ -24,8 +24,8 @@ public class CityControllerTest {
     static String token;
 
     private final String email = "alex";
-    private final String unprivilegedEmail = "unprivileged.user@gmail.com";
     private final String password = "AlexAdmin";
+    private final String unprivilegedEmail = "up.city.user@gmail.com";
     private final String unprivilegedPassword = "unprivileged.user.password";
     static CityDTO city;
 
@@ -152,16 +152,16 @@ public class CityControllerTest {
                 .build();
 
         // creating the city
-        webClient.post()
+        ResponseEntity<String> responseEntity = webClient.post()
                 .uri("/city/api/v1/")
                 .bodyValue(cityDTO)
                 .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toBodilessEntity()
-                .subscribe(
-                        responseEntity -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED)
-                );
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
 
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
@@ -171,27 +171,29 @@ public class CityControllerTest {
         city.setName("Casa");
 
         // creating the city
-        webClient.put()
+        ResponseEntity<String> responseEntity = webClient.put()
                 .uri("/city/api/v1/")
                 .bodyValue(city)
                 .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toBodilessEntity()
-                .subscribe(
-                        responseEntity -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED)
-                );
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     @Order(7)
     public void failDeleteCity() {
-        webClient.delete()
+        ResponseEntity<String> responseEntity = webClient.delete()
                 .uri("/city/api/v1/" + city.getId())
                 .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toBodilessEntity()
-                .subscribe(
-                        responseEntity -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED)
-                );
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }

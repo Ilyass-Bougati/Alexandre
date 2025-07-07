@@ -28,6 +28,7 @@ public class PaymentMethodMapperImpl implements PaymentMethodMapper {
     @Override
     public PaymentMethod toEntity(PaymentMethodDTO paymentMethodDTO) {
         return PaymentMethod.builder()
+                .id(paymentMethodDTO.getId())
                 .cardHolderName(paymentMethodDTO.getCardHolderName())
                 .last4Digits(paymentMethodDTO.getLast4Digits())
                 .stripeToken(paymentMethodDTO.getStripeToken())

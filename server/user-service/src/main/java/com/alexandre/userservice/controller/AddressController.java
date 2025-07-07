@@ -45,6 +45,7 @@ public class AddressController {
     @PutMapping("/")
     public ResponseEntity<AddressDTO> updateAddress(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid AddressDTO addressDTO) {
         if (addressService.profileOwnsAddress(userPrincipal.profile().getId(), addressDTO.getId())) {
+            addressDTO.setProfileId(userPrincipal.profile().getId());
             return ResponseEntity.ok(addressService.update(addressDTO));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -52,7 +53,7 @@ public class AddressController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAddress(UserPrincipal userPrincipal, @PathVariable UUID id) {
+    public ResponseEntity<Void> deleteAddress(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID id) {
         if (addressService.profileOwnsAddress(userPrincipal.profile().getId(), id)) {
             addressService.deleteById(id);
             return ResponseEntity.ok().build();
