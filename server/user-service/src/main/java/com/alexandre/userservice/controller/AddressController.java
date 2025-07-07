@@ -36,13 +36,13 @@ public class AddressController {
         return ResponseEntity.ok(addressService.findByProfileId(userPrincipal.profile().getId()));
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<AddressDTO> createAddress(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid AddressDTO addressDTO) {
         addressDTO.setProfileId(userPrincipal.profile().getId());
         return ResponseEntity.ok(addressService.create(addressDTO));
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<AddressDTO> updateAddress(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid AddressDTO addressDTO) {
         if (addressService.profileOwnsAddress(userPrincipal.profile().getId(), addressDTO.getId())) {
             return ResponseEntity.ok(addressService.update(addressDTO));
