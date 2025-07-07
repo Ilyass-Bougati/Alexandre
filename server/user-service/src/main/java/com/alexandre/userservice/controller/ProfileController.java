@@ -17,25 +17,21 @@ import java.util.UUID;
 public class ProfileController {
     private final ProfileService profileService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProfileDTO> getProfile(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
-        System.out.println(jwt.getSubject());
-        return ResponseEntity.ok(profileService.findById(id));
-    }
-
-    @PostMapping("/")
-    public ResponseEntity<ProfileDTO> createProfile(@RequestBody @Valid ProfileDTO profileDTO) {
-        return ResponseEntity.ok(profileService.create(profileDTO));
+    @GetMapping("/")
+    public ResponseEntity<ProfileDTO> getProfile(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(profileService.findById(UUID.fromString(jwt.getSubject())));
     }
 
     @PutMapping("/")
-    public ResponseEntity<ProfileDTO> updateProfile(@RequestBody @Valid ProfileDTO profileDTO) {
+    public ResponseEntity<ProfileDTO> updateProfile(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid ProfileDTO profileDTO) {
+        // making sure the user is changing their profile
+        profileDTO.setId(UUID.fromString(jwt.getSubject()));
         return ResponseEntity.ok(profileService.update(profileDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProfile(@PathVariable UUID id) {
-        profileService.deleteById(id);
+    public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal Jwt jwt) {
+        profileService.deleteById(UUID.fromString(jwt.getSubject()));
         return ResponseEntity.ok().build();
     }
 }

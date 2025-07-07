@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,5 +56,16 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public void deleteById(UUID id) {
         addressRepository.deleteById(id);
+    }
+
+    @Override
+    public List<AddressDTO> findByProfileId(UUID profileId) {
+        return addressRepository.findAllByProfileId(profileId)
+                .stream().map(addressMapper::toDto).toList();
+    }
+
+    @Override
+    public Boolean profileOwnsAddress(UUID profileId, UUID addressId) {
+        return addressRepository.existsByProfileIdAndId(profileId, addressId);
     }
 }

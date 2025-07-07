@@ -5,6 +5,7 @@ import com.alexandre.userservice.service.city.CityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,17 +21,25 @@ public class CityController {
         return ResponseEntity.ok(cityService.findById(id));
     }
 
+    @GetMapping("/by-name/{name}")
+    public ResponseEntity<CityDTO> getCityByName(@PathVariable String name) {
+        return ResponseEntity.ok(cityService.findByName(name));
+    }
+
     @PostMapping("/")
+    @PreAuthorize("hasRole('alex_admin')")
     public ResponseEntity<CityDTO> createCity(@RequestBody @Valid CityDTO cityDTO) {
         return ResponseEntity.ok(cityService.create(cityDTO));
     }
 
     @PutMapping("/")
+    @PreAuthorize("hasRole('alex_admin')")
     public ResponseEntity<CityDTO> updateCity(@RequestBody @Valid CityDTO cityDTO) {
         return ResponseEntity.ok(cityService.update(cityDTO));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('alex_admin')")
     public ResponseEntity<Void> deleteCity(@PathVariable UUID id) {
         cityService.deleteById(id);
         return ResponseEntity.ok().build();
