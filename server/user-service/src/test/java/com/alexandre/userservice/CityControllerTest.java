@@ -25,9 +25,9 @@ public class CityControllerTest {
     static String token;
 
     private final String email = "alex";
-    private final String unprivilegedEmail = "alexx@gmail.com";
+    private final String unprivilegedEmail = "unprivileged.user@gmail.com";
     private final String password = "AlexAdmin";
-    private final String unprivilegedPassword = "Alexx";
+    private final String unprivilegedPassword = "unprivileged.user.password";
     static CityDTO city;
 
     @BeforeEach
