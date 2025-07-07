@@ -25,8 +25,8 @@ public class AuthenticationTest {
     WebClient keycloakClient;
     String token;
 
-    private final String email = "i.bougati12@gmail.com";
-    private final String password = "password";
+    private final String email = "auth.test@gmail.com";
+    private final String password = "auth.test.password";
 
     @BeforeEach
     void setUp() {
@@ -49,9 +49,9 @@ public class AuthenticationTest {
         RegisterRequest request = RegisterRequest.builder()
                 .email(email)
                 .password(password)
-                .lastName("Bougati")
-                .firstName("Ilyass")
-                .phoneNumber("000000")
+                .lastName("auth")
+                .firstName("test")
+                .phoneNumber("0000000000")
                 .build();
 
         // registering the user
