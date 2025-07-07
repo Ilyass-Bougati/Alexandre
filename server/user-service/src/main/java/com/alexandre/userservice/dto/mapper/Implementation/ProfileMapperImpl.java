@@ -27,6 +27,7 @@ public class ProfileMapperImpl implements ProfileMapper {
     @Override
     public Profile toEntity(ProfileDTO profileDTO) {
         return Profile.builder()
+                .id(profileDTO.getId())
                 .firstName(profileDTO.getFirstName())
                 .lastName(profileDTO.getLastName())
                 .phoneNumber(profileDTO.getPhoneNumber())

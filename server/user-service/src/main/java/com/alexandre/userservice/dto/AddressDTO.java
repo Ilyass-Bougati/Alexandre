@@ -24,7 +24,6 @@ public class AddressDTO {
     @NotNull
     private Boolean isDefault;
 
-    @NotNull
     private UUID profileId;
 
     @NotNull

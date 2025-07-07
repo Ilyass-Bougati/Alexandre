@@ -49,7 +49,7 @@ public class AddressServiceImpl implements AddressService {
         oldAddressOptional.setProfile(profileEntityService.findById(addressDTO.getProfileId()));
         oldAddressOptional.setCity(cityEntityService.findById(addressDTO.getCityId()));
 
-        addressRepository.save(oldAddressOptional);
+//        addressRepository.save(oldAddressOptional);
         return addressMapper.toDto(oldAddressOptional);
     }
 

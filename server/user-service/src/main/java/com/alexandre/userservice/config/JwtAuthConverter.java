@@ -1,10 +1,14 @@
 package com.alexandre.userservice.config;
 
+import com.alexandre.userservice.dto.ProfileDTO;
 import com.alexandre.userservice.record.JwtConverterProperties;
+import com.alexandre.userservice.record.UserPrincipal;
+import com.alexandre.userservice.service.profile.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -13,9 +17,11 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,11 +31,13 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter();
+    private final ProfileService profileService;
 
     private final String principleAttribute;
     private final String resourceId;
 
-    public JwtAuthConverter(JwtConverterProperties jwtConverterProperties) {
+    public JwtAuthConverter(ProfileService profileService, JwtConverterProperties jwtConverterProperties) {
+        this.profileService = profileService;
         principleAttribute = jwtConverterProperties.principleAttribute();
         resourceId = jwtConverterProperties.resourceId();
     }
@@ -41,11 +49,10 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
                 extractResourceRoles(jwt).stream()
         ).collect(Collectors.toSet());
 
-        return new JwtAuthenticationToken(
-                jwt,
-                authorities,
-                getPrincipleClaimName(jwt)
-        );
+        ProfileDTO profileDTO = profileService.findByUserId(UUID.fromString(jwt.getSubject()));
+
+        UserPrincipal userPrincipal = new UserPrincipal(jwt.getSubject(), profileDTO);
+        return new UsernamePasswordAuthenticationToken(userPrincipal, "N/A", authorities);
     }
 
     private String getPrincipleClaimName(Jwt jwt) {

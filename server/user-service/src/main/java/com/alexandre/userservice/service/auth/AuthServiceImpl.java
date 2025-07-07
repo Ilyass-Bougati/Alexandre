@@ -6,6 +6,7 @@ import com.alexandre.userservice.service.keycloak.KeycloakService;
 import com.alexandre.userservice.service.profile.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

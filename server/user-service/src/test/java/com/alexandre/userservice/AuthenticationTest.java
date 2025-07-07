@@ -51,7 +51,7 @@ public class AuthenticationTest {
                 .password(password)
                 .lastName("auth")
                 .firstName("test")
-                .phoneNumber("0000000000")
+                .phoneNumber("1111111111")
                 .build();
 
         // registering the user
