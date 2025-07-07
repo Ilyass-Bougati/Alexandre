@@ -20,6 +20,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .id(profile.getId())
                 .createdAt(profile.getCreatedAt())
                 .email(profile.getEmail())
+                .userId(profile.getUserId())
                 .build();
     }
 
@@ -31,6 +32,7 @@ public class ProfileMapperImpl implements ProfileMapper {
                 .phoneNumber(profileDTO.getPhoneNumber())
                 .createdAt(profileDTO.getCreatedAt())
                 .email(profileDTO.getEmail())
+                .userId(profileDTO.getUserId())
                 .build();
     }
 }

@@ -37,6 +37,7 @@
   "clients": [
     {
       "clientId": "public-client",
+      "type": "confidential",
       "description": "The alexandre application",
       "publicClient": true,
       "directAccessGrantsEnabled": true
