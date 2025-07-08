@@ -32,6 +32,14 @@ jobs:
           # Maps tcp port 5432 on service container to the host
           - 5432:5432
 
+      keycloak:
+        image: ghcr.io/onbelayconsulting/mykeycloak:latest
+        env:
+          KEYCLOAK_USER: "admin"
+          KEYCLOAK_PASSWORD: "admin"
+        ports:
+          - 8080:8080
+
     steps:
       # Downloads a copy of the code in your repository before running CI tests
       - name: Check out code
@@ -43,6 +51,10 @@ jobs:
           java-version: "23"
           distribution: "temurin"
 
+      - name: Switching to test mode
+        run: ./switch_to_test.sh
+        working-directory: ./server
+
       - name: Running the unit tests
-        run: mvn test
+        run: mvn test -Dspring.profiles.active=test
         working-directory: ./server/user-service
