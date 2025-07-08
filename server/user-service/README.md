@@ -9,6 +9,6 @@ for all the entities.
 # Docker
 to build the image you'll have to run this command from the `server` directory
 ```bash
-docker build . -f user-service/Dockerfile -t user-service
-docker run -p 8000:8000 user-service
+docker build . -f user-service/Dockerfile -t alexandre/user-service
+docker run -p 8080:8080 alexandre/user-service
 ```

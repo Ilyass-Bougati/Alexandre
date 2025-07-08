@@ -13,6 +13,8 @@ spring:
           # Refreshing the config each 30 seconds
           refresh-rate: 30
 
+      override-none: true
+
 otel:
   metrics:
     exporter: none
