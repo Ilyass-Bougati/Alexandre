@@ -40,11 +40,10 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
                 .orElseThrow(() -> new NotFoundException("PaymentMethod not found"));
 
         // TODO : rethink this
-        paymentMethodDTO.setCardHolderName(paymentMethodDTO.getCardHolderName());
-        paymentMethodDTO.setStripeToken(paymentMethodDTO.getStripeToken());
-        paymentMethodDTO.setLast4Digits(paymentMethodDTO.getLast4Digits());
+        oldPaymentMethodOptional.setCardHolderName(paymentMethodDTO.getCardHolderName());
+        oldPaymentMethodOptional.setStripeToken(paymentMethodDTO.getStripeToken());
+        oldPaymentMethodOptional.setLast4Digits(paymentMethodDTO.getLast4Digits());
 
-        paymentMethodRepository.save(oldPaymentMethodOptional);
         return paymentMethodMapper.toDto(oldPaymentMethodOptional);
     }
 

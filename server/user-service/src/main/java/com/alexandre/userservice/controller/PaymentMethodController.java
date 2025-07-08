@@ -34,15 +34,16 @@ public class PaymentMethodController {
         return ResponseEntity.ok(paymentMethodService.findByProfileId(userPrincipal.profile().getId()));
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PaymentMethodDTO paymentMethodDTO) {
         paymentMethodDTO.setProfileId(userPrincipal.profile().getId());
         return ResponseEntity.ok(paymentMethodService.create(paymentMethodDTO));
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PaymentMethodDTO paymentMethodDTO) {
         if (paymentMethodService.profileOwnsPaymentMethod(userPrincipal.profile().getId(), paymentMethodDTO.getId())) {
+            paymentMethodDTO.setProfileId(userPrincipal.profile().getId());
             return ResponseEntity.ok(paymentMethodService.update(paymentMethodDTO));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

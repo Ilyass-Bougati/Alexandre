@@ -24,7 +24,6 @@ public class PaymentMethodDTO {
     @NotBlank
     private String last4Digits;
 
-    @NotNull
     private UUID profileId;
 
     private LocalDateTime createdAt;
