@@ -30,7 +30,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.update(profileDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/")
     public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         profileService.deleteById(userPrincipal.profile().getId());
         return ResponseEntity.ok().build();
