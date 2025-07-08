@@ -10,6 +10,9 @@ spring:
           skip-ssl-validation: true
           clone-on-start: true
 
+          # Refreshing the config each 30 seconds
+          refresh-rate: 30
+
 otel:
   metrics:
     exporter: none
