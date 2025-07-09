@@ -34,6 +34,9 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderItem> items;
 
+    @ManyToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<Coupon> appliedCoupons;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 }

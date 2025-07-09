@@ -36,7 +36,9 @@ public class OrderItem {
     @NotNull
     private Integer quantity;
 
+    @NotEmpty
     private String productName;
 
+    @NotNull
     private Double unitPriceAtOrderTime;
 }
