@@ -6,9 +6,11 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
+@PreAuthorize("@rolesUtil.adminOrStaffExpr")
 @RestController
 @RequestMapping("/inventory/api/v1/productVendor")
 public class ProductVendorController {
@@ -21,16 +23,12 @@ public class ProductVendorController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ProductVendorDTO> createProductVendor(
-            @RequestBody ProductVendorDTO productVendorDTO
-    ) {
+    public ResponseEntity<ProductVendorDTO> createProductVendor(@RequestBody ProductVendorDTO productVendorDTO) {
         return ResponseEntity.ok(productVendorService.create(productVendorDTO));
     }
 
     @PutMapping("/")
-    public ResponseEntity<ProductVendorDTO> updateProductVendor(
-            @RequestBody ProductVendorDTO productVendorDTO
-    ) {
+    public ResponseEntity<ProductVendorDTO> updateProductVendor(@RequestBody ProductVendorDTO productVendorDTO) {
         return ResponseEntity.ok(productVendorService.update(productVendorDTO));
     }
 

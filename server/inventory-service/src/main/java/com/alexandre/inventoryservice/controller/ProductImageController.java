@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -21,21 +22,20 @@ public class ProductImageController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ProductImageDTO> createProductImage(
-            @RequestBody ProductImageDTO productImageDTO
-    ) {
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    public ResponseEntity<ProductImageDTO> createProductImage(@RequestBody ProductImageDTO productImageDTO) {
         return ResponseEntity.ok(productImageService.create(productImageDTO));
     }
 
     @PutMapping("/")
-    public ResponseEntity<ProductImageDTO> updateProductImage(
-            @RequestBody ProductImageDTO productImageDTO
-    ) {
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    public ResponseEntity<ProductImageDTO> updateProductImage(@RequestBody ProductImageDTO productImageDTO) {
         return ResponseEntity.ok(productImageService.update(productImageDTO));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
     public void deleteProductImage(@PathVariable UUID id) {
         productImageService.deleteById(id);
     }

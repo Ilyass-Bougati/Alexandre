@@ -5,6 +5,7 @@ import com.alexandre.inventoryservice.service.VariationImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,16 +21,19 @@ public class VariationImageController {
         return ResponseEntity.ok(variationImageService.findById(id));
     }
 
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
     @PostMapping("/")
     public ResponseEntity<VariationImageDTO> createVariationImage(@RequestBody VariationImageDTO variationImageDTO) {
         return ResponseEntity.ok(variationImageService.create(variationImageDTO));
     }
 
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
     @PutMapping("/")
     public ResponseEntity<VariationImageDTO> updateVariationImage(@RequestBody VariationImageDTO variationImageDTO) {
         return ResponseEntity.ok(variationImageService.update(variationImageDTO));
     }
 
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteVariationImage(@PathVariable UUID id) {

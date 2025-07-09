@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -21,19 +22,18 @@ public class ProductVariationController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ProductVariationDTO> createProductVariation(
-            @RequestBody ProductVariationDTO productVariationDTO
-    ) {
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    public ResponseEntity<ProductVariationDTO> createProductVariation(@RequestBody ProductVariationDTO productVariationDTO) {
         return ResponseEntity.ok(productVariationService.create(productVariationDTO));
     }
 
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
     @PutMapping("/")
-    public ResponseEntity<ProductVariationDTO> updateProductVariation(
-            @RequestBody ProductVariationDTO productVariationDTO
-    ) {
+    public ResponseEntity<ProductVariationDTO> updateProductVariation(@RequestBody ProductVariationDTO productVariationDTO) {
         return ResponseEntity.ok(productVariationService.update(productVariationDTO));
     }
 
+    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProductVariation(@PathVariable UUID id) {
