@@ -19,14 +19,17 @@ import java.util.UUID;
 public class OrderDTO {
     private UUID id;
 
-    @NotNull
     private UUID profileId;
 
-    @NotNull
-    private UUID addressId;
+    // TODO : remove later, make this take the default address
+//    @NotNull
+    @Builder.Default
+    private UUID addressId = UUID.randomUUID();
 
+    @Builder.Default
     private OrderState state = OrderState.PENDING;
 
+    @Builder.Default
     private List<OrderItemDTO> items = new ArrayList<>();
 
     @CreationTimestamp

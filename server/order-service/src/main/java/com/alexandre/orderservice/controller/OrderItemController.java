@@ -1,8 +1,6 @@
 package com.alexandre.orderservice.controller;
 
 import com.alexandre.orderservice.dto.orderItem.OrderItemDTO;
-import com.alexandre.orderservice.entity.OrderItem;
-import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.record.UserPrincipal;
 import com.alexandre.orderservice.service.order.OrderService;
 import com.alexandre.orderservice.service.orderItem.OrderItemService;
