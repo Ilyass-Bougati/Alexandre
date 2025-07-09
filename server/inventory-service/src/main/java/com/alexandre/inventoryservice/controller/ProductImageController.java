@@ -22,20 +22,20 @@ public class ProductImageController {
     }
 
     @PostMapping("/")
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     public ResponseEntity<ProductImageDTO> createProductImage(@RequestBody ProductImageDTO productImageDTO) {
         return ResponseEntity.ok(productImageService.create(productImageDTO));
     }
 
     @PutMapping("/")
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     public ResponseEntity<ProductImageDTO> updateProductImage(@RequestBody ProductImageDTO productImageDTO) {
         return ResponseEntity.ok(productImageService.update(productImageDTO));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     public void deleteProductImage(@PathVariable UUID id) {
         productImageService.deleteById(id);
     }

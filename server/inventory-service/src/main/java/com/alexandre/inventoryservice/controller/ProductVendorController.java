@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@PreAuthorize("@rolesUtil.adminOrStaffExpr")
+@PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
 @RestController
 @RequestMapping("/inventory/api/v1/productVendor")
 public class ProductVendorController {

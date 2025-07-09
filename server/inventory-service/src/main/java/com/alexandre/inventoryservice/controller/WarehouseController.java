@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@PreAuthorize("@rolesUtil.adminOrStaffExpr")
+@PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
 @RestController
 @RequestMapping("/inventory/api/v1/warehouse")
 public class WarehouseController {

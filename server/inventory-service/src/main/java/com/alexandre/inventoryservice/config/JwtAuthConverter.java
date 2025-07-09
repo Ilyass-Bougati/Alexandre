@@ -30,13 +30,11 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter();
-    private final WebClient webClient;
 
     private final String principleAttribute;
     private final String resourceId;
 
-    public JwtAuthConverter(WebClient.Builder webClientBuilder, JwtConverterProperties jwtConverterProperties) {
-        this.webClient = webClientBuilder.build();
+    public JwtAuthConverter(JwtConverterProperties jwtConverterProperties) {
         principleAttribute = jwtConverterProperties.principleAttribute();
         resourceId = jwtConverterProperties.resourceId();
     }
@@ -48,19 +46,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
                 extractResourceRoles(jwt).stream()
         ).collect(Collectors.toSet());
 
-        ResponseEntity<ProfileDTO> profileDTO = webClient.get()
-                .uri("http://user-service/profile/api/v1/")
-                .header("Authorization", "Bearer " + jwt.getTokenValue())
-                .retrieve()
-                .toEntity(ProfileDTO.class)
-                .block();
-
-        // TODO : make this better
-        if (!profileDTO.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("Unsuccessful authentication");
-        }
-
-        UserPrincipal userPrincipal = new UserPrincipal(jwt.getSubject(), profileDTO.getBody());
+        UserPrincipal userPrincipal = new UserPrincipal(jwt.getSubject());
         return new UsernamePasswordAuthenticationToken(userPrincipal, "N/A", authorities);
     }
 

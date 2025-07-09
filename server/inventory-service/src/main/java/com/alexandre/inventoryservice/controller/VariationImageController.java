@@ -21,19 +21,19 @@ public class VariationImageController {
         return ResponseEntity.ok(variationImageService.findById(id));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @PostMapping("/")
     public ResponseEntity<VariationImageDTO> createVariationImage(@RequestBody VariationImageDTO variationImageDTO) {
         return ResponseEntity.ok(variationImageService.create(variationImageDTO));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @PutMapping("/")
     public ResponseEntity<VariationImageDTO> updateVariationImage(@RequestBody VariationImageDTO variationImageDTO) {
         return ResponseEntity.ok(variationImageService.update(variationImageDTO));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteVariationImage(@PathVariable UUID id) {

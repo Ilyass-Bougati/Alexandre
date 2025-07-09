@@ -21,19 +21,19 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(id));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @PostMapping("/")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         return ResponseEntity.ok(productService.create(productDTO));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @PutMapping("/")
     public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO) {
         return ResponseEntity.ok(productService.update(productDTO));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable UUID id) {

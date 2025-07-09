@@ -22,18 +22,18 @@ public class ProductVariationController {
     }
 
     @PostMapping("/")
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     public ResponseEntity<ProductVariationDTO> createProductVariation(@RequestBody ProductVariationDTO productVariationDTO) {
         return ResponseEntity.ok(productVariationService.create(productVariationDTO));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @PutMapping("/")
     public ResponseEntity<ProductVariationDTO> updateProductVariation(@RequestBody ProductVariationDTO productVariationDTO) {
         return ResponseEntity.ok(productVariationService.update(productVariationDTO));
     }
 
-    @PreAuthorize("@rolesUtil.adminOrStaffExpr")
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProductVariation(@PathVariable UUID id) {
