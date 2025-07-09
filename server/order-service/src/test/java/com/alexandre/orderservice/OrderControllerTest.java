@@ -29,6 +29,7 @@ public class OrderControllerTest {
     @LocalServerPort
     int port;
     static String token;
+    static String unprivilegedToken;
     WebClient lbWebClient;
     WebClient webClient;
 
@@ -39,6 +40,7 @@ public class OrderControllerTest {
     private final String unprivilegedEmail = "up.order.user@gmail.com";
     private final String unprivilegedPassword = "up.user.password";
     static OrderDTO order;
+    static UUID itemId;
 
     @BeforeEach
     void setUp() {
@@ -91,6 +93,59 @@ public class OrderControllerTest {
 
     @Test
     @Order(2)
+    void getOrder() {
+        // getting a new order
+        ResponseEntity<OrderDTO> resOrder = webClient.get()
+                .uri("/order/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(OrderDTO.class)
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resOrder.getBody()).isNotNull();
+        assertThat(resOrder.getBody().getItems().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Order(3)
+    void failGetOrder() {
+        // registering the new user
+        RegisterRequest request = RegisterRequest.builder()
+                .email(unprivilegedEmail)
+                .password(unprivilegedPassword)
+                .lastName("auth")
+                .firstName("test")
+                .phoneNumber("up.order.test.pn")
+                .build();
+
+        // registering the user
+        ResponseEntity<Void> registerRes = lbWebClient.post()
+                .uri("http://user-service/auth/api/v1/register/")
+                .bodyValue(request)
+                .retrieve()
+                .toEntity(Void.class)
+                .block();
+
+        ResponseEntity<AuthenticationResponse> res = AuthUtils.login(unprivilegedEmail, unprivilegedPassword);
+        Assertions.assertNotNull(res.getBody());
+        unprivilegedToken = res.getBody().getAccess_token();
+
+        // getting a new order
+        ResponseEntity<String> resOrder = webClient.get()
+                .uri("/order/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + unprivilegedToken)
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @Test
+    @Order(4)
     void addOrderItem() {
         OrderItemDTO item = OrderItemDTO.builder()
                 .unitPriceAtOrderTime(12.2)
@@ -109,7 +164,6 @@ public class OrderControllerTest {
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        // creating a new order
         ResponseEntity<OrderDTO> resOrder = webClient.get()
                 .uri("/order/api/v1/" + order.getId())
                 .header("Authorization", "Bearer " + token)
@@ -120,6 +174,136 @@ public class OrderControllerTest {
         assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(resOrder.getBody().getItems().get(0)).isNotNull();
         assertThat(resOrder.getBody().getItems().get(0).getProductName()).isEqualTo("product name");
+        itemId = resOrder.getBody().getItems().get(0).getId();
+    }
+
+    @Test
+    @Order(5)
+    void getOrderItem() {
+        // getting a new order
+        ResponseEntity<OrderItemDTO> resOrder = webClient.get()
+                .uri("/item/api/v1/" + itemId)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(OrderItemDTO.class)
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resOrder.getBody()).isNotNull();
+    }
+
+    @Test
+    @Order(6)
+    void failAddOrderItem() {
+        OrderItemDTO item = OrderItemDTO.builder()
+                .unitPriceAtOrderTime(12.2)
+                .productId(UUID.randomUUID())
+                .productName("product name")
+                .quantity(1)
+                .build();
+
+        ResponseEntity<String> res = webClient.post()
+                .uri("/item/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + unprivilegedToken)
+                .bodyValue(item)
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        ResponseEntity<OrderDTO> resOrder = webClient.get()
+                .uri("/order/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(OrderDTO.class)
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resOrder.getBody().getItems().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Order(7)
+    void failDeleteOrderItem() {
+        ResponseEntity<String> resOrder = webClient.delete()
+                .uri("/item/api/v1/" + itemId)
+                .header("Authorization", "Bearer " + unprivilegedToken)
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        ResponseEntity<OrderItemDTO> res = webClient.get()
+                .uri("/item/api/v1/" + itemId)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(OrderItemDTO.class)
+                .block();
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Order(8)
+    void deleteOrderItem() {
+        ResponseEntity<Void> resOrder = webClient.delete()
+                .uri("/item/api/v1/" + itemId)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(Void.class)
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Order(9)
+    void failDeleteOrder() {
+        ResponseEntity<String> resOrder = webClient.delete()
+                .uri("/order/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + unprivilegedToken)
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        ResponseEntity<OrderItemDTO> res = webClient.get()
+                .uri("/order/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(OrderItemDTO.class)
+                .block();
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Order(10)
+    void deleteOrder() {
+        ResponseEntity<Void> resOrder = webClient.delete()
+                .uri("/order/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(Void.class)
+                .block();
+
+        assertThat(resOrder.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<String> res = webClient.get()
+                .uri("/order/api/v1/" + order.getId())
+                .header("Authorization", "Bearer " + token)
+                .exchangeToMono(clientResponse ->
+                        clientResponse.toEntity(String.class)
+                )
+                .block();
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 }

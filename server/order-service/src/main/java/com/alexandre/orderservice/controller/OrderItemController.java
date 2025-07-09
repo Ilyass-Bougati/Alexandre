@@ -35,12 +35,12 @@ public class OrderItemController {
     }
 
     @PreAuthorize("@orderService.profileOwnsOrder(#orderItemDTO.orderId, #userPrincipal.profile.id)")
-    @PostMapping("/")
+    @PutMapping("/")
     public ResponseEntity<OrderItemDTO> updateOrderItem(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid OrderItemDTO orderItemDTO) {
         return ResponseEntity.ok(orderItemService.update(orderItemDTO));
     }
 
-    @PreAuthorize("@orderService.profileOwnsOrder(#orderItemId, #userPrincipal.profile.id)")
+    @PreAuthorize("@orderItemService.profileOwnsOrderItem(#orderItemId, #userPrincipal.profile.id)")
     @DeleteMapping("/{orderItemId}")
     public ResponseEntity<Void> deleteOrderItem(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderItemId) {
         orderItemService.deleteById(orderItemId);
