@@ -10,5 +10,8 @@ if [[ "$*" == *"--build-all"* ]]; then
     docker build . -f discovery-server/Dockerfile -t alexandre/discovery-server
 fi
 
+docker build . -f config-server/Dockerfile -t config/discovery-server
+
 # Building and deploying the discovery server
 kubectl apply -f k8s/discovery-server.yaml
+kubectl apply -f k8s/config-server.yaml
