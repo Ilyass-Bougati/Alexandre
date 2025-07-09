@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Service("paymentMethodService")
 @RequiredArgsConstructor
 @Transactional
 public class PaymentMethodServiceImpl implements PaymentMethodService {

@@ -8,4 +8,7 @@ import java.util.UUID;
 
 public interface OrderItemService extends CrudService<OrderItemDTO, UUID> {
     List<OrderItemDTO> getOrdersItems(UUID orderId);
+    void addOrderItem(OrderItemDTO orderItemDTO, UUID orderId);
+    Boolean profileOwnsOrderItem(UUID orderItemId, UUID profileId);
+
 }

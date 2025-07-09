@@ -1,10 +1,18 @@
 package com.alexandre.orderservice.dto.orderItem;
 
 import com.alexandre.orderservice.entity.OrderItem;
+import com.alexandre.orderservice.repository.OrderItemRepository;
+import com.alexandre.orderservice.service.order.OrderEntityService;
+import com.alexandre.orderservice.service.order.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class OrderItemMapperImpl implements OrderItemMapper {
+
+    private final OrderEntityService orderEntityService;
+
     @Override
     public OrderItem toEntity(OrderItemDTO orderItemDTO) {
         return OrderItem.builder()
@@ -12,7 +20,7 @@ public class OrderItemMapperImpl implements OrderItemMapper {
                 .productId(orderItemDTO.getProductId())
                 .productName(orderItemDTO.getProductName())
                 .unitPriceAtOrderTime(orderItemDTO.getUnitPriceAtOrderTime())
-                // TODO : Add order
+                .order(orderEntityService.findById(orderItemDTO.getOrderId()))
                 .build();
     }
 
