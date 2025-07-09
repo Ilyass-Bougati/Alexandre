@@ -1,6 +1,7 @@
 package com.alexandre.orderservice.entity;
 
 import com.alexandre.orderservice.enums.OrderState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -31,8 +32,13 @@ public class Order {
     @NotNull
     private OrderState state;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderItem> items;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Coupon> appliedCoupons;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

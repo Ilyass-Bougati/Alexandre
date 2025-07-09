@@ -6,4 +6,5 @@ import com.alexandre.orderservice.service.CrudService;
 import java.util.UUID;
 
 public interface OrderService extends CrudService<OrderDTO, UUID> {
+    Boolean profileOwnsOrder(UUID orderId, UUID profileId);
 }

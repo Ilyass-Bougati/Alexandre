@@ -36,7 +36,10 @@ public class OrderItem {
     @NotNull
     private Integer quantity;
 
+    // TODO : change this later when the inventory service is finished
+//    @NotEmpty
     private String productName;
 
+//    @NotNull
     private Double unitPriceAtOrderTime;
 }

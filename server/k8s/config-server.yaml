@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: discovery-server
+  name: config-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: discovery
+      app: config
   template:
     metadata:
       labels:
-        app: discovery
+        app: config
     spec:
       containers:
-        - name: discovery
-          image: alexandre/discovery-server:latest
+        - name: config
+          image: alexandre/config-server:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 8761
@@ -23,11 +23,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: discovery-server
+  name: config-server
 spec:
   type: LoadBalancer
   selector:
-    app: discovery
+    app: config
   ports:
-    - port: 8761
-      targetPort: 8761
+    - port: 8888
+      targetPort: 8888
