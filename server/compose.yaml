@@ -71,6 +71,22 @@ services:
       - "8080:8080"
     command: start-dev --import-realm
 
+  discovery-server:
+    container_name: discovery_server
+    image: alexandre/discovery-server:latest
+    ports:
+      - "8761:8761"
+
+  config-server:
+    container_name: config_server
+    image: alexandre/config-server:latest
+    environment:
+      EUREKA_HOST: "discovery-server"
+    ports:
+      - "8888:8888"
+    depends_on:
+      - discovery-server
+
 volumes:
   alexandre_user_service:
   alexandre_order_service:

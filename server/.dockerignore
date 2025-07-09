@@ -1,0 +1,6 @@
+.idea
+.mvn
+configurations/
+k8s/
+*/target/
+.env
