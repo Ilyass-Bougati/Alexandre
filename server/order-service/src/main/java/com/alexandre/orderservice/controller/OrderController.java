@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,31 +26,22 @@ public class OrderController {
         return ResponseEntity.ok(orderService.create(orderDTO));
     }
 
+    @PreAuthorize("@orderService.profileOwnsOrder(orderDTO.id, userPrincipal.profile.id)")
     @PutMapping("/")
     public ResponseEntity<OrderDTO> updateOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid OrderDTO orderDTO) {
-        if (orderService.profileOwnsOrder(orderDTO.getId(), userPrincipal.profile().getId())) {
-            return ResponseEntity.ok(orderService.update(orderDTO));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok(orderService.update(orderDTO));
     }
 
+    @PreAuthorize("@orderService.profileOwnsOrder(#id, userPrincipal.profile.id)")
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID id) {
-        if (orderService.profileOwnsOrder(id, userPrincipal.profile().getId())) {
-            return ResponseEntity.ok(orderService.findById(id));
-        } else {
-            throw new NotFoundException("Order not found");
-        }
+        return ResponseEntity.ok(orderService.findById(id));
     }
 
+    @PreAuthorize("@orderService.profileOwnsOrder(#id, userPrincipal.profile.id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID id) {
-        if (orderService.profileOwnsOrder(id, userPrincipal.profile().getId())) {
-            orderService.deleteById(id);
-            return ResponseEntity.ok().build();
-        } else {
-            throw new NotFoundException("Order not found");
-        }
+        orderService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }
