@@ -5,6 +5,7 @@ import com.alexandre.inventoryservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,16 +21,19 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(id));
     }
 
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @PostMapping("/")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         return ResponseEntity.ok(productService.create(productDTO));
     }
 
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @PutMapping("/")
     public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO) {
         return ResponseEntity.ok(productService.update(productDTO));
     }
 
+    @PreAuthorize("hasAnyRole('alex_admin', 'alex_staff')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable UUID id) {
