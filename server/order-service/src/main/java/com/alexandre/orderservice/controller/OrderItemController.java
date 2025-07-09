@@ -1,8 +1,6 @@
 package com.alexandre.orderservice.controller;
 
 import com.alexandre.orderservice.dto.orderItem.OrderItemDTO;
-import com.alexandre.orderservice.entity.OrderItem;
-import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.record.UserPrincipal;
 import com.alexandre.orderservice.service.order.OrderService;
 import com.alexandre.orderservice.service.orderItem.OrderItemService;
@@ -37,12 +35,12 @@ public class OrderItemController {
     }
 
     @PreAuthorize("@orderService.profileOwnsOrder(#orderItemDTO.orderId, #userPrincipal.profile.id)")
-    @PostMapping("/")
+    @PutMapping("/")
     public ResponseEntity<OrderItemDTO> updateOrderItem(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid OrderItemDTO orderItemDTO) {
         return ResponseEntity.ok(orderItemService.update(orderItemDTO));
     }
 
-    @PreAuthorize("@orderService.profileOwnsOrder(#orderItemId, #userPrincipal.profile.id)")
+    @PreAuthorize("@orderItemService.profileOwnsOrderItem(#orderItemId, #userPrincipal.profile.id)")
     @DeleteMapping("/{orderItemId}")
     public ResponseEntity<Void> deleteOrderItem(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderItemId) {
         orderItemService.deleteById(orderItemId);

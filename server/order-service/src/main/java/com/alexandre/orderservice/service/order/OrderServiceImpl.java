@@ -4,6 +4,7 @@ import com.alexandre.orderservice.dto.order.OrderDTO;
 import com.alexandre.orderservice.dto.orderItem.OrderItemMapper;
 import com.alexandre.orderservice.entity.Order;
 import com.alexandre.orderservice.dto.order.OrderMapper;
+import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO findById(UUID id) {
         return orderRepository.findById(id)
                 .map(orderMapper::toDto)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new NotFoundException("Order not found"));
     }
 
     @Override
@@ -66,6 +67,9 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Boolean profileOwnsOrder(UUID orderId, UUID profileId) {
+        if (!orderRepository.existsById(orderId)) {
+            throw new NotFoundException("Order not found");
+        }
         return orderRepository.existsByIdAndProfileId(orderId, profileId);
     }
 }

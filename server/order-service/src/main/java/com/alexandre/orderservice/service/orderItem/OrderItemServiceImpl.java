@@ -4,6 +4,7 @@ import com.alexandre.orderservice.dto.orderItem.OrderItemDTO;
 import com.alexandre.orderservice.dto.orderItem.OrderItemMapper;
 import com.alexandre.orderservice.entity.Order;
 import com.alexandre.orderservice.entity.OrderItem;
+import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.repository.OrderItemRepository;
 import com.alexandre.orderservice.service.order.OrderEntityService;
 import com.alexandre.orderservice.service.order.OrderService;
@@ -74,6 +75,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public Boolean profileOwnsOrderItem(UUID orderItemId, UUID profileId) {
+        if (!orderItemRepository.existsById(orderItemId)) {
+            throw new NotFoundException("Order item not found");
+        }
         return orderItemRepository.existsByIdAndOrder_ProfileId(orderItemId, profileId);
     }
 }
