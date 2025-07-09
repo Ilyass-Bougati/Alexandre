@@ -25,6 +25,7 @@ kind: Service
 metadata:
   name: discovery-server
 spec:
+  type: LoadBalancer
   selector:
     app: discovery
   ports:
