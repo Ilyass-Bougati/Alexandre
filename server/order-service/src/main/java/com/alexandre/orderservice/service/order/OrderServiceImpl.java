@@ -55,4 +55,15 @@ public class OrderServiceImpl implements OrderService {
     public void deleteById(UUID id) {
         orderRepository.deleteById(id);
     }
+
+    /**
+     * This function checks if an order was created by a certain profile
+     * @param orderId the order's id
+     * @param profileId the profile's id
+     * @return a boolean, true if the order is owned by the profile
+     */
+    @Override
+    public Boolean profileOwnsOrder(UUID orderId, UUID profileId) {
+        return orderRepository.existsByIdAndProfileId(orderId, profileId);
+    }
 }
