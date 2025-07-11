@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+
+from NtfyPy.Notification import Notification, Ntfy
+from sys import argv
+
+# Checking if a topic was provided
+if len(argv) != 2:
+    print("Wrong usage of the script")
+    print("usage : ")
+    print("     ./notify.py [topic]")
+
+
+TOPIC = argv[1]
+ntfy = Ntfy(TOPIC)
+
+# Sending the notification
+notification = Notification(
+    message = "Finished building the project images",
+    priority = "high",
+    tags = "loudspeaker",
+    title = "Alexandre"
+)
+ntfy.send(notification)
