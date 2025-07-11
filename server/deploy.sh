@@ -12,6 +12,9 @@ if [[ "$*" == *"--build-all"* ]]; then
     echo "Building all images..."
     docker build . -f discovery-server/Dockerfile -t alexandre/discovery-server
     docker build . -f config-server/Dockerfile -t alexandre/config-server
+    docker build . -f api-gateway/Dockerfile -t alexandre/api-gateway
+    # Notifying that the deployment is finished
+    ./utils/notify.py alexandre
 fi
 
 # checking for the compose flag

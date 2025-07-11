@@ -1,4 +1,29 @@
 services:
+  grafana:
+    image: grafana/grafana
+    container_name: akira_grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./configurations/grafana:/etc/grafana/provisioning/datasources
+
+  tempo:
+    image: grafana/tempo
+    container_name: tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./configurations/tempo/tempo.yml:/etc/tempo.yaml
+      - ./configurations/tempo/tempo-data:/tmp/tempo
+    ports:
+      - "3200:3200" # Tempo
+      - "4317:4317" # OTLP
+      - "4318:4318" # HTTP
+    hostname: tempo
+
   postgres_users:
     image: postgres:15
     container_name: alexandre_user_service_postgres_container
@@ -74,18 +99,36 @@ services:
   discovery-server:
     container_name: discovery_server
     image: alexandre/discovery-server:latest
+    environment:
+      TEMPO_HOST: tempo
     ports:
       - "8761:8761"
+    depends_on:
+      - grafana
+      - tempo
 
   config-server:
     container_name: config_server
     image: alexandre/config-server:latest
     environment:
-      EUREKA_HOST: "discovery-server"
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
     ports:
       - "8888:8888"
     depends_on:
       - discovery-server
+
+  api-gateway:
+    container_name: api_gateway
+    image: alexandre/api-gateway
+    environment:
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+    ports:
+      - "4000:4000"
+    depends_on:
+      - discovery-server
+      - config-server
 
 volumes:
   alexandre_user_service:
