@@ -38,7 +38,7 @@ if [[ "$*" == *"--build-all"* ]]; then
     docker build . -f order-service/Dockerfile -t alexandre/order-service
     notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
     docker build . -f inventory-service/Dockerfile -t alexandre/inventory-service
-    notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
+    notify_if_failed_or_success  alexandre "Building the inventory-service failed" "rotating_light"
     docker build . -f user-service/Dockerfile -t alexandre/user-service
     DEPLOY_STATUS="$?"
 
@@ -72,7 +72,7 @@ if [[ "$*" == *"--precompile"* ]]; then
     docker build . -f order-service/precompiled.Dockerfile -t alexandre/order-service
     notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
     docker build . -f inventory-service/precompiled.Dockerfile -t alexandre/inventory-service
-    notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
+    notify_if_failed_or_success  alexandre "Building the inventory-service failed" "rotating_light"
     docker build . -f user-service/precompiled.Dockerfile -t alexandre/user-service
 
     # Notifying that the deployment is finished
