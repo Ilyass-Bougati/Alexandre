@@ -1,11 +1,10 @@
-package com.alexandre.inventoryservice.service.implementation;
+package com.alexandre.inventoryservice.service.warehouse;
 
 import com.alexandre.inventoryservice.dto.WarehouseDTO;
 import com.alexandre.inventoryservice.entity.Warehouse;
 import com.alexandre.inventoryservice.exception.NotFoundException;
 import com.alexandre.inventoryservice.mapper.WarehouseMapper;
 import com.alexandre.inventoryservice.repository.WarehouseRepository;
-import com.alexandre.inventoryservice.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -30,7 +30,8 @@ public class Order {
     private UUID addressId;
 
     @NotNull
-    private OrderState state;
+    @Builder.Default
+    private OrderState state = OrderState.PENDING;
 
     @JsonIgnore
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

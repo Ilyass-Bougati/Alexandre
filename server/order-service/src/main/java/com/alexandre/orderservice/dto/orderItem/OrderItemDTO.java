@@ -1,9 +1,9 @@
 package com.alexandre.orderservice.dto.orderItem;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -16,11 +16,11 @@ public class OrderItemDTO {
     private UUID orderId;
 
     @NotNull
-    private UUID productId;
+    private UUID productVariationId;
 
     @NotNull
     private Integer quantity;
 
     private String productName;
-    private Double unitPriceAtOrderTime;
+    private BigDecimal unitPriceAtOrderTime;
 }

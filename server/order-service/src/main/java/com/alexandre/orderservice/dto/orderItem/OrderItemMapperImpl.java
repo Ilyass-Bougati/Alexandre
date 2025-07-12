@@ -1,9 +1,7 @@
 package com.alexandre.orderservice.dto.orderItem;
 
 import com.alexandre.orderservice.entity.OrderItem;
-import com.alexandre.orderservice.repository.OrderItemRepository;
 import com.alexandre.orderservice.service.order.OrderEntityService;
-import com.alexandre.orderservice.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +15,7 @@ public class OrderItemMapperImpl implements OrderItemMapper {
     public OrderItem toEntity(OrderItemDTO orderItemDTO) {
         return OrderItem.builder()
                 .quantity(orderItemDTO.getQuantity())
-                .productId(orderItemDTO.getProductId())
+                .productVariationId(orderItemDTO.getProductVariationId())
                 .productName(orderItemDTO.getProductName())
                 .unitPriceAtOrderTime(orderItemDTO.getUnitPriceAtOrderTime())
                 .order(orderEntityService.findById(orderItemDTO.getOrderId()))
@@ -28,10 +26,10 @@ public class OrderItemMapperImpl implements OrderItemMapper {
     public OrderItemDTO toDto(OrderItem orderItem) {
         return OrderItemDTO.builder()
                 .quantity(orderItem.getQuantity())
-                .productId(orderItem.getProductId())
+                .productVariationId(orderItem.getProductVariationId())
                 .productName(orderItem.getProductName())
                 .unitPriceAtOrderTime(orderItem.getUnitPriceAtOrderTime())
-                .productId(orderItem.getProductId())
+                .productVariationId(orderItem.getProductVariationId())
                 .orderId(orderItem.getId())
                 .id(orderItem.getId())
                 .build();

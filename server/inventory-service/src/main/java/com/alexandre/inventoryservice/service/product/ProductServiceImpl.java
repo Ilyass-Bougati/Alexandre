@@ -1,11 +1,10 @@
-package com.alexandre.inventoryservice.service.implementation;
+package com.alexandre.inventoryservice.service.product;
 
 import com.alexandre.inventoryservice.dto.ProductDTO;
 import com.alexandre.inventoryservice.entity.Product;
 import com.alexandre.inventoryservice.exception.NotFoundException;
 import com.alexandre.inventoryservice.mapper.ProductMapper;
 import com.alexandre.inventoryservice.repository.ProductRepository;
-import com.alexandre.inventoryservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

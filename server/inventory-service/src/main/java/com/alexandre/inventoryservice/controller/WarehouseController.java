@@ -1,7 +1,7 @@
 package com.alexandre.inventoryservice.controller;
 
 import com.alexandre.inventoryservice.dto.WarehouseDTO;
-import com.alexandre.inventoryservice.service.WarehouseService;
+import com.alexandre.inventoryservice.service.warehouse.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

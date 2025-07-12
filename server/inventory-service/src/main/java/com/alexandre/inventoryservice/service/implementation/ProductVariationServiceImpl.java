@@ -7,6 +7,8 @@ import com.alexandre.inventoryservice.mapper.ProductVariationMapper;
 import com.alexandre.inventoryservice.repository.ProductVariationRepository;
 import com.alexandre.inventoryservice.service.ProductVariationService;
 import java.util.UUID;
+
+import com.alexandre.inventoryservice.service.warehouse.WarehouseServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
