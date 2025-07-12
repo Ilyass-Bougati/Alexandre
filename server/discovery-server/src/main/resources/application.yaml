@@ -13,6 +13,15 @@ eureka:
 server:
   port: 8761
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 otel:
   metrics:
     exporter: none

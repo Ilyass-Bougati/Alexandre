@@ -103,6 +103,13 @@ services:
       TEMPO_HOST: tempo
     ports:
       - "8761:8761"
+    healthcheck:
+      test:
+        ["CMD", "curl", "-f", "http://discovery-server:8761/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     depends_on:
       - grafana
       - tempo
@@ -115,8 +122,15 @@ services:
       TEMPO_HOST: tempo
     ports:
       - "8888:8888"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://config-server:8888/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     depends_on:
-      - discovery-server
+      discovery-server:
+        condition: service_healthy
 
   api-gateway:
     container_name: api_gateway
@@ -127,8 +141,33 @@ services:
     ports:
       - "4000:4000"
     depends_on:
-      - discovery-server
-      - config-server
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+
+  user-service:
+    container_name: user_service
+    image: alexandre/user-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://user-service:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8080"
 
 volumes:
   alexandre_user_service:

@@ -16,9 +16,9 @@ ntfy = Ntfy(TOPIC)
 
 # Sending the notification
 notification = Notification(
-    message = "Finished building the project images",
+    message = "Error building the images",
     priority = "high",
-    tags = "heavy_check_mark",
+    tags = "rotating_light",
     title = "Alexandre"
 )
 ntfy.send(notification)

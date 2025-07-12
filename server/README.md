@@ -16,3 +16,7 @@ Then you can run each microservice individually using
 cd microservice-dir
 mvn spring-boot:run
 ```
+
+```bash
+./deploy.sh --compose --build-all --ntfy
+```

@@ -1,5 +1,20 @@
 #!/usr/bin/bash
 
+# Function for notification
+notify_if_failed_or_success() {
+    local topic=$1
+    local exit_code=$?
+
+    if [[ -z "$topic" ]]; then
+        echo "Usage: notify_if_failed_or_success <topic>"
+        return 1
+    fi
+
+    if [[ "$exit_code" -ne 0 ]]; then
+        ./utils/error.py "$topic"
+    fi
+}
+
 # checking for the build-all flag
 # if it's present building all the images
 if [[ "$*" == *"--build-all"* ]]; then
@@ -10,11 +25,24 @@ if [[ "$*" == *"--build-all"* ]]; then
     fi
 
     echo "Building all images..."
-    docker build . -f discovery-server/Dockerfile -t alexandre/discovery-server
+    # docker build . -f discovery-server/Dockerfile -t alexandre/discovery-server
+    notify_if_failed_or_success "alexandre"
     docker build . -f config-server/Dockerfile -t alexandre/config-server
+    notify_if_failed_or_success "alexandre"
     docker build . -f api-gateway/Dockerfile -t alexandre/api-gateway
+    notify_if_failed_or_success "alexandre"
+    docker build . -f user-service/Dockerfile -t alexandre/user-service
+    DEPLOY_STATUS="$?"
+
     # Notifying that the deployment is finished
-    ./utils/notify.py alexandre
+    if [[ "$*" == *"--ntfy"* ]]; then
+        if [[ "$DEPLOY_STATUS" == "0" ]]; then
+            ./utils/notify.py alexandre
+        else
+            ./utils/error.py alexandre
+            exit 1
+        fi
+    fi
 fi
 
 # checking for the compose flag
