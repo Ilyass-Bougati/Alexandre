@@ -7,8 +7,5 @@ RUN apt-get update && apt-get install -y curl
 WORKDIR /app/inventory-service
 COPY . /app
 
-# Build the JAR
-RUN mvn package -Dmaven.test.skip=true
-
 EXPOSE 8080
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/inventory-service/target/inventory-service-1.0-SNAPSHOT.jar"]

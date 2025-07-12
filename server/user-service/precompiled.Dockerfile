@@ -1,7 +1,6 @@
 FROM openjdk:17-slim AS builder
 
 # Install dependencies
-RUN apt-get update && apt-get install -y maven
 RUN apt-get update && apt-get install -y curl
 
 WORKDIR /app/user-service

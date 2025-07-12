@@ -30,11 +30,15 @@ if [[ "$*" == *"--build-all"* ]]; then
 
     echo "Building all images..."
     docker build . -f discovery-server/Dockerfile -t alexandre/discovery-server
-    notify_if_failed_or_success  alexandre "Building finished successfully" "loudspeaker"
+    notify_if_failed_or_success  alexandre "Building the discovery-server failed" "rotating_light"
     docker build . -f config-server/Dockerfile -t alexandre/config-server
-    notify_if_failed_or_success  alexandre "Building finished successfully" "loudspeaker"
+    notify_if_failed_or_success  alexandre "Building the config-server failed" "rotating_light"
     docker build . -f api-gateway/Dockerfile -t alexandre/api-gateway
-    notify_if_failed_or_success  alexandre "Building finished successfully" "loudspeaker"
+    notify_if_failed_or_success  alexandre "Building the api-gateway failed" "rotating_light"
+    docker build . -f order-service/Dockerfile -t alexandre/order-service
+    notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
+    docker build . -f inventory-service/Dockerfile -t alexandre/inventory-service
+    notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
     docker build . -f user-service/Dockerfile -t alexandre/user-service
     DEPLOY_STATUS="$?"
 
@@ -43,7 +47,7 @@ if [[ "$*" == *"--build-all"* ]]; then
         if [[ "$DEPLOY_STATUS" == "0" ]]; then
             ./utils/notify.py alexandre "Building finished successfully" "loudspeaker"
         else
-            ./utils/notify.py alexandre "Error building the images" "rotating_light"
+            ./utils/notify.py alexandre "Error the user-service failed" "rotating_light"
             exit 1
         fi
     fi
@@ -54,15 +58,21 @@ if [[ "$*" == *"--precompile"* ]]; then
     mvn -f discovery-server/ clean install -Dmaven.test.skip=true
     mvn -f config-server/ clean install -Dmaven.test.skip=true
     mvn -f api-gateway/ clean install -Dmaven.test.skip=true
+    mvn -f inventory-service/ clean install -Dmaven.test.skip=true
+    mvn -f order-service/ clean install -Dmaven.test.skip=true
     mvn -f user-service/ clean install -Dmaven.test.skip=true
 
     # building the docker images
     docker build . -f discovery-server/precompiled.Dockerfile -t alexandre/discovery-server
-    notify_if_failed_or_success  alexandre "Building finished successfully" "loudspeaker"
+    notify_if_failed_or_success  alexandre "Building the discovery-server failed" "rotating_light"
     docker build . -f config-server/precompiled.Dockerfile -t alexandre/config-server
-    notify_if_failed_or_success  alexandre "Building finished successfully" "loudspeaker"
+    notify_if_failed_or_success  alexandre "Building the config-server failed" "rotating_light"
     docker build . -f api-gateway/precompiled.Dockerfile -t alexandre/api-gateway
-    notify_if_failed_or_success  alexandre "Building finished successfully" "loudspeaker"
+    notify_if_failed_or_success  alexandre "Building the api-gateway failed" "rotating_light"
+    docker build . -f order-service/precompiled.Dockerfile -t alexandre/order-service
+    notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
+    docker build . -f inventory-service/precompiled.Dockerfile -t alexandre/inventory-service
+    notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
     docker build . -f user-service/precompiled.Dockerfile -t alexandre/user-service
 
     # Notifying that the deployment is finished
@@ -70,7 +80,7 @@ if [[ "$*" == *"--precompile"* ]]; then
         if [[ "$DEPLOY_STATUS" == "0" ]]; then
             ./utils/notify.py alexandre "Building finished successfully" "loudspeaker"
         else
-            ./utils/notify.py alexandre "Error building the images" "rotating_light"
+            ./utils/notify.py alexandre "Error the user-service failed" "rotating_light"
             exit 1
         fi
     fi

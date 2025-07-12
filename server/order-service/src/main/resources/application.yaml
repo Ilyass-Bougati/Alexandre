@@ -3,7 +3,7 @@ spring:
     name: order-service
 
   profiles:
-    active: dev
+    active: ${ACTIVE_PROFILE}
 
   config:
     import: "optional:configserver:"
