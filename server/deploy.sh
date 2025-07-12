@@ -25,7 +25,7 @@ if [[ "$*" == *"--build-all"* ]]; then
     fi
 
     echo "Building all images..."
-    # docker build . -f discovery-server/Dockerfile -t alexandre/discovery-server
+    docker build . -f discovery-server/Dockerfile -t alexandre/discovery-server
     notify_if_failed_or_success "alexandre"
     docker build . -f config-server/Dockerfile -t alexandre/config-server
     notify_if_failed_or_success "alexandre"
@@ -43,6 +43,20 @@ if [[ "$*" == *"--build-all"* ]]; then
             exit 1
         fi
     fi
+fi
+
+if [[ "$*" == *"--precompile"* ]]; then
+    # precompiling the services
+    mvn -f discovery-server/ clean install -Dmaven.test.skip=true
+    mvn -f config-server/ clean install -Dmaven.test.skip=true
+    mvn -f api-gateway/ clean install -Dmaven.test.skip=true
+    mvn -f user-service/ clean install -Dmaven.test.skip=true
+
+    # building the docker images
+    docker build . -f discovery-server/precompiled.Dockerfile -t alexandre/discovery-server
+    docker build . -f config-server/precompiled.Dockerfile -t alexandre/config-server
+    docker build . -f api-gateway/precompiled.Dockerfile -t alexandre/api-gateway
+    docker build . -f user-service/precompiled.Dockerfile -t alexandre/user-service
 fi
 
 # checking for the compose flag
