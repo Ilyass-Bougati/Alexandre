@@ -46,19 +46,31 @@ public class OrderServiceImpl implements OrderService {
         // TODO : Get the products data from the InventoryService
         WebClient webClient = webClientBuilder.build();
         for (OrderItemDTO orderItemDTO : orderDTO.getItems()) {
-            ResponseEntity<ProductVariationDTO> productVariationDTORes = webClient.get()
-                    .uri("http://inventory-service/inventory/api/v1/productVariation/" + orderItemDTO.getProductVariationId())
-                    .retrieve()
-                    .toEntity(ProductVariationDTO.class)
-                    .block();
+            ResponseEntity<ProductVariationDTO> productVariationDTORes;
+            try {
+                productVariationDTORes = webClient.get()
+                        .uri("http://inventory-service/inventory/api/v1/productVariation/" + orderItemDTO.getProductVariationId())
+                        .retrieve()
+                        .toEntity(ProductVariationDTO.class)
+                        .block();
+            } catch (Exception e) {
+                throw new NotFoundException("Product variation not found");
+            }
+
 
             ProductVariationDTO productVariationDTO = productVariationDTORes.getBody();
 
-            ResponseEntity<ProductDTO> res = webClient.get()
-                    .uri("http://inventory-service/inventory/api/v1/product/" + productVariationDTO.getProductId())
-                    .retrieve()
-                    .toEntity(ProductDTO.class)
-                    .block();
+            ResponseEntity<ProductDTO> res;
+
+            try {
+                res = webClient.get()
+                        .uri("http://inventory-service/inventory/api/v1/product/" + productVariationDTO.getProductId())
+                        .retrieve()
+                        .toEntity(ProductDTO.class)
+                        .block();
+            } catch (Exception e) {
+                throw new NotFoundException("Product not found");
+            }
 
             ProductDTO productDTO = res.getBody();
 
@@ -73,11 +85,6 @@ public class OrderServiceImpl implements OrderService {
             savedOrder.getItems().add(orderItem);
         }
 
-
-
-        // Inserting the items
-//        savedOrder.setItems(orderDTO.getItems().stream().map(orderItemMapper::toEntity).collect(Collectors.toCollection(ArrayList::new)));
-//        savedOrder.getItems().forEach(item -> item.setOrder(savedOrder));
         return orderMapper.toDto(orderRepository.save(savedOrder));
     }
 
