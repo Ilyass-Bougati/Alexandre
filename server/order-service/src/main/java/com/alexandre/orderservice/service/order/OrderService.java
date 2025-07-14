@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface OrderService extends CrudService<OrderDTO, UUID> {
     Boolean profileOwnsOrder(UUID orderId, UUID profileId);
     void addItemToOrder(UUID orderId, OrderItemDTO orderItemDTO);
+    void removeItemFromOrder(UUID orderId, UUID orderItemId);
 }

@@ -170,4 +170,23 @@ public class OrderServiceImpl implements OrderService {
         OrderItem orderItem = orderItemMapper.toEntity(orderItemDTO);
         order.getItems().add(orderItem);
     }
+
+    @Override
+    public void removeItemFromOrder(UUID orderId, UUID orderItemId) {
+        // getting the order
+        Order order = orderEntityService.findById(orderId);
+        if (order == null) {
+            throw new NotFoundException("Order not found");
+        }
+
+        if (order.getState() != OrderState.PENDING) {
+            throw new RuntimeException("Can't modify a confirmed order");
+        }
+
+        if (order.getItems().stream().filter(orderItem -> orderItem.getId().equals(orderItemId)).findFirst().isEmpty()) {
+            throw new NotFoundException("Order item not found");
+        }
+
+        order.getItems().removeIf(orderItem -> orderItem.getId().equals(orderItemId));
+    }
 }

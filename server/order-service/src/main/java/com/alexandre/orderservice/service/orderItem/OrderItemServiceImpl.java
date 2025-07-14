@@ -1,14 +1,17 @@
 package com.alexandre.orderservice.service.orderItem;
 
+import com.alexandre.orderservice.dto.order.OrderDTO;
 import com.alexandre.orderservice.dto.orderItem.OrderItemDTO;
 import com.alexandre.orderservice.dto.orderItem.OrderItemMapper;
 import com.alexandre.orderservice.entity.Order;
 import com.alexandre.orderservice.entity.OrderItem;
+import com.alexandre.orderservice.enums.OrderState;
 import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.repository.OrderItemRepository;
 import com.alexandre.orderservice.service.order.OrderEntityService;
 import com.alexandre.orderservice.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final OrderItemRepository orderItemRepository;
     private final OrderItemMapper orderItemMapper;
     private final OrderService orderService;
+    private final OrderItemEntityService orderItemEntityService;
     private final OrderEntityService orderEntityService;
 
     @Override
@@ -50,6 +54,21 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public void deleteById(UUID id) {
+        // checking if the order exists and if it can be modified
+        OrderItem orderItem = orderItemEntityService.findById(id);
+        if (orderItem == null) {
+            throw new NotFoundException("Order item not found");
+        }
+
+        Order order = orderEntityService.findById(orderItem.getOrder().getId());
+        if (order == null) {
+            throw new NotFoundException("Order not found");
+        }
+
+        if (order.getState() != OrderState.PENDING) {
+            throw new RuntimeException("Confirmed orders can't be modified");
+        }
+
         orderItemRepository.deleteById(id);
     }
 
