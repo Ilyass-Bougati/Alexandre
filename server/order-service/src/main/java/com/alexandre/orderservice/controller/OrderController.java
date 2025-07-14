@@ -1,6 +1,8 @@
 package com.alexandre.orderservice.controller;
 
 import com.alexandre.orderservice.dto.order.OrderDTO;
+import com.alexandre.orderservice.dto.orderItem.OrderItemDTO;
+import com.alexandre.orderservice.enums.OrderState;
 import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.record.UserPrincipal;
 import com.alexandre.orderservice.service.order.OrderService;
@@ -23,6 +25,10 @@ public class OrderController {
     @PostMapping("/")
     public ResponseEntity<OrderDTO> createOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid OrderDTO orderDTO) {
         orderDTO.setProfileId(userPrincipal.profile().getId());
+
+        // making sure the product is Pending when first created
+        // it'll need to be confirmed later
+        orderDTO.setState(OrderState.PENDING);
         return ResponseEntity.ok(orderService.create(orderDTO));
     }
 
@@ -40,8 +46,14 @@ public class OrderController {
 
     @PreAuthorize("@orderService.profileOwnsOrder(#id, #userPrincipal.profile.id)")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID id) {
+    public void deleteOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID id) {
         orderService.deleteById(id);
-        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("@orderService.profileOwnsOrder(#orderId, #userPrincipal.profile.id)")
+    @PostMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addItem(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderId, @RequestBody @Valid OrderItemDTO orderItemDTO) {
+        orderService.addItemToOrder(orderId, orderItemDTO);
     }
 }

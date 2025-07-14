@@ -8,6 +8,7 @@ import com.alexandre.orderservice.dto.orderItem.OrderItemMapper;
 import com.alexandre.orderservice.entity.Order;
 import com.alexandre.orderservice.dto.order.OrderMapper;
 import com.alexandre.orderservice.entity.OrderItem;
+import com.alexandre.orderservice.enums.OrderState;
 import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
     private final WebClient.Builder webClientBuilder;
+    private final OrderEntityService orderEntityService;
 
     @Override
     public OrderDTO findById(UUID id) {
@@ -115,5 +117,57 @@ public class OrderServiceImpl implements OrderService {
             throw new NotFoundException("Order not found");
         }
         return orderRepository.existsByIdAndProfileId(orderId, profileId);
+    }
+
+    /**
+     * This function adds an item to an already existing order
+     * @param orderId the id of the order
+     * @param orderItemDTO the item to add to the order
+     */
+    @Override
+    public void addItemToOrder(UUID orderId, OrderItemDTO orderItemDTO) {
+        // getting the order
+        Order order = orderEntityService.findById(orderId);
+        if (order == null) {
+            throw new NotFoundException("Order not found");
+        }
+
+        if (order.getState() != OrderState.PENDING) {
+            throw new RuntimeException("Can't modify a confirmed order");
+        }
+
+        WebClient webClient = webClientBuilder.build();
+        ResponseEntity<ProductVariationDTO> productVariationRes;
+
+        try {
+             productVariationRes = webClient.get()
+                    .uri("http://inventory-service/inventory/api/v1/productVariation/" + orderItemDTO.getProductVariationId())
+                    .retrieve()
+                    .toEntity(ProductVariationDTO.class)
+                    .block();
+        } catch (Exception e) {
+            throw new NotFoundException("Product variation not found");
+        }
+
+        ProductVariationDTO productVariationDTO = productVariationRes.getBody();
+        ResponseEntity<ProductDTO> productRes;
+
+        try {
+            productRes = webClient.get()
+                    .uri("http://inventory-service/inventory/api/v1/product/" + productVariationDTO.getProductId())
+                    .retrieve()
+                    .toEntity(ProductDTO.class)
+                    .block();
+        } catch (Exception e) {
+            throw new NotFoundException("Product not found");
+        }
+
+        ProductDTO productDTO = productRes.getBody();
+        orderItemDTO.setProductName(productDTO.getName());
+        orderItemDTO.setUnitPriceAtOrderTime(productVariationDTO.getUnitPrice());
+        orderItemDTO.setOrderId(orderId);
+
+        OrderItem orderItem = orderItemMapper.toEntity(orderItemDTO);
+        order.getItems().add(orderItem);
     }
 }
