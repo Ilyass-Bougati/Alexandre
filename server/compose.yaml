@@ -1,4 +1,15 @@
 services:
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: alexandre_loki
+    ports:
+      - "3100:3100"
+    command: -config.expand-env=true -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./configurations/loki/config.yaml:/etc/loki/config.yaml
+      - ./configurations/loki/data:/loki
+
+
   grafana:
     image: grafana/grafana
     container_name: alexandre_grafana
@@ -16,6 +27,7 @@ services:
     container_name: alexandre_prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
     ports:
       - 9090:9090
     restart: unless-stopped
