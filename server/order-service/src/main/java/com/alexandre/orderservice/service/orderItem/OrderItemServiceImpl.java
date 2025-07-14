@@ -43,7 +43,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     /**
-     * This isn't implemented yet
+     * You can only update the quantity, and the variation
      * @param orderItemDTO
      * @return
      */

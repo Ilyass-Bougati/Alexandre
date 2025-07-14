@@ -11,6 +11,8 @@ import com.alexandre.orderservice.entity.OrderItem;
 import com.alexandre.orderservice.enums.OrderState;
 import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.repository.OrderRepository;
+import com.alexandre.orderservice.service.product.ProductService;
+import com.alexandre.orderservice.service.product.ProductVariationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,8 +30,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
-    private final WebClient.Builder webClientBuilder;
     private final OrderEntityService orderEntityService;
+    private final ProductService productService;
+    private final ProductVariationService productVariationService;
 
     @Override
     public OrderDTO findById(UUID id) {
@@ -45,36 +48,9 @@ public class OrderServiceImpl implements OrderService {
         order.setItems(new ArrayList<>());
         Order savedOrder = orderRepository.save(order);
 
-        // TODO : Get the products data from the InventoryService
-        WebClient webClient = webClientBuilder.build();
         for (OrderItemDTO orderItemDTO : orderDTO.getItems()) {
-            ResponseEntity<ProductVariationDTO> productVariationDTORes;
-            try {
-                productVariationDTORes = webClient.get()
-                        .uri("http://inventory-service/inventory/api/v1/productVariation/" + orderItemDTO.getProductVariationId())
-                        .retrieve()
-                        .toEntity(ProductVariationDTO.class)
-                        .block();
-            } catch (Exception e) {
-                throw new NotFoundException("Product variation not found");
-            }
-
-
-            ProductVariationDTO productVariationDTO = productVariationDTORes.getBody();
-
-            ResponseEntity<ProductDTO> res;
-
-            try {
-                res = webClient.get()
-                        .uri("http://inventory-service/inventory/api/v1/product/" + productVariationDTO.getProductId())
-                        .retrieve()
-                        .toEntity(ProductDTO.class)
-                        .block();
-            } catch (Exception e) {
-                throw new NotFoundException("Product not found");
-            }
-
-            ProductDTO productDTO = res.getBody();
+            ProductVariationDTO productVariationDTO = productVariationService.get(orderItemDTO.getProductVariationId());
+            ProductDTO productDTO = productService.get(productVariationDTO.getProductId());
 
             OrderItem orderItem = OrderItem.builder()
                     .order(savedOrder)
@@ -136,33 +112,9 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Can't modify a confirmed order");
         }
 
-        WebClient webClient = webClientBuilder.build();
-        ResponseEntity<ProductVariationDTO> productVariationRes;
+        ProductVariationDTO productVariationDTO = productVariationService.get(orderItemDTO.getProductVariationId());
+        ProductDTO productDTO = productService.get(productVariationDTO.getProductId());
 
-        try {
-             productVariationRes = webClient.get()
-                    .uri("http://inventory-service/inventory/api/v1/productVariation/" + orderItemDTO.getProductVariationId())
-                    .retrieve()
-                    .toEntity(ProductVariationDTO.class)
-                    .block();
-        } catch (Exception e) {
-            throw new NotFoundException("Product variation not found");
-        }
-
-        ProductVariationDTO productVariationDTO = productVariationRes.getBody();
-        ResponseEntity<ProductDTO> productRes;
-
-        try {
-            productRes = webClient.get()
-                    .uri("http://inventory-service/inventory/api/v1/product/" + productVariationDTO.getProductId())
-                    .retrieve()
-                    .toEntity(ProductDTO.class)
-                    .block();
-        } catch (Exception e) {
-            throw new NotFoundException("Product not found");
-        }
-
-        ProductDTO productDTO = productRes.getBody();
         orderItemDTO.setProductName(productDTO.getName());
         orderItemDTO.setUnitPriceAtOrderTime(productVariationDTO.getUnitPrice());
         orderItemDTO.setOrderId(orderId);
