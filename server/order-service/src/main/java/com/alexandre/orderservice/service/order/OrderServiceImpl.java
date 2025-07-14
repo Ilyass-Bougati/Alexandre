@@ -9,19 +9,19 @@ import com.alexandre.orderservice.entity.Order;
 import com.alexandre.orderservice.dto.order.OrderMapper;
 import com.alexandre.orderservice.entity.OrderItem;
 import com.alexandre.orderservice.enums.OrderState;
+import com.alexandre.orderservice.event.NotificationEvent;
 import com.alexandre.orderservice.exception.NotFoundException;
 import com.alexandre.orderservice.repository.OrderRepository;
 import com.alexandre.orderservice.service.product.ProductService;
 import com.alexandre.orderservice.service.product.ProductVariationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -33,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderEntityService orderEntityService;
     private final ProductService productService;
     private final ProductVariationService productVariationService;
+    private final KafkaTemplate<String, NotificationEvent> kafkaTemplate;
 
     @Override
     public OrderDTO findById(UUID id) {
