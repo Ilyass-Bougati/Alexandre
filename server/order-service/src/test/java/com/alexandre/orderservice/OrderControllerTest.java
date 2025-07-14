@@ -4,7 +4,6 @@ import com.alexandre.orderservice.dto.order.OrderDTO;
 import com.alexandre.orderservice.dto.orderItem.OrderItemDTO;
 import com.alexandre.orderservice.dto.test.AuthenticationResponse;
 import com.alexandre.orderservice.dto.test.RegisterRequest;
-import com.alexandre.orderservice.entity.OrderItem;
 import com.alexandre.orderservice.utils.AuthUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,7 +148,7 @@ public class OrderControllerTest {
     void addOrderItem() {
         OrderItemDTO item = OrderItemDTO.builder()
                 .unitPriceAtOrderTime(12.2)
-                .productId(UUID.randomUUID())
+                .productVariationId(UUID.randomUUID())
                 .productName("product name")
                 .quantity(1)
                 .build();
@@ -197,7 +196,7 @@ public class OrderControllerTest {
     void failAddOrderItem() {
         OrderItemDTO item = OrderItemDTO.builder()
                 .unitPriceAtOrderTime(12.2)
-                .productId(UUID.randomUUID())
+                .productVariationId(UUID.randomUUID())
                 .productName("product name")
                 .quantity(1)
                 .build();

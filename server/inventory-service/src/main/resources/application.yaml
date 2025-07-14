@@ -3,7 +3,7 @@ spring:
     name: inventory-service
 
   profiles:
-    active: dev
+    active: ${ACTIVE_PROFILE:dev}
 
   config:
     import: "optional:configserver:"

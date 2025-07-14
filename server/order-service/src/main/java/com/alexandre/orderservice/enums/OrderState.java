@@ -1,7 +1,7 @@
 package com.alexandre.orderservice.enums;
 
 public enum OrderState {
-    PENDING,           // Order created but not yet processed
+    PENDING,           // Order created but not yet confirmed from the user side, which mean it can still be modified
     CONFIRMED,         // Order validated (e.g., payment confirmed or stock checked)
     PREPARING,         // Being prepared (e.g., packaging, picking from warehouse)
     SHIPPED,           // Shipped from warehouse, in transit

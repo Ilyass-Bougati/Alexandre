@@ -21,8 +21,7 @@ public class OrderDTO {
 
     private UUID profileId;
 
-    // TODO : remove later, make this take the default address
-//    @NotNull
+    @NotNull
     @Builder.Default
     private UUID addressId = UUID.randomUUID();
 

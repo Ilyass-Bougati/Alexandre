@@ -2,6 +2,9 @@ spring:
   application:
     name: api-gateway
 
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
+
   config:
     import: "optional:configserver:"
 

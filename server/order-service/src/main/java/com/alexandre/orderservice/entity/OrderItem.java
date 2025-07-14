@@ -5,14 +5,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /*
     Note here that we're taking snapshots of the unit price and the product name
     at the time of ordering, so that further updates won't change what the user
     has ordered
-
-    TODO : Add @NotNull constrains later
  */
 
 @Getter
@@ -31,15 +30,14 @@ public class OrderItem {
     private Order order;
 
     @NotNull
-    private UUID productId;
+    private UUID productVariationId;
 
     @NotNull
     private Integer quantity;
 
-    // TODO : change this later when the inventory service is finished
-//    @NotEmpty
+    @NotEmpty
     private String productName;
 
-//    @NotNull
-    private Double unitPriceAtOrderTime;
+    @NotNull
+    private BigDecimal unitPriceAtOrderTime;
 }

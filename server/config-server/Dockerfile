@@ -1,9 +1,8 @@
 FROM openjdk:17-slim AS builder
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    maven \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y maven
+RUN apt-get update && apt-get install -y curl
 
 WORKDIR /app/config-server
 COPY . /app

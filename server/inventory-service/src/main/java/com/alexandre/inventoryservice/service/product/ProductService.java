@@ -1,6 +1,7 @@
-package com.alexandre.inventoryservice.service;
+package com.alexandre.inventoryservice.service.product;
 
 import com.alexandre.inventoryservice.dto.ProductDTO;
+import com.alexandre.inventoryservice.service.CrudService;
 
 import java.util.UUID;
 

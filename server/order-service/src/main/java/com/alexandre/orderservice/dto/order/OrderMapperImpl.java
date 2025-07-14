@@ -29,13 +29,18 @@ public class OrderMapperImpl implements OrderMapper {
 
     @Override
     public Order toEntity(OrderDTO orderDTO) {
-        return Order.builder()
+        Order order = Order.builder()
                 .profileId(orderDTO.getProfileId())
                 .addressId(orderDTO.getAddressId())
                 .state(orderDTO.getState())
                 .createdAt(orderDTO.getCreatedAt())
-                // This might not work
-                .items(orderDTO.getItems().stream().map(orderItemMapper::toEntity).toList())
                 .build();
+
+        if (orderDTO.getId() != null) {
+            // This might not work
+            order.setItems(orderDTO.getItems().stream().map(orderItemMapper::toEntity).toList());
+        }
+
+        return order;
     }
 }

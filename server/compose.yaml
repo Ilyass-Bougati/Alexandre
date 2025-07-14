@@ -1,4 +1,53 @@
 services:
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: alexandre_loki
+    ports:
+      - "3100:3100"
+    command: -config.expand-env=true -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./configurations/loki/config.yaml:/etc/loki/config.yaml
+      - ./configurations/loki/data:/loki
+
+
+  grafana:
+    image: grafana/grafana
+    container_name: alexandre_grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./configurations/grafana:/etc/grafana/provisioning/datasources
+
+  prometheus:
+    image: prom/prometheus
+    container_name: alexandre_prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./configurations/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+
+  tempo:
+    image: grafana/tempo
+    container_name: tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./configurations/tempo/tempo.yml:/etc/tempo.yaml
+      - ./configurations/tempo/tempo-data:/tmp/tempo
+    ports:
+      - "3200:3200" # Tempo
+      - "4317:4317" # OTLP
+      - "4318:4318" # HTTP
+    hostname: tempo
+
   postgres_users:
     image: postgres:15
     container_name: alexandre_user_service_postgres_container
@@ -71,23 +120,132 @@ services:
       - "8080:8080"
     command: start-dev --import-realm
 
-  discovery-server:
-    container_name: discovery_server
-    image: alexandre/discovery-server:latest
-    ports:
-      - "8761:8761"
+#  discovery-server:
+#    container_name: discovery_server
+#    image: alexandre/discovery-server:latest
+#    environment:
+#      TEMPO_HOST: tempo
+#    ports:
+#      - "8761:8761"
+#    healthcheck:
+#      test:
+#        ["CMD", "curl", "-f", "http://discovery-server:8761/actuator/health"]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
+#      start_period: 10s
+#    depends_on:
+#      - grafana
+#      - tempo
+#
+#  config-server:
+#    container_name: config_server
+#    image: alexandre/config-server:latest
+#    environment:
+#      EUREKA_HOST: discovery-server
+#      TEMPO_HOST: tempo
+#    ports:
+#      - "8888:8888"
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://config-server:8888/actuator/health"]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
+#      start_period: 10s
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#
+#  api-gateway:
+#    container_name: api_gateway
+#    image: alexandre/api-gateway
+#    environment:
+#      EUREKA_HOST: discovery-server
+#      TEMPO_HOST: tempo
+#      ACTIVE_PROFILE: prod
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:4000/actuator/health" ]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
+#    ports:
+#      - "4000:4000"
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#
+#  user-service:
+#    container_name: user_service
+#    image: alexandre/user-service
+#    environment:
+#      ACTIVE_PROFILE: prod
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
+#      EUREKA_HOST: discovery-server
+#      TEMPO_HOST: tempo
+#      KEYCLOAK_HOST: keycloak
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
+#      start_period: 10s
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#    ports:
+#      - "8081"
+#
+#  order-service:
+#    container_name: order_service
+#    image: alexandre/order-service
+#    environment:
+#      ACTIVE_PROFILE: prod
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_orders:5432/alexandre_order_service
+#      EUREKA_HOST: discovery-server
+#      TEMPO_HOST: tempo
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
+#      start_period: 10s
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#    ports:
+#      - "8082"
+#
+#  inventory-service:
+#    container_name: inventory_service
+#    image: alexandre/inventory-service
+#    environment:
+#      ACTIVE_PROFILE: prod
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_inventory:5432/alexandre_inventory_service
+#      EUREKA_HOST: discovery-server
+#      TEMPO_HOST: tempo
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8083/actuator/health" ]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
+#      start_period: 10s
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#    ports:
+#      - "8083"
 
-  config-server:
-    container_name: config_server
-    image: alexandre/config-server:latest
-    environment:
-      EUREKA_HOST: "discovery-server"
-    ports:
-      - "8888:8888"
-    depends_on:
-      - discovery-server
 
 volumes:
   alexandre_user_service:
   alexandre_order_service:
   alexandre_inventory_service:
+  prometheus_data:
