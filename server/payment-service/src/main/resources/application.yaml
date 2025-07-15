@@ -21,8 +21,3 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
-
-stripe:
-  secret-key: sk_test_51Rl85dJWBx0SUW4z7dLmPPfFv5DgP2MvwiElnWU9XXlXhHyYVoHJMGt3sjFgNE5MuHzaFVpTntsbFDs8ZoOfLuYz00dtQBHulc
-  success-url: http://localhost:8080/success
-  cancel-url: http://localhost:8080/cancel

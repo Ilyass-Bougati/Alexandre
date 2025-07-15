@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/payment/api/v1/")
 public class PaymentController {
-    
+
     private final StripeServiceImpl stripeServiceImpl;
 
     @PreAuthorize("@orderService.checkProfileOwnsOrder(#userPrincipal.profile.id, #orderId, #userPrincipal.token)")
