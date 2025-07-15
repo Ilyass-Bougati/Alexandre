@@ -41,7 +41,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
         // TODO : rethink this
         oldPaymentMethodOptional.setCardHolderName(paymentMethodDTO.getCardHolderName());
-        oldPaymentMethodOptional.setStripeToken(paymentMethodDTO.getStripeToken());
+        oldPaymentMethodOptional.setCardName(paymentMethodDTO.getCardName());
         oldPaymentMethodOptional.setLast4Digits(paymentMethodDTO.getLast4Digits());
 
         return paymentMethodMapper.toDto(oldPaymentMethodOptional);

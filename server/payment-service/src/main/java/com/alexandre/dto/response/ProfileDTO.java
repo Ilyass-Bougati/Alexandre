@@ -1,6 +1,7 @@
-package com.alexandre.userservice.dto;
+package com.alexandre.dto.response;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,19 +12,23 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class PaymentMethodDTO {
+public class ProfileDTO {
     private UUID id;
 
     @NotBlank
-    private String cardHolderName;
+    private String firstName;
 
     @NotBlank
-    private String cardName;
+    private String lastName;
 
     @NotBlank
-    private String last4Digits;
+    private String phoneNumber;
 
-    private UUID profileId;
+    @NotNull
+    private UUID userId;
+
+    @NotBlank
+    private String email;
 
     private LocalDateTime createdAt;
 }
