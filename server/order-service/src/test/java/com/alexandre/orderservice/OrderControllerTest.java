@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -147,7 +148,7 @@ public class OrderControllerTest {
     @Order(4)
     void addOrderItem() {
         OrderItemDTO item = OrderItemDTO.builder()
-                .unitPriceAtOrderTime(12.2)
+                .unitPriceAtOrderTime(BigDecimal.valueOf(25))
                 .productVariationId(UUID.randomUUID())
                 .productName("product name")
                 .quantity(1)
@@ -195,7 +196,7 @@ public class OrderControllerTest {
     @Order(6)
     void failAddOrderItem() {
         OrderItemDTO item = OrderItemDTO.builder()
-                .unitPriceAtOrderTime(12.2)
+                .unitPriceAtOrderTime(BigDecimal.valueOf(25))
                 .productVariationId(UUID.randomUUID())
                 .productName("product name")
                 .quantity(1)

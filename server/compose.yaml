@@ -99,6 +99,23 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres_payment:
+    image: postgres:15
+    container_name: alexandre_payment_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_payment_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - alexandre_payment_service:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   keycloak:
     image: keycloak/keycloak:26.2
     container_name: alexandre_keycloak
@@ -119,6 +136,31 @@ services:
     ports:
       - "8080:8080"
     command: start-dev --import-realm
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
 #  discovery-server:
 #    container_name: discovery_server
@@ -248,4 +290,5 @@ volumes:
   alexandre_user_service:
   alexandre_order_service:
   alexandre_inventory_service:
+  alexandre_payment_service:
   prometheus_data:

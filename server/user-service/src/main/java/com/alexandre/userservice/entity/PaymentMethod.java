@@ -24,7 +24,7 @@ public class PaymentMethod {
     private String cardHolderName;
 
     @NotBlank
-    private String stripeToken;
+    private String cardName;
 
     @NotBlank
     private String last4Digits;

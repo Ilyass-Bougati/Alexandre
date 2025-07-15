@@ -66,7 +66,7 @@ public class PaymentMethodControllerTest {
         PaymentMethodDTO paymentMethodDTO = PaymentMethodDTO.builder()
                 .cardHolderName("BOUGATI ILYASS")
                 .last4Digits("1111")
-                .stripeToken("stripetoken")
+                .cardName("stripetoken")
                 .build();
 
         ResponseEntity<PaymentMethodDTO> createdPaymentMethod = webClient.post()

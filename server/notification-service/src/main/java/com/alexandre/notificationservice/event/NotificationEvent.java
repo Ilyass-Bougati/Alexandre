@@ -1,0 +1,17 @@
+package com.alexandre.notificationservice.event;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.UUID;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class NotificationEvent {
+    private UUID profileId;
+    private String message;
+}
