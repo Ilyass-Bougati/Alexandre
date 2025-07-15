@@ -6,6 +6,7 @@ import com.alexandre.dto.StripeResponse;
 import com.alexandre.enums.OrderState;
 import com.alexandre.exception.PaymentException;
 import com.alexandre.record.StripeProperties;
+import com.alexandre.service.order.OrderService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
@@ -23,30 +24,19 @@ public class StripeServiceImpl implements StripeService {
 
     private final WebClient webClient;
     private final StripeProperties stripeProperties;
+    private final OrderService orderService;
 
-    public StripeServiceImpl(WebClient.Builder clientBuilder, StripeProperties stripeProperties) {
+    public StripeServiceImpl(WebClient.Builder clientBuilder, StripeProperties stripeProperties, OrderService orderService) {
         this.webClient = clientBuilder.build();
         this.stripeProperties = stripeProperties;
+        this.orderService = orderService;
     }
 
     // TODO : changes
     // The currency will have to be rethinked later
     public StripeResponse checkout(UUID orderId, Jwt jwt) {
         // getting the order data
-        ResponseEntity<OrderDTO> orderDTOResponseEntity = null;
-        try {
-            orderDTOResponseEntity = webClient.get()
-                    .uri("http://order-service/order/api/v1/" + orderId)
-                    .header("Authorization", "Bearer " + jwt.getTokenValue())
-                    .retrieve()
-                    .toEntity(OrderDTO.class)
-                    .block();
-        } catch (Exception e) {
-            // TODO : Refactor this
-            throw new RuntimeException(e.getMessage());
-        }
-
-        OrderDTO orderDTO = orderDTOResponseEntity.getBody();
+        OrderDTO orderDTO = orderService.get(orderId, jwt);
 
         // checking that the order is still pending
         if (orderDTO.getState() != OrderState.PENDING) {
