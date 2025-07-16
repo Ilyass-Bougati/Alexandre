@@ -13,6 +13,7 @@ public class TransactionMapperImpl implements TransactionMapper {
                 .state(transactionDTO.getState())
                 .amount(transactionDTO.getAmount())
                 .orderId(transactionDTO.getOrderId())
+                .stripeSessionId(transactionDTO.getStripeSessionId())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class TransactionMapperImpl implements TransactionMapper {
                 .state(transaction.getState())
                 .amount(transaction.getAmount())
                 .orderId(transaction.getOrderId())
+                .stripeSessionId(transaction.getStripeSessionId())
                 .build();
     }
 }
