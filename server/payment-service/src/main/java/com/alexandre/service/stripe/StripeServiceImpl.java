@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Slf4j
 public class StripeServiceImpl implements StripeService {
 
     private final StripeProperties stripeProperties;
@@ -37,10 +36,13 @@ public class StripeServiceImpl implements StripeService {
     // TODO : changes
     // The currency will have to be rethinked later
     public StripeResponse checkout(UUID orderId, Jwt jwt) {
+        // Checking if a transaction for this order already exists
+        if (transactionService.existsTransaction(orderId)) {
+            throw new PaymentException("Transaction already exists");
+        }
+
         // getting the order data
         OrderDTO orderDTO = orderService.get(orderId, jwt);
-        log.info("Checkout order: {}", orderDTO);
-        log.info("secret : {}", stripeProperties.secretKey());
 
         // checking that the order is still pending
         if (orderDTO.getState() != OrderState.PENDING) {
@@ -53,6 +55,7 @@ public class StripeServiceImpl implements StripeService {
         TransactionDTO transaction = TransactionDTO.builder()
                 .orderId(orderId)
                 .amount(0L)
+                .id(UUID.randomUUID())
                 .build();
 
         for (OrderItemDTO orderItem : orderDTO.getItems()) {
@@ -76,8 +79,8 @@ public class StripeServiceImpl implements StripeService {
 
         SessionCreateParams sessionCreateParams = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(stripeProperties.successUrl())
-                .setCancelUrl(stripeProperties.cancelUrl())
+                .setSuccessUrl(stripeProperties.successUrl() + transaction.getId())
+                .setCancelUrl(stripeProperties.cancelUrl() + transaction.getId())
                 .addAllLineItem(items)
                 .build();
 
