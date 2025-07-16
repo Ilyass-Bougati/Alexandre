@@ -21,7 +21,9 @@ public class TransactionDTO {
     private UUID orderId;
 
     @Min(0)
-    private BigDecimal amount;
+    private Long amount;
+
+    private String stripeSessionId;
 
     @Builder.Default
     private TransactionState state = TransactionState.PENDING;

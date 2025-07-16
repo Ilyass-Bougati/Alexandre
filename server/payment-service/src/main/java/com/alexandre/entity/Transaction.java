@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,14 +23,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotNull
     private UUID orderId;
 
+    @NotEmpty
+    private String stripeSessionId;
+
     @Min(0)
-    private BigDecimal amount;
+    private Long amount;
 
     @NotNull
     @Builder.Default
