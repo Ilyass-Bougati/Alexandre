@@ -55,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .timestamp(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
 
-        kafkaPaymentTemplate.send("payment.refund", cancelEvent);
+        kafkaPaymentTemplate.send("payment.cancel", cancelEvent);
         log.info("Successfully handled canceling payment for transactionId={}, orderId={}, profileId={}", transactionId, transactionDTO.getOrderId(), orderDTO.getProfileId());
     }
 
