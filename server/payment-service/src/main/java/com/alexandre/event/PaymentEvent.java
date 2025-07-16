@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentSuccessEvent {
+public class PaymentEvent {
     UUID transactionId;
     UUID profileId;
     LocalDateTime timestamp;

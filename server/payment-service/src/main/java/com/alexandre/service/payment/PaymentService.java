@@ -7,4 +7,5 @@ import java.util.UUID;
 public interface PaymentService {
     void successPayment(UUID transactionId, Jwt jwt);
     void cancelPayment(UUID transactionId, Jwt jwt);
+    void refundPayment(UUID transactionId, Jwt jwt);
 }
