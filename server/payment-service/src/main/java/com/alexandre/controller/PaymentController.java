@@ -23,7 +23,6 @@ import java.util.UUID;
 public class PaymentController {
 
     private final StripeServiceImpl stripeServiceImpl;
-    private final TransactionService transactionService;
     private final PaymentService paymentService;
 
     @PreAuthorize("@orderService.checkProfileOwnsOrder(#userPrincipal.profile.id, #orderId, #userPrincipal.token)")

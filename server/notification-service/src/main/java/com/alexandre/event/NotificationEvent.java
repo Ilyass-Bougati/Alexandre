@@ -1,4 +1,4 @@
-package com.alexandre.notificationservice.event;
+package com.alexandre.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
