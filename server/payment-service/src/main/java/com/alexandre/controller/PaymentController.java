@@ -3,6 +3,7 @@ package com.alexandre.controller;
 import com.alexandre.dto.StripeResponse;
 import com.alexandre.enums.TransactionState;
 import com.alexandre.record.UserPrincipal;
+import com.alexandre.service.payment.PaymentService;
 import com.alexandre.service.stripe.StripeServiceImpl;
 import com.alexandre.service.transaction.TransactionService;
 import com.stripe.exception.StripeException;
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class PaymentController {
 
     private final StripeServiceImpl stripeServiceImpl;
-    private final TransactionService transactionService;
+    private final PaymentService paymentService;
 
     @PreAuthorize("@orderService.checkProfileOwnsOrder(#userPrincipal.profile.id, #orderId, #userPrincipal.token)")
     @PostMapping("/pay/{orderId}")
@@ -33,7 +34,7 @@ public class PaymentController {
     @PreAuthorize("@transactionService.checkProfileOwnsTransaction(#userPrincipal.profile.id, #transactionId, #userPrincipal.token)")
     @GetMapping("/success/{transactionId}")
     public ResponseEntity<Void> success(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID transactionId) throws StripeException {
-        transactionService.updateState(transactionId, TransactionState.SUCCESSFUL);
+        paymentService.successPayment(transactionId, userPrincipal.token());
         return ResponseEntity.status(HttpStatus.FOUND)
                 // TODO : Change this later
                 .location(URI.create("https://example.com"))
@@ -43,7 +44,7 @@ public class PaymentController {
     @PreAuthorize("@transactionService.checkProfileOwnsTransaction(#userPrincipal.profile.id, #transactionId, #userPrincipal.token)")
     @GetMapping("/cancel/{transactionId}")
     public ResponseEntity<Void> cancel(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID transactionId) throws StripeException {
-        transactionService.updateState(transactionId, TransactionState.FAILED);
+        paymentService.cancelPayment(transactionId, userPrincipal.token());
         return ResponseEntity.status(HttpStatus.FOUND)
                 // TODO : Change this later
                 .location(URI.create("https://example.com"))

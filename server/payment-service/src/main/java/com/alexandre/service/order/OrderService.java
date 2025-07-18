@@ -1,6 +1,7 @@
 package com.alexandre.service.order;
 
 import com.alexandre.dto.response.OrderDTO;
+import com.alexandre.exception.NotFoundException;
 import com.alexandre.record.StripeProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -30,6 +31,10 @@ public class OrderService {
         } catch (Exception e) {
             // TODO : Refactor this
             throw new RuntimeException(e.getMessage());
+        }
+
+        if (orderDTOResponseEntity.getBody() == null) {
+            throw new NotFoundException("Order not found");
         }
 
         return orderDTOResponseEntity.getBody();
