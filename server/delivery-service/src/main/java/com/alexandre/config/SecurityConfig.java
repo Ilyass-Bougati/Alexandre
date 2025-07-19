@@ -23,7 +23,8 @@ public class SecurityConfig {
         // fine to disable since we're using JWT
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .anyRequest().authenticated()
+                .requestMatchers("/city/api/**").hasAnyRole("alex_admin", "alex_staff")
+                .anyRequest().hasAnyRole("alex_admin", "alex_staff", "alex_inv_staff")
         );
 
         // using the jwt resource server

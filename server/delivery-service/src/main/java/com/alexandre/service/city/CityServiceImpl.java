@@ -2,9 +2,11 @@ package com.alexandre.service.city;
 
 import com.alexandre.dto.city.CityDTO;
 import com.alexandre.dto.city.CityMapper;
+import com.alexandre.event.CityCreatedEvent;
 import com.alexandre.exception.NotFoundException;
 import com.alexandre.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +20,22 @@ public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
     private final CityMapper cityMapper;
+    private final KafkaTemplate<String, CityCreatedEvent> kafkaTemplate;
 
     @Override
     public CityDTO create(CityDTO cityDTO) {
-        return cityMapper.toDto(cityRepository.save(cityMapper.toEntity(cityDTO)));
+        CityDTO city = cityMapper.toDto(cityRepository.save(cityMapper.toEntity(cityDTO)));
+
+        // producing and event
+        CityCreatedEvent event = CityCreatedEvent.builder()
+                .name(city.getName())
+                .shippingFee(city.getShippingFee())
+                .id(city.getId())
+                .build();
+
+        kafkaTemplate.send("city.created", event);
+
+        return city;
     }
 
     @Override
