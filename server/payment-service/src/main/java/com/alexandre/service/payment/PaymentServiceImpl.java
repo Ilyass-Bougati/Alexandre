@@ -1,10 +1,12 @@
 package com.alexandre.service.payment;
 
 import com.alexandre.dto.response.OrderDTO;
+import com.alexandre.dto.response.ProfileDTO;
 import com.alexandre.dto.transaction.TransactionDTO;
 import com.alexandre.enums.TransactionState;
 import com.alexandre.event.PaymentEvent;
 import com.alexandre.service.order.OrderService;
+import com.alexandre.service.profile.ProfileService;
 import com.alexandre.service.transaction.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,18 +26,21 @@ public class PaymentServiceImpl implements PaymentService {
     private final TransactionService transactionService;
     private final KafkaTemplate<String, PaymentEvent> kafkaPaymentTemplate;
     private final OrderService orderService;
+    private final ProfileService profileService;
 
     @Override
     public void successPayment(UUID transactionId, Jwt jwt) {
         transactionService.updateState(transactionId, TransactionState.SUCCESSFUL);
         TransactionDTO transactionDTO = transactionService.findById(transactionId);
         OrderDTO orderDTO = orderService.get(transactionDTO.getOrderId(), jwt);
+        ProfileDTO profileDTO = profileService.get(jwt);
 
         // creating an event and producing an event
         PaymentEvent paymentSuccessEvent = PaymentEvent.builder()
                 .transactionId(transactionId)
                 .profileId(orderDTO.getProfileId())
                 .timestamp(LocalDateTime.now(ZoneOffset.UTC))
+                .email(profileDTO.getEmail())
                 .build();
 
         kafkaPaymentTemplate.send("payment.success", paymentSuccessEvent);
@@ -65,12 +70,14 @@ public class PaymentServiceImpl implements PaymentService {
         transactionService.updateState(transactionId, TransactionState.REFUNDED);
         TransactionDTO transactionDTO = transactionService.findById(transactionId);
         OrderDTO orderDTO = orderService.get(transactionDTO.getOrderId(), jwt);
+        ProfileDTO profileDTO = profileService.get(jwt);
 
         // producing a refunded event
         PaymentEvent refundEvent = PaymentEvent.builder()
                 .transactionId(transactionId)
                 .profileId(orderDTO.getProfileId())
                 .timestamp(LocalDateTime.now(ZoneOffset.UTC))
+                .email(profileDTO.getEmail())
                 .build();
 
         kafkaPaymentTemplate.send("payment.refund", refundEvent);
