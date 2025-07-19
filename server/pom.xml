@@ -25,6 +25,7 @@
       <module>config-server</module>
       <module>notification-service</module>
       <module>payment-service</module>
+      <module>delivery-service</module>
   </modules>
 
   <properties>
