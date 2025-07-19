@@ -2,13 +2,17 @@ package com.alexandre.userservice.service.auth;
 
 import com.alexandre.userservice.dto.ProfileDTO;
 import com.alexandre.userservice.dto.RegisterRequest;
+import com.alexandre.userservice.event.RegisterEvent;
 import com.alexandre.userservice.service.keycloak.KeycloakService;
 import com.alexandre.userservice.service.profile.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -16,6 +20,7 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
     private final ProfileService profileService;
     private final KeycloakService keycloakService;
+    private final KafkaTemplate<String, RegisterEvent> kafkaTemplate;
 
     @Override
     public void login(String email, String password) {
@@ -42,6 +47,16 @@ public class AuthServiceImpl implements AuthService {
 
         // saving the profile
         profileDTO.setUserId(userId);
-        profileService.create(profileDTO);
+        ProfileDTO profile = profileService.create(profileDTO);
+
+        // producing an event
+        RegisterEvent registerEvent = RegisterEvent.builder()
+                .profileId(profile.getId())
+                .email(profile.getEmail())
+                .lastName(profile.getLastName())
+                .createdAt(LocalDateTime.now(ZoneOffset.UTC))
+                .build();
+
+        kafkaTemplate.send("user.register", registerEvent);
     }
 }
