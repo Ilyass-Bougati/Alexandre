@@ -1,5 +1,6 @@
 package com.alexandre.service.email;
 
+import com.alexandre.config.EmailTemplateLoader;
 import com.alexandre.records.SendGridProperties;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
@@ -20,17 +21,27 @@ import java.io.IOException;
 public class SendGridEmailService implements EmailService {
 
     private final SendGridProperties sendGridProperties;
+    private final EmailTemplateLoader emailTemplateLoader;
     private final Email fromEmail;
 
-    public SendGridEmailService(SendGridProperties sendGridProperties) {
+    public SendGridEmailService(SendGridProperties sendGridProperties, EmailTemplateLoader emailTemplateLoader) {
         this.sendGridProperties = sendGridProperties;
         this.fromEmail = new Email(sendGridProperties.fromEmail());
+        this.emailTemplateLoader = emailTemplateLoader;
     }
 
     @Override
-    public void send(String to, String subject, String body) {
+    public void send(String to, String subject, String templatePath) {
+        String body;
+        try {
+            body = emailTemplateLoader.loadTemplate(templatePath);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return;
+        }
+
         Email toEmail = new Email(to);
-        Mail mail = new Mail(fromEmail, subject, toEmail, new Content("text/plain", body));
+        Mail mail = new Mail(fromEmail, subject, toEmail, new Content("text/html", body));
 
         SendGrid sg = new SendGrid(sendGridProperties.apiKey());
         Request request = new Request();

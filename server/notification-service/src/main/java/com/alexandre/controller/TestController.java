@@ -12,7 +12,7 @@ public class TestController {
 
     @PostMapping("/")
     public String test() {
-        emailService.send("i.bougati12@gmail.com", "test email", "this is a test email");
+        emailService.send("i.bougati12@gmail.com", "test email", "welcome.html");
         return "success";
     }
 }

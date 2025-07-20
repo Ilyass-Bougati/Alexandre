@@ -13,5 +13,6 @@ import java.util.UUID;
 public class PaymentEvent {
     UUID transactionId;
     UUID profileId;
+    String email;
     LocalDateTime timestamp;
 }

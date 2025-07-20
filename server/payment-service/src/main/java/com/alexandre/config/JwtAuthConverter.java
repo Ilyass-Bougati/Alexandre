@@ -4,6 +4,7 @@ package com.alexandre.config;
 import com.alexandre.dto.response.ProfileDTO;
 import com.alexandre.record.JwtConverterProperties;
 import com.alexandre.record.UserPrincipal;
+import com.alexandre.service.profile.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,13 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private final String principleAttribute;
     private final String resourceId;
+    private final ProfileService profileService;
 
-    public JwtAuthConverter(WebClient.Builder webClientBuilder, JwtConverterProperties jwtConverterProperties) {
+    public JwtAuthConverter(WebClient.Builder webClientBuilder, JwtConverterProperties jwtConverterProperties, ProfileService profileService) {
         this.webClient = webClientBuilder.build();
         principleAttribute = jwtConverterProperties.principleAttribute();
         resourceId = jwtConverterProperties.resourceId();
+        this.profileService = profileService;
     }
 
     @Override
@@ -48,19 +51,9 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
                 extractResourceRoles(jwt).stream()
         ).collect(Collectors.toSet());
 
-        ResponseEntity<ProfileDTO> profileDTO = webClient.get()
-                .uri("http://user-service/profile/api/v1/")
-                .header("Authorization", "Bearer " + jwt.getTokenValue())
-                .retrieve()
-                .toEntity(ProfileDTO.class)
-                .block();
+        ProfileDTO profileDTO = profileService.get(jwt);
 
-        // TODO : make this better
-        if (!profileDTO.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("Unsuccessful authentication");
-        }
-
-        UserPrincipal userPrincipal = new UserPrincipal(jwt, jwt.getSubject(), profileDTO.getBody());
+        UserPrincipal userPrincipal = new UserPrincipal(jwt, jwt.getSubject(), profileDTO);
         return new UsernamePasswordAuthenticationToken(userPrincipal, "N/A", authorities);
     }
 
