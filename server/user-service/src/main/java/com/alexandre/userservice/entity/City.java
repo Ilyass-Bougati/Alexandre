@@ -19,7 +19,6 @@ import java.util.UUID;
 @Builder
 public class City {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotBlank

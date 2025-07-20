@@ -3,6 +3,7 @@ package com.alexandre.service.city;
 import com.alexandre.dto.city.CityDTO;
 import com.alexandre.dto.city.CityMapper;
 import com.alexandre.event.CityCreatedEvent;
+import com.alexandre.event.CityDeletedEvent;
 import com.alexandre.exception.NotFoundException;
 import com.alexandre.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,14 @@ public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
     private final CityMapper cityMapper;
-    private final KafkaTemplate<String, CityCreatedEvent> kafkaTemplate;
+    private final KafkaTemplate<String, CityCreatedEvent> cityCreatedKafkaTemplate;
+    private final KafkaTemplate<String, CityDeletedEvent> cityDeletedKafkaTemplate;
 
     @Override
     public CityDTO create(CityDTO cityDTO) {
+        // Generating a random UUID for the id of the city
+        cityDTO.setId(UUID.randomUUID());
+
         CityDTO city = cityMapper.toDto(cityRepository.save(cityMapper.toEntity(cityDTO)));
 
         // producing and event
@@ -33,7 +38,7 @@ public class CityServiceImpl implements CityService {
                 .id(city.getId())
                 .build();
 
-        kafkaTemplate.send("city.created", event);
+        cityCreatedKafkaTemplate.send("city.created", event);
 
         return city;
     }
@@ -52,12 +57,42 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public void delete(UUID id) {
+
         cityRepository.deleteById(id);
+
+        // producing an event
+        CityDeletedEvent event = CityDeletedEvent.builder()
+                .cityId(id)
+                .build();
+
+        cityDeletedKafkaTemplate.send("city.deleted", event);
     }
 
     @Override
     public List<CityDTO> findAll() {
         return cityRepository.findAll()
                 .stream().map(cityMapper::toDto).toList();
+    }
+
+    /**
+     * This function creates a city and saves it to the database without producing a kafka event
+     * @param cityDTO The city object to create
+     */
+    @Override
+    public void createSilent(CityDTO cityDTO) {
+        if (cityDTO.getId() == null) {
+            // Generating a random UUID for the id of the city
+            cityDTO.setId(UUID.randomUUID());
+        }
+        cityRepository.save(cityMapper.toEntity(cityDTO));
+    }
+
+    /**
+     * This function deletes a city from database without producing a kafka event
+     * @param id The id city of the city to delete
+     */
+    @Override
+    public void deleteSilent(UUID id) {
+        cityRepository.deleteById(id);
     }
 }
