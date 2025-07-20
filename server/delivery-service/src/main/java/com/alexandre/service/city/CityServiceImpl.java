@@ -2,6 +2,7 @@ package com.alexandre.service.city;
 
 import com.alexandre.dto.city.CityDTO;
 import com.alexandre.dto.city.CityMapper;
+import com.alexandre.entity.City;
 import com.alexandre.event.CityCreatedEvent;
 import com.alexandre.event.CityDeletedEvent;
 import com.alexandre.exception.NotFoundException;
@@ -45,7 +46,13 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityDTO update(CityDTO cityDTO) {
-        return null;
+        City city = cityRepository.findById(cityDTO.getId())
+                .orElseThrow(() -> new NotFoundException("City not found"));
+
+        city.setName(cityDTO.getName());
+        city.setShippingFee(cityDTO.getShippingFee());
+
+        return cityMapper.toDto(city);
     }
 
     @Override
