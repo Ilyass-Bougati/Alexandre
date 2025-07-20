@@ -6,4 +6,6 @@ import com.alexandre.service.CrudService;
 import java.util.UUID;
 
 public interface DeliveryCompanyService extends CrudService<DeliveryCompanyDTO, UUID> {
+    DeliveryCompanyDTO addAvailableCity(UUID companyId, UUID cityId);
+    DeliveryCompanyDTO removeAvailableCity(UUID companyId, UUID cityId);
 }

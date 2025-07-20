@@ -11,14 +11,17 @@ import lombok.*;
 
 import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Getter
 @Setter
 @Entity
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class City {
     @Id
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @NotBlank
