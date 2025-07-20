@@ -1,0 +1,39 @@
+package com.alexandre.dto.mapper.Implementation;
+
+import com.alexandre.dto.ProfileDTO;
+import com.alexandre.entity.Profile;
+import com.alexandre.dto.mapper.ProfileMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class ProfileMapperImpl implements ProfileMapper {
+
+
+    @Override
+    public ProfileDTO toDto(Profile profile) {
+        return ProfileDTO.builder()
+                .firstName(profile.getFirstName())
+                .lastName(profile.getLastName())
+                .phoneNumber(profile.getPhoneNumber())
+                .id(profile.getId())
+                .createdAt(profile.getCreatedAt())
+                .email(profile.getEmail())
+                .userId(profile.getUserId())
+                .build();
+    }
+
+    @Override
+    public Profile toEntity(ProfileDTO profileDTO) {
+        return Profile.builder()
+                .id(profileDTO.getId())
+                .firstName(profileDTO.getFirstName())
+                .lastName(profileDTO.getLastName())
+                .phoneNumber(profileDTO.getPhoneNumber())
+                .createdAt(profileDTO.getCreatedAt())
+                .email(profileDTO.getEmail())
+                .userId(profileDTO.getUserId())
+                .build();
+    }
+}

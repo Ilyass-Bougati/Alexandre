@@ -1,30 +1,28 @@
-package com.alexandre.entity;
+package com.alexandre.dto;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
 @Builder
-public class City {
-    @Id
+public class CityDTO {
     private UUID id;
 
     @NotBlank
     private String name;
 
     @NotNull
-    @Min(value = 0)
     private Double shippingFee;
+
+    private LocalDateTime createdAt;
 }
