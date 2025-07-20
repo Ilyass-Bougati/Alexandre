@@ -1,0 +1,71 @@
+package com.alexandre.service.address;
+
+import com.alexandre.dto.AddressDTO;
+import com.alexandre.dto.mapper.AddressMapper;
+import com.alexandre.entity.Address;
+import com.alexandre.exception.NotFoundException;
+import com.alexandre.repository.AddressRepository;
+import com.alexandre.service.city.CityEntityService;
+import com.alexandre.service.profile.ProfileEntityService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service("addressService")
+@RequiredArgsConstructor
+@Transactional
+public class AddressServiceImpl implements AddressService {
+    private final AddressRepository addressRepository;
+    private final AddressMapper addressMapper;
+    private final ProfileEntityService profileEntityService;
+    private final CityEntityService cityEntityService;
+
+    @Override
+    @Transactional(readOnly = true)
+    public AddressDTO findById(UUID id) {
+        Optional<Address> addressOptional = addressRepository.findById(id);
+        return addressOptional.map(addressMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("Address not found"));
+    }
+
+    @Override
+    public AddressDTO create(AddressDTO addressDTO) {
+        Address address = addressMapper.toEntity(addressDTO);
+        return addressMapper.toDto(addressRepository.save(address));
+    }
+
+    @Override
+    public AddressDTO update(AddressDTO addressDTO) {
+        Address oldAddressOptional = addressRepository.findById(addressDTO.getId())
+                .orElseThrow(() -> new NotFoundException("Address not found"));
+
+        oldAddressOptional.setStreet(addressDTO.getStreet());
+        oldAddressOptional.setIsDefault(addressDTO.getIsDefault());
+        oldAddressOptional.setPostalCode(addressDTO.getPostalCode());
+        oldAddressOptional.setProfile(profileEntityService.findById(addressDTO.getProfileId()));
+        oldAddressOptional.setCity(cityEntityService.findById(addressDTO.getCityId()));
+
+//        addressRepository.save(oldAddressOptional);
+        return addressMapper.toDto(oldAddressOptional);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        addressRepository.deleteById(id);
+    }
+
+    @Override
+    public List<AddressDTO> findByProfileId(UUID profileId) {
+        return addressRepository.findAllByProfileId(profileId)
+                .stream().map(addressMapper::toDto).toList();
+    }
+
+    @Override
+    public Boolean profileOwnsAddress(UUID profileId, UUID addressId) {
+        return addressRepository.existsByProfileIdAndId(profileId, addressId);
+    }
+}
