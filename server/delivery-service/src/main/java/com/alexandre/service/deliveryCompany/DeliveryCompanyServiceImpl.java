@@ -64,7 +64,6 @@ public class DeliveryCompanyServiceImpl implements DeliveryCompanyService {
                 .orElseThrow(() -> new NotFoundException("Delivery Company not found"));
         City city = cityEntityService.findById(cityId);
 
-        // this doesn't scale well
         deliveryCompany.getAvailableCities().add(city);
 
         return deliveryCompanyMapper.toDto(deliveryCompany);
@@ -76,7 +75,6 @@ public class DeliveryCompanyServiceImpl implements DeliveryCompanyService {
                 .orElseThrow(() -> new NotFoundException("Delivery Company not found"));
         City city = cityEntityService.findById(cityId);
 
-        // this doesn't scale well
         deliveryCompany.getAvailableCities().remove(city);
 
         return deliveryCompanyMapper.toDto(deliveryCompany);
