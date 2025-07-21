@@ -9,7 +9,6 @@ services:
       - ./configurations/loki/config.yaml:/etc/loki/config.yaml
       - ./configurations/loki/data:/loki
 
-
   grafana:
     image: grafana/grafana
     container_name: alexandre_grafana
@@ -111,11 +110,10 @@ services:
     volumes:
       - alexandre_payment_service:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-
 
   postgres_delivery:
     image: postgres:15
@@ -129,7 +127,7 @@ services:
     volumes:
       - alexandre_delivery_service:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -166,143 +164,249 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.4.4
-    container_name: broker
+    container_name: kafka_container
     ports:
       - "9092:9092"
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
-#  discovery-server:
-#    container_name: discovery_server
-#    image: alexandre/discovery-server:latest
-#    environment:
-#      TEMPO_HOST: tempo
-#    ports:
-#      - "8761:8761"
-#    healthcheck:
-#      test:
-#        ["CMD", "curl", "-f", "http://discovery-server:8761/actuator/health"]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 3
-#      start_period: 10s
-#    depends_on:
-#      - grafana
-#      - tempo
-#
-#  config-server:
-#    container_name: config_server
-#    image: alexandre/config-server:latest
-#    environment:
-#      EUREKA_HOST: discovery-server
-#      TEMPO_HOST: tempo
-#    ports:
-#      - "8888:8888"
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://config-server:8888/actuator/health"]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 3
-#      start_period: 10s
-#    depends_on:
-#      discovery-server:
-#        condition: service_healthy
-#
-#  api-gateway:
-#    container_name: api_gateway
-#    image: alexandre/api-gateway
-#    environment:
-#      EUREKA_HOST: discovery-server
-#      TEMPO_HOST: tempo
-#      ACTIVE_PROFILE: prod
-#    healthcheck:
-#      test: [ "CMD", "curl", "-f", "http://localhost:4000/actuator/health" ]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 3
-#    ports:
-#      - "4000:4000"
-#    depends_on:
-#      discovery-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#
-#  user-service:
-#    container_name: user_service
-#    image: alexandre/user-service
-#    environment:
-#      ACTIVE_PROFILE: prod
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
-#      EUREKA_HOST: discovery-server
-#      TEMPO_HOST: tempo
-#      KEYCLOAK_HOST: keycloak
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 3
-#      start_period: 10s
-#    depends_on:
-#      discovery-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    ports:
-#      - "8081"
-#
-#  order-service:
-#    container_name: order_service
-#    image: alexandre/order-service
-#    environment:
-#      ACTIVE_PROFILE: prod
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_orders:5432/alexandre_order_service
-#      EUREKA_HOST: discovery-server
-#      TEMPO_HOST: tempo
-#    healthcheck:
-#      test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 3
-#      start_period: 10s
-#    depends_on:
-#      discovery-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    ports:
-#      - "8082"
-#
-#  inventory-service:
-#    container_name: inventory_service
-#    image: alexandre/inventory-service
-#    environment:
-#      ACTIVE_PROFILE: prod
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_inventory:5432/alexandre_inventory_service
-#      EUREKA_HOST: discovery-server
-#      TEMPO_HOST: tempo
-#    healthcheck:
-#      test: [ "CMD", "curl", "-f", "http://localhost:8083/actuator/health" ]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 3
-#      start_period: 10s
-#    depends_on:
-#      discovery-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    ports:
-#      - "8083"
+  discovery-server:
+    container_name: discovery_server
+    image: alexandre/discovery-server:latest
+    environment:
+      TEMPO_HOST: tempo
+      LOKI_HOST: loki
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test:
+        ["CMD", "curl", "-f", "http://discovery-server:8761/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - grafana
+      - tempo
 
+  config-server:
+    container_name: config_server
+    image: alexandre/config-server:latest
+    environment:
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+      LOKI_HOST: loki
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://config-server:8888/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+
+  api-gateway:
+    container_name: api_gateway
+    image: alexandre/api-gateway
+    environment:
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+      ACTIVE_PROFILE: prod
+      LOKI_HOST: loki
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "4000:4000"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+
+  user-service:
+    container_name: user_service
+    image: alexandre/user-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+      KEYCLOAK_HOST: keycloak
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 29092
+      LOKI_HOST: loki
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8081"
+
+  order-service:
+    container_name: order_service
+    image: alexandre/order-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_orders:5432/alexandre_order_service
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 29092
+      LOKI_HOST: loki
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8082"
+
+  inventory-service:
+    container_name: inventory_service
+    image: alexandre/inventory-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_inventory:5432/alexandre_inventory_service
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+      LOKI_HOST: loki
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8083"
+
+  notification-service:
+    container_name: notification_service
+    image: alexandre/notification-service
+    environment:
+      ACTIVE_PROFILE: prod
+      EUREKA_HOST: discovery-server
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      FROM_EMAIL: ${FROM_EMAIL}
+      TEMPO_HOST: tempo
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 29092
+      LOKI_HOST: loki
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8084"
+
+  payment-service:
+    container_name: payment_service
+    image: alexandre/payment-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_payment:5432/alexandre_payment_service
+      EUREKA_HOST: discovery-server
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      TEMPO_HOST: tempo
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 29092
+      LOKI_HOST: loki
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8085"
+
+  delivery-service:
+    container_name: delivery_service
+    image: alexandre/delivery-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_delivery:5432/alexandre_delivery_service
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: tempo
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 29092
+      LOKI_HOST: loki
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8086"
 
 volumes:
   alexandre_user_service:

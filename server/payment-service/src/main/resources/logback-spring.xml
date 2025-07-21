@@ -18,7 +18,7 @@
         </http>
         <format>
             <label>
-                <pattern>app=delivery-service, service_name=delivery-service, level=%level</pattern>
+                <pattern>app=payment-service, service_name=payment-service, level=%level</pattern>
                 <readMarkers>true</readMarkers>
             </label>
             <message>

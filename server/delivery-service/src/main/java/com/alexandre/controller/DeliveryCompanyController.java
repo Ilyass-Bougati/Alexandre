@@ -33,7 +33,7 @@ public class DeliveryCompanyController {
         return ResponseEntity.ok(deliveryCompanyService.create(deliveryCompanyDTO));
     }
 
-    @GetMapping("/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteDeliveryCompany(@PathVariable UUID id) {
         deliveryCompanyService.delete(id);

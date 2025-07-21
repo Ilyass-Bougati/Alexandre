@@ -17,6 +17,7 @@ spring:
       retry:
         max-attempts: 20
 
+
 eureka:
   client:
     serviceUrl:
