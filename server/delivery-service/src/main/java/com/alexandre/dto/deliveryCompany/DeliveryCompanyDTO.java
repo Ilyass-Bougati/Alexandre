@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -27,5 +28,5 @@ public class DeliveryCompanyDTO {
     private String phoneNumber;
 
     @NotNull
-    private List<UUID> availableCitiesIds;
+    private Set<UUID> availableCitiesIds;
 }

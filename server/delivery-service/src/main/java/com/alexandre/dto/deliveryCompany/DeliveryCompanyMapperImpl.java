@@ -5,6 +5,7 @@ import com.alexandre.entity.DeliveryCompany;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @Service
 public class DeliveryCompanyMapperImpl implements DeliveryCompanyMapper {
@@ -13,7 +14,7 @@ public class DeliveryCompanyMapperImpl implements DeliveryCompanyMapper {
         DeliveryCompanyDTO dto = DeliveryCompanyDTO.builder()
                 .email(deliveryCompany.getEmail())
                 .name(deliveryCompany.getName())
-                .availableCitiesIds(new ArrayList<>())
+                .availableCitiesIds(new HashSet<>())
                 .id(deliveryCompany.getId())
                 .build();
 
@@ -30,7 +31,7 @@ public class DeliveryCompanyMapperImpl implements DeliveryCompanyMapper {
         return DeliveryCompany.builder()
                 .email(deliveryCompanyDTO.getEmail())
                 .name(deliveryCompanyDTO.getName())
-                .availableCities(new ArrayList<>())
+                .availableCities(new HashSet<>())
                 .id(deliveryCompanyDTO.getId())
                 .build();
     }

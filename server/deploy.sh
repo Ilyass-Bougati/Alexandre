@@ -39,6 +39,12 @@ if [[ "$*" == *"--build-all"* ]]; then
     notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
     docker build . -f inventory-service/Dockerfile -t alexandre/inventory-service
     notify_if_failed_or_success  alexandre "Building the inventory-service failed" "rotating_light"
+    docker build . -f notification-service/Dockerfile -t alexandre/notification-service
+    notify_if_failed_or_success  alexandre "Building the notification-service failed" "rotating_light"
+    docker build . -f delivery-service/Dockerfile -t alexandre/delivery-service
+    notify_if_failed_or_success  alexandre "Building the delivery-service failed" "rotating_light"
+    docker build . -f payment-service/Dockerfile -t alexandre/payment-service
+    notify_if_failed_or_success  alexandre "Building the payment-service failed" "rotating_light"
     docker build . -f user-service/Dockerfile -t alexandre/user-service
     DEPLOY_STATUS="$?"
 
@@ -55,12 +61,7 @@ fi
 
 if [[ "$*" == *"--precompile"* ]]; then
     # precompiling the services
-    mvn -f discovery-server/ clean install -Dmaven.test.skip=true
-    mvn -f config-server/ clean install -Dmaven.test.skip=true
-    mvn -f api-gateway/ clean install -Dmaven.test.skip=true
-    mvn -f inventory-service/ clean install -Dmaven.test.skip=true
-    mvn -f order-service/ clean install -Dmaven.test.skip=true
-    mvn -f user-service/ clean install -Dmaven.test.skip=true
+    mvn clean install -Dmaven.test.skip=true
 
     # building the docker images
     docker build . -f discovery-server/precompiled.Dockerfile -t alexandre/discovery-server
@@ -73,6 +74,12 @@ if [[ "$*" == *"--precompile"* ]]; then
     notify_if_failed_or_success  alexandre "Building the order-service failed" "rotating_light"
     docker build . -f inventory-service/precompiled.Dockerfile -t alexandre/inventory-service
     notify_if_failed_or_success  alexandre "Building the inventory-service failed" "rotating_light"
+    docker build . -f notification-service/precompiled.Dockerfile -t alexandre/notification-service
+    notify_if_failed_or_success  alexandre "Building the notification-service failed" "rotating_light"
+    docker build . -f delivery-service/precompiled.Dockerfile -t alexandre/delivery-service
+    notify_if_failed_or_success  alexandre "Building the delivery-service failed" "rotating_light"
+    docker build . -f payment-service/precompiled.Dockerfile -t alexandre/payment-service
+    notify_if_failed_or_success  alexandre "Building the payment-service failed" "rotating_light"
     docker build . -f user-service/precompiled.Dockerfile -t alexandre/user-service
 
     # Notifying that the deployment is finished

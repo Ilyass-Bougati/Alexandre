@@ -34,7 +34,7 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.create(deliveryDTO));
     }
 
-    @GetMapping("/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable UUID id) {
         deliveryService.delete(id);

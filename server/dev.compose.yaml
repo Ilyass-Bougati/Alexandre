@@ -1,0 +1,185 @@
+services:
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: alexandre_loki
+    ports:
+      - "3100:3100"
+    command: -config.expand-env=true -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./configurations/loki/config.yaml:/etc/loki/config.yaml
+      - ./configurations/loki/data:/loki
+
+  grafana:
+    image: grafana/grafana
+    container_name: alexandre_grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./configurations/grafana:/etc/grafana/provisioning/datasources
+
+  prometheus:
+    image: prom/prometheus
+    container_name: alexandre_prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./configurations/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+
+  tempo:
+    image: grafana/tempo
+    container_name: tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./configurations/tempo/tempo.yml:/etc/tempo.yaml
+      - ./configurations/tempo/tempo-data:/tmp/tempo
+    ports:
+      - "3200:3200" # Tempo
+      - "4317:4317" # OTLP
+      - "4318:4318" # HTTP
+    hostname: tempo
+
+  postgres_users:
+    image: postgres:15
+    container_name: alexandre_user_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_user_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - alexandre_user_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_orders:
+    image: postgres:15
+    container_name: alexandre_order_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_order_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - alexandre_order_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_inventory:
+    image: postgres:15
+    container_name: alexandre_inventory_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_inventory_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - alexandre_inventory_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_payment:
+    image: postgres:15
+    container_name: alexandre_payment_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_payment_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - alexandre_payment_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_delivery:
+    image: postgres:15
+    container_name: alexandre_delivery_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_delivery_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - alexandre_delivery_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: keycloak/keycloak:26.2
+    container_name: alexandre_keycloak
+    environment:
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      # TODO : make these env variables
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+    volumes:
+      - ./configurations/keycloak.config.json:/opt/keycloak/data/import/realm-config.json
+    depends_on:
+      - postgres_users
+    ports:
+      - "8080:8080"
+    command: start-dev --import-realm
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    container_name: kafka_container
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s

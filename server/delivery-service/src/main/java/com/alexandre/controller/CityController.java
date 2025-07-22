@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/city/api/v1")
+@RequestMapping("/delivery-city/api/v1")
 public class CityController {
 
     private final CityService cityService;
