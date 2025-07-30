@@ -19,9 +19,13 @@
         "alex_admin",
         "alex_user",
         "alex_staff",
-        "alex_inv_staff",
-        "realm-admin"
-      ]
+        "alex_inv_staff"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "realm-admin"
+        ]
+      }
     }
   ],
   "roles": {

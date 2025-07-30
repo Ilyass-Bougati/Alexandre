@@ -152,7 +152,7 @@ services:
     ports:
       - "8080:8080"
     # The hostname should be keycloak for the services to work inside docker compose
-    command: start-dev --import-realm --hostname keycloak --hostname-strict false
+    command: start-dev --import-realm --hostname ${KEYCLOAK_HOSTNAME} --hostname-strict false
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4

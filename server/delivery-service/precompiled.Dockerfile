@@ -1,4 +1,4 @@
-FROM openjdk:17-slim AS builder
+FROM openjdk:21-slim AS builder
 
 # Install dependencies
 RUN apt-get update && apt-get install -y curl
