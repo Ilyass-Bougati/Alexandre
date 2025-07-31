@@ -39,3 +39,6 @@ build/
 
 ### environment variables
 .env
+
+### TSL key
+keycloak.jks
