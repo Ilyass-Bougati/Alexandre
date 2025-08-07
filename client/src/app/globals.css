@@ -14,8 +14,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #202124;
+    --foreground: #E8DFD5;
   }
 }
 
@@ -27,7 +27,6 @@ body {
 
 .logo-text {
   font-family: var(--font-italianno);
-  font-size: 24px;
 }
 
 .jetbrain {
@@ -39,6 +38,7 @@ body {
 }
 
 .navbar {
+  font-size: 32px;
   margin-left: 40px;
   margin-right: 40px;
 }
