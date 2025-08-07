@@ -147,12 +147,12 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
       KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
       KC_HOSTNAME_STRICT: false
-      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/keycloak.jks
+      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/keys/keycloak.jks
       KC_HTTPS_KEY_STORE_PASSWORD: password
       KC_HOSTNAME_STRICT_HTTPS: false
     volumes:
       - ./configurations/keycloak.config.json:/opt/keycloak/data/import/realm-config.json
-      - ./keycloak.jsk:/opt/keycloak/conf/keycloak.jks
+      - ./keys:/opt/keycloak/conf/keys
     depends_on:
       - postgres_users
     ports:
