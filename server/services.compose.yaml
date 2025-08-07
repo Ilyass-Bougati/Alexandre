@@ -1,0 +1,240 @@
+services:
+  keycloak:
+    image: keycloak/keycloak:26.2
+    container_name: alexandre_keycloak
+    environment:
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      # TODO : make these env variables
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
+      KC_HOSTNAME_STRICT: false
+      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/keys/keycloak.jks
+      KC_HTTPS_KEY_STORE_PASSWORD: password
+      KC_HOSTNAME_STRICT_HTTPS: false
+    volumes:
+      - ./configurations/keycloak.config.json:/opt/keycloak/data/import/realm-config.json
+      - ./keys:/opt/keycloak/conf/keys
+    depends_on:
+      - postgres_users
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    # The hostname should be keycloak for the services to work inside docker compose
+    command: start-dev --import-realm
+
+  discovery-server:
+    container_name: discovery_server
+    image: alexandre/discovery-server:latest
+    environment:
+      TEMPO_HOST: ${TEMPO_HOST}
+      LOKI_HOST: ${LOKI_HOST}
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test:
+        ["CMD", "curl", "-f", "http://discovery-server:8761/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  config-server:
+    container_name: config_server
+    image: alexandre/config-server:latest
+    environment:
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: ${TEMPO_HOST}
+      LOKI_HOST: ${LOKI_HOST}
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://config-server:8888/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+
+  api-gateway:
+    container_name: api_gateway
+    image: alexandre/api-gateway
+    environment:
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: ${TEMPO_HOST}
+      ACTIVE_PROFILE: prod
+      LOKI_HOST: ${LOKI_HOST}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "4000:4000"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+
+  user-service:
+    container_name: user_service
+    image: alexandre/user-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: ${USERS_DB_URI}
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: ${TEMPO_HOST}
+      KEYCLOAK_HOST: keycloak
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: 29092
+      LOKI_HOST: ${LOKI_HOST}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8081"
+
+  order-service:
+    container_name: order_service
+    image: alexandre/order-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: ${ORDERS_DB_URI}
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: ${TEMPO_HOST}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: 29092
+      LOKI_HOST: ${LOKI_HOST}
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8082"
+
+  inventory-service:
+    container_name: inventory_service
+    image: alexandre/inventory-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: ${INVENTORY_DB_URI}
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: ${TEMPO_HOST}
+      LOKI_HOST: ${LOKI_HOST}
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8083"
+
+  notification-service:
+    container_name: notification_service
+    image: alexandre/notification-service
+    environment:
+      ACTIVE_PROFILE: prod
+      EUREKA_HOST: discovery-server
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      FROM_EMAIL: ${FROM_EMAIL}
+      TEMPO_HOST: ${TEMPO_HOST}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: 29092
+      LOKI_HOST: ${LOKI_HOST}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8084"
+
+  payment-service:
+    container_name: payment_service
+    image: alexandre/payment-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: ${PAYMENT_DB_URI}
+      EUREKA_HOST: discovery-server
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      TEMPO_HOST: ${TEMPO_HOST}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: 29092
+      LOKI_HOST: ${LOKI_HOST}
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8085"
+
+  delivery-service:
+    container_name: delivery_service
+    image: alexandre/delivery-service
+    environment:
+      ACTIVE_PROFILE: prod
+      SPRING_DATASOURCE_URL: ${DELIVERY_DB_URI}
+      EUREKA_HOST: discovery-server
+      TEMPO_HOST: ${TEMPO_HOST}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: 29092
+      LOKI_HOST: ${LOKI_HOST}
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "8086"

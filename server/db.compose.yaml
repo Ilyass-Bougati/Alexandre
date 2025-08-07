@@ -1,0 +1,92 @@
+services:
+  postgres_users:
+    image: postgres:15
+    container_name: alexandre_user_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_user_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - alexandre_user_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_orders:
+    image: postgres:15
+    container_name: alexandre_order_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_order_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - alexandre_order_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_inventory:
+    image: postgres:15
+    container_name: alexandre_inventory_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_inventory_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - alexandre_inventory_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_payment:
+    image: postgres:15
+    container_name: alexandre_payment_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_payment_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - alexandre_payment_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_delivery:
+    image: postgres:15
+    container_name: alexandre_delivery_service_postgres_container
+    environment:
+      POSTGRES_DB: alexandre_delivery_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - alexandre_delivery_service:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  alexandre_user_service:
+  alexandre_order_service:
+  alexandre_inventory_service:
+  alexandre_payment_service:
+  alexandre_delivery_service:
