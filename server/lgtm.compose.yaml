@@ -16,8 +16,8 @@ services:
       - 3000:3000
     restart: unless-stopped
     environment:
-      - GF_SECURITY_ADMIN_USER: ${GRAFANA_USERNAME}
-      - GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
     volumes:
       - ./configurations/grafana:/etc/grafana/provisioning/datasources
 
@@ -46,3 +46,7 @@ services:
       - "4317:4317" # OTLP
       - "4318:4318" # HTTP
     hostname: tempo
+
+
+volumes:
+  prometheus_data:
