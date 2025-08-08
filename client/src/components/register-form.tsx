@@ -17,11 +17,14 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "@deemlol/next-icons";
 
 
-export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  
-  const apiUrl = process.env.NEXT_PUBLIC_KEYCLOAK_URL;
+export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -61,6 +64,15 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
     setPassword(e.target.value)
   }
+  const firstNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
+    setFirstName(e.target.value)
+  }
+  const lastNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
+    setLastName(e.target.value)
+  }
+  const phoneNumberChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
+    setPhoneNumber(e.target.value)
+  }
 
 
   return (
@@ -70,14 +82,47 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           <Link href={"/"}>
             <ArrowLeft />
           </Link>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Create a new account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Fill in your informations to create a new account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
+                <div className="grid gap-3">
+                <Label htmlFor="first-name">First name</Label>
+                <Input
+                  id="first-name"
+                  type="text"
+                  placeholder="First name"
+                  onChange={firstNameChangeHandler}
+                  value={firstName}
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="last-name">Last name</Label>
+                <Input
+                  id="last-name"
+                  type="text"
+                  placeholder="Last name"
+                  onChange={lastNameChangeHandler}
+                  value={lastName}
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  type="text"
+                  placeholder="Phone number"
+                  onChange={phoneNumberChangeHandler}
+                  value={phoneNumber}
+                  required
+                />
+              </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -92,25 +137,19 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </Link>
                 </div>
                 <Input id="password" type="password" onChange={passwordChangeHandler} value={password} required />
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
-                  Login
+                  Register
                 </Button>
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/register" className="underline underline-offset-4">
-                Sign up
+              Already have an account?{" "}
+              <Link href="/login" className="underline underline-offset-4">
+                Login
               </Link>
             </div>
           </form>
