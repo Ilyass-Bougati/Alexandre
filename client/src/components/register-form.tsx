@@ -18,6 +18,7 @@ import { ArrowLeft } from "@deemlol/next-icons";
 import { isAuthenticated } from "@/utils/jwtUtils"
 import { Toaster, toast } from "sonner"
 import { api } from "@/utils/api"
+import { AxiosError } from "axios"
 
 const PhoneNumberRegex = /^[0-9]*$/;
 const NameRegex = /^[a-zA-Z]*$/
@@ -54,7 +55,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 
     try {
       const res = await api.post(
-      '/auth/api/v1/register/', 
+        '/auth/api/v1/register/', 
         {
           email: email,
           password: password,
@@ -69,9 +70,17 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 
       router.push('/login');
     } catch (err) {
-      alertError("Error creating your account", "idk honestly")
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 401) {
+          alertError("Invalid credentials", "The password or email entered are invalid");
+        } else {
+          alertError("Error login", "Try again later, if the issue persists report it to us :>");
+        }
+      } else {
+        alertError("Error login", "Try again later, if the issue persists report it to us :>");
+      }
     }
-
+    
     setLoading(false)
   };
 

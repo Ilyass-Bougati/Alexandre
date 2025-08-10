@@ -18,6 +18,7 @@ import { ArrowLeft } from "@deemlol/next-icons";
 import { authenticate, isAuthenticated } from "@/utils/jwtUtils";
 import { toast, Toaster } from "sonner"
 import { keycloakApi } from "@/utils/api";
+import { AxiosError } from "axios";
 
 
 function alertError(title: string, description: string) {
@@ -67,10 +68,14 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       router.push('/');
       
     } catch (err) {
-      if (err.response.status == 401) {
-        alertError("invalide credentials", "The password or emails entered are invalid")
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 401) {
+          alertError("Invalid credentials", "The password or email entered are invalid");
+        } else {
+          alertError("Error login", "Try again later, if the issue persists report it to us :>");
+        }
       } else {
-        alertError("Error login", "Try again later, if the issue persist report it to us :>")
+        alertError("Error login", "Try again later, if the issue persists report it to us :>");
       }
     }
 
