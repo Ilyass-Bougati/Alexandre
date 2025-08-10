@@ -12,46 +12,69 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "@deemlol/next-icons";
+import { authenticate, isAuthenticated } from "@/utils/jwtUtils";
+import { toast, Toaster } from "sonner"
+import { keycloakApi } from "@/utils/api";
 
+
+function alertError(title: string, description: string) {
+  toast.error(title, {
+          description: description,
+          action: {
+            label: "Ok",
+            onClick: () => {},
+          },
+        })
+}
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  
   const apiUrl = process.env.NEXT_PUBLIC_KEYCLOAK_URL;
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState('');
 
-
+  if (isAuthenticated()) {
+    router.push('/');
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true)
 
-    const res = await fetch(apiUrl + '/realms/Alexandre/protocol/openid-connect/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'password',
-        client_id: 'public-client',
-        username: email,
-        password: password,
-      }),
-    });
+    try {
+      const res = await keycloakApi.post(
+        '/realms/Alexandre/protocol/openid-connect/token',
+        {
+          grant_type: 'password',
+          client_id: 'public-client',
+          username: email,
+          password: password,
+        }, 
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      )
 
-    if (!res.ok) {
-      setError('Invalid credentials');
-      return;
+      const { access_token, refresh_token } = res.data
+      authenticate(access_token, refresh_token)
+      router.push('/');
+      
+    } catch (err) {
+      if (err.response.status == 401) {
+        alertError("invalide credentials", "The password or emails entered are invalid")
+      } else {
+        alertError("Error login", "Try again later, if the issue persist report it to us :>")
+      }
     }
 
-    const { access_token } = await res.json();
-
-    // Save JWT (choose cookie for SSR or localStorage for CSR)
-    localStorage.setItem('jwt', access_token); // Or use a secure cookie (see below)
-
-    router.push('/'); // Redirect to a protected route
+    setLoading(false)
   };
 
   const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
@@ -62,10 +85,10 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     setPassword(e.target.value)
   }
 
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
+        <Toaster/>
         <CardHeader>
           <Link href={"/"}>
             <ArrowLeft />
@@ -102,8 +125,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                 <Input id="password" type="password" onChange={passwordChangeHandler} value={password} required />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={loading}>
+                  { loading ? "Loading..." : "Login"}
                 </Button>
               </div>
             </div>

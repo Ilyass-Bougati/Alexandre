@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -12,49 +12,67 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "@deemlol/next-icons";
+import { isAuthenticated } from "@/utils/jwtUtils"
+import { Toaster, toast } from "sonner"
+import { api } from "@/utils/api"
+
+const PhoneNumberRegex = /^[0-9]*$/;
+const NameRegex = /^[a-zA-Z]*$/
+
+function alertError(title: string, description: string) {
+  toast.error(title, {
+          description: description,
+          action: {
+            label: "Ok",
+            onClick: () => {},
+          },
+        })
+}
 
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
-
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_GATEWAY;
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-
+  if (isAuthenticated()) {
+      router.push('/');
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
+    setLoading(true)
     e.preventDefault();
 
-    const res = await fetch(apiUrl + '/realms/Alexandre/protocol/openid-connect/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'password',
-        client_id: 'public-client',
-        username: email,
-        password: password,
-      }),
-    });
+    try {
+      const res = await api.post(
+      '/auth/api/v1/register/', 
+        {
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber
+        },
+        {
+        headers: { 'Content-Type': 'application/json' },
+        }
+      );
 
-    if (!res.ok) {
-      setError('Invalid credentials');
-      return;
+      router.push('/login');
+    } catch (err) {
+      alertError("Error creating your account", "idk honestly")
     }
 
-    const { access_token } = await res.json();
-
-    // Save JWT (choose cookie for SSR or localStorage for CSR)
-    localStorage.setItem('jwt', access_token); // Or use a secure cookie (see below)
-
-    router.push('/'); // Redirect to a protected route
+    setLoading(false)
   };
 
   const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
@@ -64,20 +82,40 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
   const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
     setPassword(e.target.value)
   }
+
   const firstNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
-    setFirstName(e.target.value)
+    const value = e.target.value
+    if (NameRegex.test(value)) {
+      if (value.length == 1) {
+        setFirstName(value.toUpperCase())
+      } else {
+        setFirstName(value)
+      }
+    }
   }
+
   const lastNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
-    setLastName(e.target.value)
+    const value = e.target.value
+    if (NameRegex.test(value)) {
+      if (value.length == 1) {
+        setLastName(value.toUpperCase())
+      } else {
+        setLastName(value)
+      }
+    }
   }
+
   const phoneNumberChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
-    setPhoneNumber(e.target.value)
+    if (PhoneNumberRegex.test(e.target.value)) {
+      setPhoneNumber(e.target.value)
+    }
   }
 
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
+        <Toaster />
         <CardHeader>
           <Link href={"/"}>
             <ArrowLeft />
@@ -90,27 +128,30 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
         <CardContent>
           <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
-                <div className="grid gap-3">
-                <Label htmlFor="first-name">First name</Label>
-                <Input
-                  id="first-name"
-                  type="text"
-                  placeholder="First name"
-                  onChange={firstNameChangeHandler}
-                  value={firstName}
-                  required
-                />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input
-                  id="last-name"
-                  type="text"
-                  placeholder="Last name"
-                  onChange={lastNameChangeHandler}
-                  value={lastName}
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="first-name">First name</Label>
+                  <Input
+                    id="first-name"
+                    type="text"
+                    placeholder="First name"
+                    onChange={firstNameChangeHandler}
+                    value={firstName}
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="last-name">Last name</Label>
+                  <Input
+                    id="last-name"
+                    type="text"
+                    placeholder="Last name"
+                    onChange={lastNameChangeHandler}
+                    value={lastName}
+                    required
+                  />
+                </div>
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="phone">Phone</Label>
@@ -141,8 +182,8 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
                 <Input id="password" type="password" onChange={passwordChangeHandler} value={password} required />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Register
+                <Button type="submit" className="w-full" disabled={loading}>
+                  { loading ? "Loading..." : "Register"}
                 </Button>
               </div>
             </div>
