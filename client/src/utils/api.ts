@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let accessToken = localStorage.getItem("access_token")
+const accessToken = localStorage.getItem("access_token")
 // let refreshToken = localStorage.getItem("refresh_token")
 
 export const keycloakApi = axios.create({
