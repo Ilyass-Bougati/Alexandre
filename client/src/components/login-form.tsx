@@ -12,13 +12,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "@deemlol/next-icons";
-import { authenticate, isAuthenticated } from "@/utils/jwtUtils";
 import { toast, Toaster } from "sonner"
 import { keycloakApi } from "@/utils/api";
 import { AxiosError } from "axios";
+import axios from "axios";
 
 
 function alertError(title: string, description: string) {
@@ -32,16 +32,20 @@ function alertError(title: string, description: string) {
 }
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  const apiUrl = process.env.NEXT_PUBLIC_KEYCLOAK_URL;
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('');
 
-  if (isAuthenticated()) {
-    router.push('/');
-  }
+  useEffect(() => {
+        axios.get("/api/auth")
+            .then((res) => {
+                if (res.status == 200) {
+                  router.push('/');
+                }
+            })
+  })
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +68,16 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       )
 
       const { access_token, refresh_token } = res.data
-      authenticate(access_token, refresh_token)
+      // saving them to a cookie
+      const res2 = await axios.post("/api/auth", {
+        access_token: access_token,
+        refresh_token: refresh_token
+      })
+
+      if (res2.status != 200) {
+        toast.error("Error authenticating the user", {description: "Couldn\'t save the cookie"})
+      }
+
       router.push('/');
       
     } catch (err) {

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -12,13 +12,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "@deemlol/next-icons";
-import { isAuthenticated } from "@/utils/jwtUtils"
 import { Toaster, toast } from "sonner"
 import { api } from "@/utils/api"
 import { AxiosError } from "axios"
+import axios from "axios";
 
 const PhoneNumberRegex = /^[0-9]*$/;
 const NameRegex = /^[a-zA-Z]*$/
@@ -35,7 +35,6 @@ function alertError(title: string, description: string) {
 
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_GATEWAY;
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -43,9 +42,18 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [token, setToken] = useState<string | null>(null);
 
-  if (isAuthenticated()) {
+  useEffect(() => {
+    axios.get("/api/auth")
+        .then((res) => {
+            if (res.status == 200) {
+              router.push('/');
+            }
+        })
+  })
+
+  if (token !== undefined) {
       router.push('/');
   }
 
@@ -54,7 +62,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
     e.preventDefault();
 
     try {
-      const res = await api.post(
+      await api.post(
         '/auth/api/v1/register/', 
         {
           email: email,
