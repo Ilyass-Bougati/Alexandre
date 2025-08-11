@@ -14,43 +14,85 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+import { ArrowLeft } from "@deemlol/next-icons";
+import { toast, Toaster } from "sonner"
+import { keycloakApi } from "@/utils/api";
+import { AxiosError } from "axios";
+import axios from "axios";
+
+
+function alertError(title: string, description: string) {
+  toast.error(title, {
+          description: description,
+          action: {
+            label: "Ok",
+            onClick: () => {},
+          },
+        })
+}
+
+export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+        axios.get("/api/auth")
+            .then((res) => {
+                if (res.status == 200) {
+                  router.push('/');
+                }
+            })
+  })
 
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true)
 
-    const res = await fetch(apiUrl + '/realms/Alexandre/protocol/openid-connect/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'password',
-        client_id: 'public-client',
-        username: email,
-        password: password,
-      }),
-    });
+    try {
+      const res = await keycloakApi.post(
+        '/realms/Alexandre/protocol/openid-connect/token',
+        {
+          grant_type: 'password',
+          client_id: 'public-client',
+          username: email,
+          password: password,
+        }, 
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      )
 
-    if (!res.ok) {
-      setError('Invalid credentials');
-      return;
+      const { access_token, refresh_token } = res.data
+      // saving them to a cookie
+      const res2 = await axios.post("/api/auth", {
+        access_token: access_token,
+        refresh_token: refresh_token
+      })
+
+      if (res2.status != 200) {
+        toast.error("Error authenticating the user", {description: "Couldn\'t save the cookie"})
+      }
+
+      router.push('/');
+      
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 401) {
+          alertError("Invalid credentials", "The password or email entered are invalid");
+        } else {
+          alertError("Error login", "Try again later, if the issue persists report it to us :>");
+        }
+      } else {
+        alertError("Error login", "Try again later, if the issue persists report it to us :>");
+      }
     }
 
-    const { access_token } = await res.json();
-
-    // Save JWT (choose cookie for SSR or localStorage for CSR)
-    localStorage.setItem('jwt', access_token); // Or use a secure cookie (see below)
-
-    router.push('/'); // Redirect to a protected route
+    setLoading(false)
   };
 
   const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement >) => {
@@ -61,11 +103,14 @@ export function LoginForm({
     setPassword(e.target.value)
   }
 
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
+        <Toaster/>
         <CardHeader>
+          <Link href={"/"}>
+            <ArrowLeft />
+          </Link>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
             Enter your email below to login to your account
@@ -98,8 +143,8 @@ export function LoginForm({
                 <Input id="password" type="password" onChange={passwordChangeHandler} value={password} required />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={loading}>
+                  { loading ? "Loading..." : "Login"}
                 </Button>
               </div>
             </div>
