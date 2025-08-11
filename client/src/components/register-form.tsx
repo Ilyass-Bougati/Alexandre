@@ -42,7 +42,6 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     axios.get("/api/auth")
@@ -52,10 +51,6 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
           }
       })
   })
-
-  if (token !== undefined) {
-      router.push('/');
-  }
 
   const handleLogin = async (e: React.FormEvent) => {
     setLoading(true)
