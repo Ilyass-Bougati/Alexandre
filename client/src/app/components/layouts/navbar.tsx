@@ -8,6 +8,7 @@ import axios from "axios";
 export default function Navbar() {
 
     const [authenticated, setAuthenticated] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(true) 
 
     useEffect(() => {
         axios.get("/api/auth")
@@ -16,13 +17,18 @@ export default function Navbar() {
                     setAuthenticated(true)
                 }
             })
+            .catch(() => {})
+            .finally(() => {
+                setLoading(false)
+            })
     }, [])
 
     return (<>
         <nav className="pale-cashmere navbar">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                 <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse logo-text">Alexandre</Link>
-                { authenticated ?
+                {loading ? "" :
+                 authenticated ?
                 <div className="flex items-center space-x-6 rtl:space-x-reverse jetbrain text-lg">
                     <Link href="/account" className="hover:underline">
                         <span>

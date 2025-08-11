@@ -46,11 +46,11 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 
   useEffect(() => {
     axios.get("/api/auth")
-        .then((res) => {
-            if (res.status == 200) {
-              router.push('/');
-            }
-        })
+      .then((res) => {
+          if (res.status == 200) {
+            router.push('/');
+          }
+      })
   })
 
   if (token !== undefined) {
