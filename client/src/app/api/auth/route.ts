@@ -35,12 +35,12 @@ export async function POST(req: Request) {
 /**
  * This function checks if the user is authenticated
  * @param req the request doesn't have to send any body data, since we only need the cookies inside
- * @returns status code `200` if authenticated, and `401` otherwise
+ * @returns status code `200` if authenticated, and `201` otherwise (to not print an error)
  */
 export async function GET(req: NextRequest) {
     const token = req.cookies.get("access_token")?.value;
     if (!token) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 201 });
     } else {
         return NextResponse.json({}, { status: 200 });
     }
