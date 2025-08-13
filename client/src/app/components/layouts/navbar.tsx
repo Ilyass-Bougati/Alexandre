@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import styles from "./Navbar.module.css"
 
 export default function Navbar() {
 
@@ -26,7 +27,7 @@ export default function Navbar() {
     return (<>
         <nav className="pale-cashmere navbar">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
-                <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse logo-text">Alexandre</Link>
+                <Link href="/" className={"flex items-center space-x-3 rtl:space-x-reverse " + styles.logo}>Alexandre</Link>
                 {loading ? "" :
                  authenticated ?
                 <div className="flex items-center space-x-6 rtl:space-x-reverse jetbrain text-lg">
