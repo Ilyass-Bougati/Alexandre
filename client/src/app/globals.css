@@ -170,3 +170,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.italianno {
+  font-family: var(--font-italianno);
+}
+
+.jetbrain {
+  font-family: var(--font-jetbrain-mono);
+}
