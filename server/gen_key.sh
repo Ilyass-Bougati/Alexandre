@@ -5,7 +5,16 @@ keytool -genkeypair \
   -keyalg RSA \
   -keysize 2048 \
   -validity 365 \
-  -keystore keycloak.jks \
+  -keystore keys/keycloak.jks \
   -storepass password \
   -keypass password \
   -dname "CN=your-ec2-ip"
+
+keytool -genkeypair \
+  -alias myalias \
+  -keyalg RSA \
+  -keysize 2048 \
+  -storetype PKCS12 \
+  -keystore keystore.p12 \
+  -validity 3650 \
+  -storepass password

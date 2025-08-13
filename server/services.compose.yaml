@@ -7,7 +7,7 @@ services:
       KC_METRICS_ENABLED: true
       # TODO : make these env variables
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres_users:5432/alexandre_user_service
+      KC_DB_URL: ${USERS_DB_URI}
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN_USERNAME}
@@ -20,8 +20,6 @@ services:
     volumes:
       - ./configurations/keycloak.config.json:/opt/keycloak/data/import/realm-config.json
       - ./keys:/opt/keycloak/conf/keys
-    depends_on:
-      - postgres_users
     ports:
       - "8080:8080"
       - "8443:8443"
