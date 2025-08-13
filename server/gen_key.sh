@@ -10,6 +10,7 @@ keytool -genkeypair \
   -keypass password \
   -dname "CN=your-ec2-ip"
 
+# generating self signed cert for nginx
 keytool -genkeypair \
   -alias myalias \
   -keyalg RSA \
