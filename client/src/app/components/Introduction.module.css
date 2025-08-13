@@ -1,0 +1,28 @@
+.center {
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alexandreLogo {
+    font-size: 150px;
+    color: #E8DFD5;
+}
+
+.slogan {
+    font-size: 38px;
+    font-weight: lighter;
+    font-style: italic;
+    color: #E8DFD5;
+}
+
+.link {
+    font-size: 26px;
+    font-weight: bold;
+    font-style: italic;
+    color: #FF7124;
+}
+
+.writing {
+    border-color: #FF7124;
+}
