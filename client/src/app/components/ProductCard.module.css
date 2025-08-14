@@ -10,7 +10,6 @@
 }
 
 .cardDiv:hover {
-    width: 350px;
     background-color: #272D4E;
     box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.13);
     -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.13);
@@ -34,4 +33,18 @@
     text-align: right;
     color: #FF7124;
     transition-duration: 200ms;
+}
+
+
+.drawerTitle {
+    font-size: 30px;
+}
+
+.drawerItemDescription {
+    font-size: 16px;
+    width: 600px;
+}
+
+.drawerContainer {
+    
 }
