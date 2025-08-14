@@ -1,0 +1,18 @@
+.container {
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.products {
+    flex-basis: 1000px;
+    flex-shrink: 1;
+    flex-grow: 1;
+    gap: 40px;
+}
