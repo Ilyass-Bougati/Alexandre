@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export default function Introduction() {
     return (<>
-        <div className={`flex items-center pt-10 text-white ${styles.introduction} ${styles.center}`}>
+        <div className={`flex center items-center pt-10 text-white ${styles.introduction}`}>
             <div className="pr-20">
                 <h1 className={"font-serif italic text-5xl italianno " + styles.alexandreLogo}>Alexandre</h1>
             </div>
@@ -14,7 +14,7 @@ export default function Introduction() {
                         height={30}
                         width={30}
                         src={"/icons/right-arrow.svg"}
-                        className={`ml-2`}
+                        className={`ml-2 ${styles.arrow}`}
                         alt=""
                     />
                 </a>

@@ -6,7 +6,7 @@ export default function ProductCard() {
         <div className={`jetbrain ${styles.cardDiv}`}>
             <div>
                 <Image
-                    className={`${styles.image}`}
+                    className={` center ${styles.image}`}
                     width={300}
                     height={300}
                     src={"/mock/iphone-16.png"}

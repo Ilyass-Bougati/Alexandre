@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 
 export default function Navbar() {
@@ -27,7 +28,12 @@ export default function Navbar() {
         <nav className="pale-cashmere navbar">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                 <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse "></Link>
-                {loading ? "" :
+                {loading ? 
+                <div className="space-y-1">
+                    <Skeleton className="h-4 w-[150px]" />
+                    <Skeleton className="h-4 w-[100px]" />
+                </div>
+                :
                  authenticated ?
                 <div className="flex items-center space-x-6 rtl:space-x-reverse jetbrain text-lg">
                     <Link href="/account" className="hover:underline">
