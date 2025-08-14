@@ -1,0 +1,28 @@
+.cardDiv {
+    width: 300px;
+    height: auto;
+    border-radius: 15px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #272D4E;
+    transition-duration: 200ms;
+}
+
+.cardDiv:hover {
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.13);
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.13);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.13);
+}
+
+.productName {
+    font-size: 24px;
+    color: #E8DFD5;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: bolder;
+    text-align: right;
+    color: #FF7124;
+    transition-duration: 200ms;
+}
