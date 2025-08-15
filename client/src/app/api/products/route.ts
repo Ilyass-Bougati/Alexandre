@@ -1,5 +1,6 @@
 import { ProductCardProps } from "@/app/components/productCard";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { api } from "@/utils/api";
 
 
 const products: Array<ProductCardProps> = [
@@ -33,7 +34,12 @@ const products: Array<ProductCardProps> = [
     },
 ]
 
-export async function GET() {
-    const res = NextResponse.json(products);
-    return res;
+// export async function GET() {
+//     const res = NextResponse.json(products);
+//     return res;
+// }
+
+export async function GET(req: NextRequest) {
+    const res = await api.get("/inventory/api/v1/product")
+    return NextResponse.json({...res})
 }
