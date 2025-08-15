@@ -18,6 +18,7 @@ import { ArrowLeft } from "@deemlol/next-icons";
 import { toast, Toaster } from "sonner"
 import { keycloakApi } from "@/utils/api";
 import { AxiosError } from "axios";
+import { Loader2Icon } from "lucide-react";
 import axios from "axios";
 
 
@@ -44,7 +45,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   router.push('/');
                 }
             })
-  })
+  }, [])
 
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -144,7 +145,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full" disabled={loading}>
-                  { loading ? "Loading..." : "Login"}
+                  { loading ? <><Loader2Icon className="animate-spin" /> Loading...</> : "Login"}
                 </Button>
               </div>
             </div>

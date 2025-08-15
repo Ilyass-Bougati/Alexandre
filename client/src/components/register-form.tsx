@@ -18,6 +18,7 @@ import { ArrowLeft } from "@deemlol/next-icons";
 import { Toaster, toast } from "sonner"
 import { api } from "@/utils/api"
 import { AxiosError } from "axios"
+import { Loader2Icon } from "lucide-react";
 import axios from "axios";
 
 const PhoneNumberRegex = /^[0-9]*$/;
@@ -50,7 +51,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
             router.push('/');
           }
       })
-  })
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     setLoading(true)
@@ -128,10 +129,10 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <Toaster />
-        <CardHeader>
-          <Link href={"/"}>
+        <Link href={"/"}>
             <ArrowLeft />
-          </Link>
+        </Link>
+        <CardHeader>
           <CardTitle>Create a new account</CardTitle>
           <CardDescription>
             Fill in your informations to create a new account
@@ -195,7 +196,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full" disabled={loading}>
-                  { loading ? "Loading..." : "Register"}
+                  { loading ? <><Loader2Icon className="animate-spin" /> Loading...</> : "Register"}
                 </Button>
               </div>
             </div>
