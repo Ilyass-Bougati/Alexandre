@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -53,5 +54,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteById(UUID uuid) {
         productRepository.deleteById(uuid);
+    }
+
+    @Override
+    public List<ProductDTO> findAllProducts() {
+        return productRepository.findAll()
+                .stream().map(productMapper::toDto).toList();
     }
 }
