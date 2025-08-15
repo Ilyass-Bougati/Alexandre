@@ -9,8 +9,8 @@ import axios from "axios"
 
 
 export default function Products() {
-    let [loading, setLoading] = useState<boolean>(true)
-    let [products, setProducts] = useState<Array<ProductCardProps>>([])
+    const [loading, setLoading] = useState<boolean>(true)
+    const [products, setProducts] = useState<Array<ProductCardProps>>([])
 
     useEffect(() => {
         axios.get("/api/products")
