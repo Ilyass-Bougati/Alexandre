@@ -1,5 +1,5 @@
 .cardDiv {
-    width: 300px;
+    width: 250px;
     height: auto;
     border-radius: 15px;
     border-style: solid;
@@ -17,7 +17,8 @@
 }
 
 .productName {
-    font-size: 24px;
+    text-align: left;
+    font-size: 22px;
     color: #E8DFD5;
 }
 
@@ -28,7 +29,7 @@
 }
 
 .price {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bolder;
     text-align: right;
     color: #FF7124;
@@ -43,8 +44,4 @@
 .drawerItemDescription {
     font-size: 16px;
     width: 600px;
-}
-
-.drawerContainer {
-    
 }

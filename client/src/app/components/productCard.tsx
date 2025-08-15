@@ -1,3 +1,5 @@
+'use client'
+
 import styles from "./ProductCard.module.css"
 import Image from "next/image"
 import {
@@ -11,16 +13,44 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
-
+import { useState } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { MouseEvent } from "react"
+import { Loader2Icon } from "lucide-react"
 
 export type ProductCardProps = {
     id?: string,
     name: string,
     price: string,
-    imageUrl: string
+    imageUrl: string,
+    description: string
 }
 
 export default function ProductCard(props: ProductCardProps) {
+
+    const [loading, setLoading] = useState<boolean>(false)
+    const router = useRouter()
+
+    const handleAddToCardHandler = (e: MouseEvent) => {
+        setLoading(true)
+        axios.get("/api/auth")
+            .then((res) => {
+                if (res.status == 200) {
+                    // add the logic here
+                    console.log(e.type)
+                } else {
+                    router.push("/login")
+                }
+            })
+            .catch(() => {
+                router.push("/login")
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
     return (<>
         <Drawer>
             <DrawerTrigger>
@@ -28,8 +58,8 @@ export default function ProductCard(props: ProductCardProps) {
                     <div>
                         <Image
                             className={`p-5 center ${styles.image}`}
-                            width={300}
-                            height={300}
+                            width={250}
+                            height={250}
                             src={props.imageUrl}
                             alt=""
                         />
@@ -40,7 +70,7 @@ export default function ProductCard(props: ProductCardProps) {
                     </div>
                 </div>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent className="sm:max-h-lg">
                 <DrawerDescription>
                     <div className={`flex center ${styles.drawerContainer}`}>
                         <Image
@@ -49,12 +79,13 @@ export default function ProductCard(props: ProductCardProps) {
                             height={400}
                             src={props.imageUrl}
                             alt=""
+                            priority
                         />
                         <div>
                             <DrawerHeader>
                                 <DrawerTitle className={`${styles.drawerTitle}`}>{props.name}</DrawerTitle>
                             </DrawerHeader>
-                            <p className={`jetbrain ${styles.drawerItemDescription}`}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque vel laudantium architecto aliquam adipisci officiis eius sequi hic modi, alias facilis, placeat earum fuga consequuntur delectus voluptates tempore. Architecto, nulla?</p>
+                            <p className={`jetbrain ${styles.drawerItemDescription}`}>{props.description}</p>
                             <h1 className={`my-10 jetbrain ${styles.price}`}>{props.price}</h1>
                         </div>
                     </div>
@@ -64,7 +95,17 @@ export default function ProductCard(props: ProductCardProps) {
                         <DrawerClose>
                             <Button variant="secondary">Back</Button>
                         </DrawerClose>
-                        <Button>Add to Card</Button>
+                            {loading ? 
+                                <Button id={props.id} variant="ghost" onClick={handleAddToCardHandler}>
+                                    <Loader2Icon className="animate-spin"/> 
+                                    Adding...
+                                </Button>
+                            :
+                                <Button id={props.id} onClick={handleAddToCardHandler}>
+                                    Add to Card
+                                </Button>
+                            }
+                            
                     </div>
                 </DrawerFooter>
             </DrawerContent>
