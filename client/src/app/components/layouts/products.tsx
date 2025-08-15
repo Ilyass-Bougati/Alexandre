@@ -41,6 +41,7 @@ export default function Products() {
                                 name={productProps.name}
                                 price={productProps.price}
                                 imageUrl={productProps.imageUrl}
+                                description={productProps.description}
                             />
                     })
                 }

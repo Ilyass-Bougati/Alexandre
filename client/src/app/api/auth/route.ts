@@ -1,5 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 
+
+/**
+ * This function simulates delay in response
+ * @param ms The number of milliseconds to sleep for
+ * @returns a promise
+ */
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
 /**
  * This function authenticates the user
  * @param req The request should contain `access_token` and `refresh_token`
@@ -38,10 +48,11 @@ export async function POST(req: Request) {
  * @returns status code `200` if authenticated, and `201` otherwise (to not print an error)
  */
 export async function GET(req: NextRequest) {
-    const token = req.cookies.get("access_token")?.value;
-    if (!token) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 201 });
-    } else {
-        return NextResponse.json({}, { status: 200 });
-    }
+  delay(500)
+  const token = req.cookies.get("access_token")?.value;
+  if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 201 });
+  } else {
+      return NextResponse.json({}, { status: 200 });
+  }
 }

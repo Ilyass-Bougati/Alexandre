@@ -1,6 +1,11 @@
 .alexandreLogo {
     font-size: 150px;
     color: #E8DFD5;
+    transition-duration: 200ms;
+}
+
+.alexandreLogo:hover {
+    font-size: 160px;
 }
 
 .slogan {
@@ -8,6 +13,11 @@
     font-weight: lighter;
     font-style: italic;
     color: #E8DFD5;
+    transition-duration: 200ms;
+}
+
+.slogan:hover {
+    font-size: 40px;
 }
 
 .link {
