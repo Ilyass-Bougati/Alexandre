@@ -22,6 +22,10 @@
     color: #E8DFD5;
 }
 
+.drawerContainer {
+    height: 400px;
+}
+
 .image {
     max-width: fit-content;
     margin-left: auto;
