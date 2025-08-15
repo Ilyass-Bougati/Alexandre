@@ -58,17 +58,14 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
     e.preventDefault();
 
     try {
-      await api.post(
-        '/auth/api/v1/register/', 
+      await axios.post(
+        '/api/auth/register', 
         {
           email: email,
           password: password,
           firstName: firstName,
           lastName: lastName,
           phoneNumber: phoneNumber
-        },
-        {
-        headers: { 'Content-Type': 'application/json' },
         }
       );
 

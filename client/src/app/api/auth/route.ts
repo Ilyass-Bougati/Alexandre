@@ -48,7 +48,7 @@ export async function POST(req: Request) {
  * @returns status code `200` if authenticated, and `201` otherwise (to not print an error)
  */
 export async function GET(req: NextRequest) {
-  delay(500)
+  delay(2000)
   const token = req.cookies.get("access_token")?.value;
   if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 201 });
