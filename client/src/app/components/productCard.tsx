@@ -62,7 +62,7 @@ export default function ProductCard(props: ProductCardProps) {
                 <DrawerFooter>
                     <div className="center">
                         <DrawerClose>
-                            <Button variant="mx-5 secondary">Back</Button>
+                            <Button variant="secondary">Back</Button>
                         </DrawerClose>
                         <Button>Add to Card</Button>
                     </div>
