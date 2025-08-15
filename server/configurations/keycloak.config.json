@@ -50,7 +50,10 @@
       "type": "confidential",
       "description": "The alexandre application",
       "publicClient": true,
-      "directAccessGrantsEnabled": true
+      "directAccessGrantsEnabled": true,
+      "webOrigins": [
+        "*"
+      ]
     }
   ]
 }
