@@ -90,7 +90,7 @@ services:
       - SPRING_DATASOURCE_URL=${USERS_DB_URI}
       - EUREKA_HOST=discovery-server
       - TEMPO_HOST=${TEMPO_HOST}
-      - KEYCLOAK_HOST=keycloak
+      - KEYCLOAK_HOST=${KEYCLOAK_HOSTNAME}
       - KAFKA_HOST=${KAFKA_HOST}
       - KAFKA_PORT=9092
       - LOKI_HOST=${LOKI_HOST}
@@ -119,7 +119,7 @@ services:
       - KAFKA_HOST=${KAFKA_HOST}
       - KAFKA_PORT=9092
       - LOKI_HOST=${LOKI_HOST}
-      - KEYCLOAK_HOST=keycloak
+      - KEYCLOAK_HOST=${KEYCLOAK_HOSTNAME}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
       interval: 30s
@@ -143,7 +143,7 @@ services:
       - EUREKA_HOST=discovery-server
       - TEMPO_HOST=${TEMPO_HOST}
       - LOKI_HOST=${LOKI_HOST}
-      - KEYCLOAK_HOST=keycloak
+      - KEYCLOAK_HOST=${KEYCLOAK_HOSTNAME}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
       interval: 30s
@@ -196,7 +196,7 @@ services:
       - KAFKA_HOST=${KAFKA_HOST}
       - KAFKA_PORT=9092
       - LOKI_HOST=${LOKI_HOST}
-      - KEYCLOAK_HOST=keycloak
+      - KEYCLOAK_HOST=${KEYCLOAK_HOSTNAME}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
       interval: 30s
@@ -222,7 +222,7 @@ services:
       - KAFKA_HOST=${KAFKA_HOST}
       - KAFKA_PORT=9092
       - LOKI_HOST=${LOKI_HOST}
-      - KEYCLOAK_HOST=keycloak
+      - KEYCLOAK_HOST=${KEYCLOAK_HOSTNAME}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
       interval: 30s
