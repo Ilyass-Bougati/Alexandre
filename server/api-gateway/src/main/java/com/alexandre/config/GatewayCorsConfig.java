@@ -20,6 +20,7 @@ public class GatewayCorsConfig {
         config.addAllowedOrigin(frontEndProperties.url());
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
+        config.addExposedHeader("Authorization");
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

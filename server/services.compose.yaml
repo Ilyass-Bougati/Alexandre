@@ -30,8 +30,8 @@ services:
     container_name: discovery_server
     image: alexandre/discovery-server:latest
     environment:
-      TEMPO_HOST: ${TEMPO_HOST}
-      LOKI_HOST: ${LOKI_HOST}
+      - TEMPO_HOST=${TEMPO_HOST}
+      - LOKI_HOST=${LOKI_HOST}
     ports:
       - "8761:8761"
     healthcheck:
@@ -46,9 +46,9 @@ services:
     container_name: config_server
     image: alexandre/config-server:latest
     environment:
-      EUREKA_HOST: discovery-server
-      TEMPO_HOST: ${TEMPO_HOST}
-      LOKI_HOST: ${LOKI_HOST}
+      - EUREKA_HOST=discovery-server
+      - TEMPO_HOST=${TEMPO_HOST}
+      - LOKI_HOST=${LOKI_HOST}
     ports:
       - "8888:8888"
     healthcheck:
@@ -65,10 +65,10 @@ services:
     container_name: api_gateway
     image: alexandre/api-gateway
     environment:
-      EUREKA_HOST: discovery-server
-      TEMPO_HOST: ${TEMPO_HOST}
-      ACTIVE_PROFILE: prod
-      LOKI_HOST: ${LOKI_HOST}
+      - EUREKA_HOST=discovery-server
+      - TEMPO_HOST=${TEMPO_HOST}
+      - ACTIVE_PROFILE=prod
+      - LOKI_HOST=${LOKI_HOST}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4000/actuator/health"]
       interval: 30s
@@ -86,14 +86,14 @@ services:
     container_name: user_service
     image: alexandre/user-service
     environment:
-      ACTIVE_PROFILE: prod
-      SPRING_DATASOURCE_URL: ${USERS_DB_URI}
-      EUREKA_HOST: discovery-server
-      TEMPO_HOST: ${TEMPO_HOST}
-      KEYCLOAK_HOST: keycloak
-      KAFKA_HOST: ${KAFKA_HOST}
-      KAFKA_PORT: 29092
-      LOKI_HOST: ${LOKI_HOST}
+      - ACTIVE_PROFILE=prod
+      - SPRING_DATASOURCE_URL=${USERS_DB_URI}
+      - EUREKA_HOST=discovery-server
+      - TEMPO_HOST=${TEMPO_HOST}
+      - KEYCLOAK_HOST=keycloak
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=9092
+      - LOKI_HOST=${LOKI_HOST}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 30s
@@ -112,14 +112,14 @@ services:
     container_name: order_service
     image: alexandre/order-service
     environment:
-      ACTIVE_PROFILE: prod
-      SPRING_DATASOURCE_URL: ${ORDERS_DB_URI}
-      EUREKA_HOST: discovery-server
-      TEMPO_HOST: ${TEMPO_HOST}
-      KAFKA_HOST: ${KAFKA_HOST}
-      KAFKA_PORT: 29092
-      LOKI_HOST: ${LOKI_HOST}
-      KEYCLOAK_HOST: keycloak
+      - ACTIVE_PROFILE=prod
+      - SPRING_DATASOURCE_URL=${ORDERS_DB_URI}
+      - EUREKA_HOST=discovery-server
+      - TEMPO_HOST=${TEMPO_HOST}
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=9092
+      - LOKI_HOST=${LOKI_HOST}
+      - KEYCLOAK_HOST=keycloak
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
       interval: 30s
@@ -138,12 +138,12 @@ services:
     container_name: inventory_service
     image: alexandre/inventory-service
     environment:
-      ACTIVE_PROFILE: prod
-      SPRING_DATASOURCE_URL: ${INVENTORY_DB_URI}
-      EUREKA_HOST: discovery-server
-      TEMPO_HOST: ${TEMPO_HOST}
-      LOKI_HOST: ${LOKI_HOST}
-      KEYCLOAK_HOST: keycloak
+      - ACTIVE_PROFILE=prod
+      - SPRING_DATASOURCE_URL=${INVENTORY_DB_URI}
+      - EUREKA_HOST=discovery-server
+      - TEMPO_HOST=${TEMPO_HOST}
+      - LOKI_HOST=${LOKI_HOST}
+      - KEYCLOAK_HOST=keycloak
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
       interval: 30s
@@ -162,14 +162,14 @@ services:
     container_name: notification_service
     image: alexandre/notification-service
     environment:
-      ACTIVE_PROFILE: prod
-      EUREKA_HOST: discovery-server
-      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
-      FROM_EMAIL: ${FROM_EMAIL}
-      TEMPO_HOST: ${TEMPO_HOST}
-      KAFKA_HOST: ${KAFKA_HOST}
-      KAFKA_PORT: 29092
-      LOKI_HOST: ${LOKI_HOST}
+      - ACTIVE_PROFILE=prod
+      - EUREKA_HOST=discovery-server
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - FROM_EMAIL=${FROM_EMAIL}
+      - TEMPO_HOST=${TEMPO_HOST}
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=9092
+      - LOKI_HOST=${LOKI_HOST}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
       interval: 30s
@@ -188,15 +188,15 @@ services:
     container_name: payment_service
     image: alexandre/payment-service
     environment:
-      ACTIVE_PROFILE: prod
-      SPRING_DATASOURCE_URL: ${PAYMENT_DB_URI}
-      EUREKA_HOST: discovery-server
-      STRIPE_API_KEY: ${STRIPE_API_KEY}
-      TEMPO_HOST: ${TEMPO_HOST}
-      KAFKA_HOST: ${KAFKA_HOST}
-      KAFKA_PORT: 29092
-      LOKI_HOST: ${LOKI_HOST}
-      KEYCLOAK_HOST: keycloak
+      - ACTIVE_PROFILE=prod
+      - SPRING_DATASOURCE_URL=${PAYMENT_DB_URI}
+      - EUREKA_HOST=discovery-server
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - TEMPO_HOST=${TEMPO_HOST}
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=9092
+      - LOKI_HOST=${LOKI_HOST}
+      - KEYCLOAK_HOST=keycloak
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
       interval: 30s
@@ -215,14 +215,14 @@ services:
     container_name: delivery_service
     image: alexandre/delivery-service
     environment:
-      ACTIVE_PROFILE: prod
-      SPRING_DATASOURCE_URL: ${DELIVERY_DB_URI}
-      EUREKA_HOST: discovery-server
-      TEMPO_HOST: ${TEMPO_HOST}
-      KAFKA_HOST: ${KAFKA_HOST}
-      KAFKA_PORT: 29092
-      LOKI_HOST: ${LOKI_HOST}
-      KEYCLOAK_HOST: keycloak
+      - ACTIVE_PROFILE=prod
+      - SPRING_DATASOURCE_URL=${DELIVERY_DB_URI}
+      - EUREKA_HOST=discovery-server
+      - TEMPO_HOST=${TEMPO_HOST}
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=9092
+      - LOKI_HOST=${LOKI_HOST}
+      - KEYCLOAK_HOST=keycloak
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
       interval: 30s
