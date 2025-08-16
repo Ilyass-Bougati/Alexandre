@@ -39,7 +39,7 @@ const products: Array<ProductCardProps> = [
 //     return res;
 // }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     const res = await api.get("/inventory/api/v1/product")
-    return NextResponse.json({...res})
+    return NextResponse.json(res.data)
 }
