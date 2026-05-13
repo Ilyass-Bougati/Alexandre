@@ -247,5 +247,99 @@
 
 \end{frame}
 
+% ── Slide 6 — Pourquoi les Microservices ? ───────────────────────────────────
+\begin{frame}{Pourquoi les Microservices ?}
+
+  \begin{center}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{>{\bfseries\color{primary}}l
+                    >{\centering\arraybackslash}p{0.28\textwidth}
+                    >{\centering\arraybackslash}p{0.28\textwidth}}
+      \toprule
+      \textbf{\color{black}Critère}
+        & \textbf{Monolithe}
+        & \textbf{Microservices} \\
+      \midrule
+      Déploiement
+        & Un seul artefact
+        & Indépendant par service \\
+      Scalabilité
+        & Globale uniquement
+        & Ciblée par service \\
+      Stack technique
+        & Unique et partagée
+        & Polyglotte possible \\
+      Tolérance aux pannes
+        & Panne globale
+        & Isolation des défaillances \\
+      Maintenabilité
+        & Couplage fort
+        & Découplage, responsabilité unique \\
+      Complexité initiale
+        & \textcolor{accent}{\textbf{Faible}}
+        & \textcolor{red!70!black}{\textbf{Élevée dès le départ}} \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+
+  \begin{alertblock}{}
+    \small Les microservices introduisent une \textbf{complexité opérationnelle réelle} —
+    leur adoption est justifiée à grande échelle ou dans un
+    \textbf{objectif d'apprentissage explicite}.
+  \end{alertblock}
+
+\end{frame}
+
+% ── Slide 7 — Architecture globale ───────────────────────────────────────────
+\begin{frame}{Architecture Globale d'Alexandre}
+
+  \begin{center}
+    \includegraphics[width=\textwidth,height=0.30\textheight,keepaspectratio]{architecture.png}
+  \end{center}
+
+  \vspace{0.2em}
+
+  \begin{columns}[T]
+    \begin{column}{0.30\textwidth}
+      \textbf{\color{primary}\small Couche d'entrée}
+      \begin{itemize}\small
+        \item \textbf{Nginx} — reverse proxy
+        \item \textbf{API Gateway}
+        \item \textbf{Eureka} — service discovery
+        \item \textbf{Keycloak} — auth. JWT
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \textbf{\color{primary}\small Services métier}
+      \begin{itemize}\small
+        \item User, Order, Inventory
+        \item Payment, Delivery
+        \item \textbf{Notification} (event-driven / Kafka)
+        \item \textbf{Config Server}
+        \item[$\hookrightarrow$] \textit{\scriptsize Chaque service : base de données dédiée}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.28\textwidth}
+      \textbf{\color{primary}\small Observabilité}
+      \begin{itemize}\small
+        \item \textbf{Prometheus} — métriques
+        \item \textbf{Loki} — logs
+        \item \textbf{Tempo} — tracing distribué
+        \item \textbf{Grafana} — visualisation
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3em}
+
+  \begin{block}{}
+    \small \textbf{Base de données par service} — principe fondamental garantissant
+    un découplage réel entre les services.
+  \end{block}
+
+\end{frame}
+
 % ═══════════════════════════════════════════════════════════════════════════════
 \end{document}
