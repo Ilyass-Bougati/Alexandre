@@ -48,7 +48,7 @@
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,center]{palette primary}%
       \usebeamerfont{date in head/foot}%
-      \insertframenumber{} / 12
+      \insertframenumber{} / 14
     \end{beamercolorbox}%
   }%
   \vskip0pt%
@@ -518,6 +518,80 @@
     problème de cohérence. Solution : implémentation du \textbf{pattern SAGA} pour
     garantir la cohérence des données de manière fiable.
   \end{block}
+
+\end{frame}
+
+% ── Slide 13 — Ce que j'ai appris ────────────────────────────────────────────
+\begin{frame}{Ce que j'ai appris}
+
+  \begin{block}{\faBalanceScale\quad Le coût réel des microservices}
+    \small L'\textbf{overhead opérationnel} des microservices est difficile à justifier :
+    le seuil à partir duquel ils deviennent nécessaires est très élevé. Une PME n'en
+    aura jamais besoin — il existe un cas d'usage très spécifique où ils surpassent
+    le monolithe.
+  \end{block}
+
+  \vspace{0.35em}
+
+  \begin{block}{\faPuzzlePiece\quad La modélisation des services est un art}
+    \small Certains services ont été bien plus sollicités que d'autres, sans qu'il soit
+    possible de le prévoir à l'avance. Avec le recul, certains microservices auraient
+    pu être \textbf{fusionnés} en un seul service plus cohérent.
+  \end{block}
+
+  \vspace{0.35em}
+
+  \begin{block}{\faEye\quad L'observabilité est non négociable}
+    \small Une observabilité robuste est indispensable pour toute application, et dans
+    le cas des microservices, le \textbf{tracing distribué est impératif}. Loki montre
+    ses limites face à de grands volumes de logs — un remplacement par la stack
+    \textbf{ELK} (Elasticsearch, Logstash, Kibana) aurait été plus adapté.
+  \end{block}
+
+\end{frame}
+
+% ── Slide 14 — Conclusion & Perspectives ─────────────────────────────────────
+\begin{frame}{Conclusion \& Perspectives}
+
+  \begin{block}{\faTrophy\quad Bilan}
+    \small \textbf{Alexandre} est une implémentation complète et fonctionnelle d'une
+    architecture microservices moderne — service discovery, configuration centralisée,
+    communication event-driven, observabilité complète, et déploiement cloud sur
+    \textbf{AWS EC2}. Développé en solo dans un cadre académique, il démontre la
+    faisabilité et la complexité réelle de ce type d'architecture.
+  \end{block}
+
+  \vspace{0.4em}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{primary}\small Fonctionnalités non implémentées}
+      \begin{itemize}\small
+        \item Orchestration \textbf{Kubernetes}
+        \item Circuit breakers (\textbf{Resilience4j})
+        \item Communication asynchrone généralisée
+        \item Mise en cache (\textbf{Redis})
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{primary}\small Améliorations possibles}
+      \begin{itemize}\small
+        \item Remplacement de Loki par la stack \textbf{ELK}
+        \item \textbf{Autoscaling} horizontal des services
+        \item Pipeline \textbf{CI/CD} automatisé
+        \item Tests d'intégration inter-services
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.4em}
+
+  \begin{alertblock}{}
+    \centering\small
+    Ce projet m'a permis de comprendre non seulement \textbf{comment} construire
+    une architecture distribuée, mais surtout \textbf{quand} — et \textbf{quand
+    ne pas} — la choisir.
+  \end{alertblock}
 
 \end{frame}
 
