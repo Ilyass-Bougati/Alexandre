@@ -48,7 +48,7 @@
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,center]{palette primary}%
       \usebeamerfont{date in head/foot}%
-      \insertframenumber{} / \inserttotalframenumber
+      \insertframenumber{} / 12
     \end{beamercolorbox}%
   }%
   \vskip0pt%
@@ -335,6 +335,188 @@
   \begin{block}{}
     \small \textbf{Base de données par service} — principe fondamental garantissant
     un découplage réel entre les services.
+  \end{block}
+
+\end{frame}
+
+% ── Slide 8 — Stack Technique ────────────────────────────────────────────────
+\begin{frame}{Stack Technique}
+
+  \begin{columns}[T]
+
+    \begin{column}{0.33\textwidth}
+      \begin{block}{\faCode\quad Services métier}
+        \begin{itemize}\small
+          \item \textbf{Spring Boot} (Java)\\
+                \scriptsize tous les microservices\normalsize
+          \item \textbf{Spring Cloud Gateway}\\
+                \scriptsize API Gateway\normalsize
+          \item \textbf{Spring Cloud Eureka}\\
+                \scriptsize service discovery\normalsize
+          \item \textbf{Spring Cloud Config}\\
+                \scriptsize configuration centralisée\normalsize
+          \item \textbf{Keycloak}\\
+                \scriptsize authentification JWT\normalsize
+          \item \textbf{Apache Kafka}\\
+                \scriptsize messaging asynchrone\normalsize
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.33\textwidth}
+      \begin{block}{\faDatabase\quad BDD \& Déploiement}
+        \begin{itemize}\small
+          \item \textbf{Base de données dédiée}\\
+                \scriptsize par service\normalsize
+          \item \textbf{Docker \& Docker Compose}\\
+                \scriptsize conteneurisation\normalsize
+          \item \textbf{Nginx}\\
+                \scriptsize reverse proxy\normalsize
+          \item \textbf{AWS EC2}\\
+                \scriptsize déploiement cloud\normalsize
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.33\textwidth}
+      \begin{block}{\faChartBar\quad Observabilité}
+        \begin{itemize}\small
+          \item \textbf{Prometheus}\\
+                \scriptsize métriques\normalsize
+          \item \textbf{Loki}\\
+                \scriptsize logs\normalsize
+          \item \textbf{Tempo + OpenTelemetry}\\
+                \scriptsize tracing distribué\normalsize
+          \item \textbf{Grafana}\\
+                \scriptsize visualisation unifiée\normalsize
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+  \end{columns}
+
+\end{frame}
+
+% ── Slide 9a — Réalisation : Interface Utilisateur ───────────────────────────
+\begin{frame}{Réalisation : Interface Utilisateur}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+        \fbox{\parbox[c][0.45\textheight][c]{0.90\linewidth}{%
+          \centering\color{primary!50}
+          \faImage\\[6pt]
+          \small [Screenshot Frontend 1]
+        }}
+      \end{center}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+        \fbox{\parbox[c][0.45\textheight][c]{0.90\linewidth}{%
+          \centering\color{primary!50}
+          \faImage\\[6pt]
+          \small [Screenshot Frontend 2]
+        }}
+      \end{center}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.4em}
+  \begin{block}{}
+    \small Interface utilisateur permettant la \textbf{navigation}, la \textbf{gestion du panier}
+    et le \textbf{passage de commandes}.
+  \end{block}
+
+\end{frame}
+
+% ── Slide 9b — Réalisation : Backend & Services ───────────────────────────────
+\begin{frame}{Réalisation : Backend \& Services}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+        \fbox{\parbox[c][0.45\textheight][c]{0.90\linewidth}{%
+          \centering\color{primary!50}
+          \faImage\\[6pt]
+          \small [Screenshot Backend 1]
+        }}
+      \end{center}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+        \fbox{\parbox[c][0.45\textheight][c]{0.90\linewidth}{%
+          \centering\color{primary!50}
+          \faImage\\[6pt]
+          \small [Screenshot Backend 2]
+        }}
+      \end{center}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.4em}
+  \begin{block}{}
+    \small Vue sur les services enregistrés dans \textbf{Eureka} et les endpoints
+    exposés via l'\textbf{API Gateway}.
+  \end{block}
+
+\end{frame}
+
+% ── Slide 9c — Réalisation : Observabilité ───────────────────────────────────
+\begin{frame}{Réalisation : Observabilité}
+
+  \begin{center}
+    \fbox{\parbox[c][0.38\textheight][c]{0.96\linewidth}{%
+      \centering\color{primary!50}
+      \faImage\\[6pt]
+      [Screenshot Grafana Dashboard]
+    }}
+  \end{center}
+
+  \vspace{0.3em}
+
+  \begin{columns}[T]
+    \begin{column}{0.33\textwidth}
+      \begin{block}{\centering\small Prometheus}
+        \centering\scriptsize Métriques collectées en temps réel
+      \end{block}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{block}{\centering\small Loki}
+        \centering\scriptsize Logs centralisés et consultables
+      \end{block}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{block}{\centering\small Tempo}
+        \centering\scriptsize Traces distribuées entre les services
+      \end{block}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% ── Slide 10 — Défis & Solutions ─────────────────────────────────────────────
+\begin{frame}{Défis \& Solutions}
+
+  \begin{block}{\faTools\quad Complexité opérationnelle}
+    \small \textbf{21 containers} à orchestrer simultanément. Les ressources nécessaires ont
+    imposé un déploiement distribué sur \textbf{3 instances EC2} : bases de données, stack
+    LGTM, Kafka et Zookeeper déportés du poste local.
+  \end{block}
+
+  \vspace{0.4em}
+
+  \begin{block}{\faUserAlt\quad Charge de développement solo}
+    \small \textbf{6 microservices} développés par une seule personne. Certaines
+    fonctionnalités prévues n'ont pas pu être implémentées : orchestration
+    \textbf{Kubernetes}, circuit breakers (\textbf{Resilience4j}).
+  \end{block}
+
+  \vspace{0.4em}
+
+  \begin{block}{\faSyncAlt\quad Cohérence des transactions distribuées}
+    \small Sans base de données partagée, les transactions multi-services posent un
+    problème de cohérence. Solution : implémentation du \textbf{pattern SAGA} pour
+    garantir la cohérence des données de manière fiable.
   \end{block}
 
 \end{frame}
